@@ -32,7 +32,7 @@
     height: $mobileLogoSize;
   }
 
-  #header > .theme-logo[data-fallback] {
+  #header > .theme-logo .theme-logo-face[data-letter] {
     font-size: $mobileLogoSize * 0.45;
   }
 

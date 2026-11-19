@@ -13,6 +13,8 @@ $headerLogoRadius:              $radiusMd !default;
 // Fallback ohne Logo: Kachel wie die App-Icons im Monitor
 $headerLogoFallbackBackground:  $colorAccent !default;
 $headerLogoFallbackColor:       $neutral950 !default;
+// Projekt-Kachel (nur Farbe, kein Bild): weiße Schrift auf der Projektfarbe
+$headerProjectTileColor:        $neutral0 !default;
 
 $headerTitleFontSize:          $fontSizeXl !default;
 $headerPaddingTop:              $spaceLg !default;

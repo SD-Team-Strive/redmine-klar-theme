@@ -4,17 +4,61 @@
 
 @use "../variables" as *;
 @use "../mixins" as *;
+@use "variables/projectsVariables" as *;
 
+// -----------------------------------------------------------------------------
 // Projektliste als Karten
+//
+//   [ ▣ Hauptprojekt                 ]  [ ▣ Hauptprojekt             ]
+//   [   Beschreibung                 ]  [   Beschreibung             ]
+//   [ ─────────────────────────────  ]  [                            ]
+//   [   Unterprojekt                 ]  [                            ]
+//   [ ─────────────────────────────  ]  [                            ]
+//   [   Unterprojekt                 ]  [                            ]
+//
+// Redmine stapelt die Karten in CSS-Spalten (versetzt, unterschiedlich hoch);
+// hier ein Raster: Karten in Reihen, je Reihe gleich hoch. Unterprojekte als
+// ruhige Liste am Fuß der Karte statt mit senkrechtem Strich.
+// -----------------------------------------------------------------------------
+
 #projects-index {
-  column-gap: $spaceMd;
+  columns: auto;
+
+  > ul.projects.root {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, #{$projectCardMinWidth}), 1fr));
+    gap: $spaceMd;
+    margin: 0 0 $spaceMd;
+  }
 
   ul.projects li.root {
     @include card($spaceLg, $radiusLg);
-    margin-bottom: $spaceMd;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    break-inside: auto;
+  }
+
+  // Titelzeile: Name und Symbol "Meine Projekte" auf einer Mitte,
+  // Beschreibung darunter über die volle Breite
+  ul.projects :is(div.root, div.child) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: $spaceXxs;
+  }
+
+  ul.projects :is(div.root, div.child) > div.description {
+    flex: 0 0 100%;
+  }
+
+  // Redmine schiebt das Symbol mit 10px Rand nach oben
+  ul.projects :is(div.root, div.child) :is(.my-project, .icon-bookmarked-project) svg {
+    margin: 0;
   }
 
   ul.projects div.root a.project {
+    margin: 0;
     font-size: $fontSizeMd;
     font-weight: $fontWeightSemibold;
   }
@@ -23,17 +67,60 @@
     padding-top: $spaceXxs;
     font-size: $fontSizeSm;
     color: $colorTextMuted;
+
+    > :last-child {
+      margin-bottom: 0;
+    }
   }
 
-  li.root ul.projects {
-    margin-top: $spaceSm;
-    padding-left: $spaceMd;
-    border-left: $borderWidth solid $colorBorder;
+  // Unterprojekte: Liste am Fuß der Karte, Zeilen mit feinem Trenner
+  li.root > ul.projects {
+    margin: $spaceMd 0 0;
+    padding: 0;
+    border: 0;
+    border-top: $borderWidth solid $colorBorder;
   }
 
   ul.projects li.child {
-    margin-top: $spaceSm;
+    margin: 0;
   }
+
+  ul.projects li.child > div.child {
+    padding: $spaceXs 0;
+    border-bottom: $borderWidth solid $projectChildDivider;
+
+    a.project {
+      font-weight: $fontWeightMedium;
+      color: $colorTextPrimary;
+    }
+
+    div.description {
+      padding-top: 0;
+    }
+  }
+
+  // Letzte Zeile ohne Trenner (die Karte endet dort)
+  li.root > ul.projects > li.child:last-child > div.child:only-child,
+  li.root > ul.projects > li.child:last-child:not(:has(ul.projects)) > div.child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  // Tiefere Ebenen leicht eingerückt, ohne Strich
+  li.child > ul.projects {
+    margin: 0;
+    padding: 0 0 0 $spaceMd;
+    border: 0;
+  }
+}
+
+// Symbol "Meine Projekte" (Mitglied im Projekt) ausblenden – Karten, Liste
+// und Legende: Man sieht meist ohnehin nur die eigenen Projekte, dann steht
+// es überall und sagt nichts. Lesezeichen bleiben (bewusst gesetzt);
+// eigene Projekte filtert die Abfrage "Meine Projekte" in der Seitenleiste.
+// Nur das Symbol (span) – Redmine setzt my-project auch am Projektlink selbst.
+body.controller-projects.action-index span.my-project {
+  display: none;
 }
 
 ul.projects li.root div.archived,

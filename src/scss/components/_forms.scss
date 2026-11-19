@@ -39,12 +39,15 @@ textarea {
   }
 }
 
-// Fokus: gleiche Spezifität wie Redmines input[type="text"]:focus, steht später
+// Fokus: gleiche Spezifität wie Redmines input[type="text"]:focus, steht später.
+// Nach innen statt Ring außen – in vollbreiten Feldern (mobil) wurde der
+// Ring vom umgebenden Container abgeschnitten
 :is(input[type="text"], input[type="password"], input[type="date"], input[type="number"],
   input[type="email"], input[type="url"], input[type="search"], input[type="tel"],
   input[type="time"], input:not([type]), select, textarea):is(:focus, :active) {
   border-color: $formControlFocusBorder;
-  @include focusRing;
+  outline: none;
+  box-shadow: $formControlFocusShadow;
 }
 
 textarea {

@@ -14,7 +14,7 @@
     width: 36px;
     height: 36px;
   }
-  #header > .theme-logo[data-fallback] {
+  #header > .theme-logo .theme-logo-face[data-letter] {
     font-size: 16.2px;
   }
   #project-jump.drdn {
@@ -486,7 +486,7 @@
     flex-wrap: wrap;
     align-items: baseline;
     gap: 4px 12px;
-    padding: 12px 34px 12px 30px;
+    padding: 12px 42px 12px 38px;
     border-top: 1px solid #e5e5e5;
     white-space: normal;
   }
@@ -527,15 +527,16 @@
   }
   table.list.issues > tbody > tr > td.checkbox, table.list.time-entries > tbody > tr > td.checkbox {
     position: absolute;
-    top: 14px;
+    top: calc(12px + (0.875rem * 1.5 - 16px) / 2);
     left: 12px;
     width: auto;
     padding: 0;
+    line-height: 0;
   }
   table.list.issues > tbody > tr > td.buttons, table.list.time-entries > tbody > tr > td.buttons {
     position: absolute;
-    top: 8px;
-    right: 4px;
+    top: calc(12px + (0.875rem * 1.5 - 36px) / 2);
+    right: 8px;
   }
   table.list.issues > tbody > tr > td.block_column, table.list.time-entries > tbody > tr > td.block_column {
     flex: 0 0 100%;
@@ -552,7 +553,88 @@
   }
   table.list.issues > tbody > tr:not(.issue):not(.group):not(.time-entry), table.list.time-entries > tbody > tr:not(.issue):not(.group):not(.time-entry) {
     display: block;
-    padding: 0 34px 12px 30px;
+    padding: 0 42px 12px 38px;
+  }
+  table.list.issues > tbody > tr.issue {
+    row-gap: 4px;
+    align-items: center;
+  }
+  table.list.issues > tbody > tr.issue::before, table.list.issues > tbody > tr.issue::after {
+    content: "";
+    flex: 0 0 100%;
+    height: 0;
+  }
+  table.list.issues > tbody > tr.issue::before {
+    order: 2;
+  }
+  table.list.issues > tbody > tr.issue::after {
+    order: 4;
+  }
+  table.list.issues > tbody > tr.issue > td {
+    order: 5;
+  }
+  table.list.issues > tbody > tr.issue > td.subject {
+    order: 0;
+  }
+  table.list.issues > tbody > tr.issue > td.subject a {
+    font-weight: 500;
+  }
+  table.list.issues > tbody > tr.issue > td:is(.id, .project, .tracker, .parent) {
+    order: 1;
+  }
+  table.list.issues > tbody > tr.issue > td:is(.status, .priority, .assigned_to, .author, .fixed_version, .category) {
+    order: 3;
+  }
+  table.list.issues > tbody > tr.issue > td.status {
+    padding: 0 8px;
+    color: #404040;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+  }
+  table.list.issues > tbody > tr.issue > td.assigned_to {
+    color: #404040;
+  }
+  table.list.issues > tbody > tr.issue.priority-default > td.priority,
+  table.list.issues > tbody > tr.issue > td.done_ratio:has(table.progress-0),
+  table.list.issues > tbody > tr.issue > td:is(.spent_hours, .total_spent_hours):not(:has(a)) {
+    display: none;
+  }
+  table.list.issues > tbody > tr.issue > td.done_ratio table.progress {
+    width: 56px;
+    margin: 0;
+  }
+  table.list.issues > tbody > tr.issue > td.done_ratio p.percent {
+    display: none;
+  }
+  table.list.issues:has(> tbody > tr.group), table.list.time-entries:has(> tbody > tr.group) {
+    overflow: visible;
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+  table.list.issues:has(> tbody > tr.group) > tbody > tr.group, table.list.time-entries:has(> tbody > tr.group) > tbody > tr.group {
+    padding: 20px 4px 8px;
+    background-color: transparent;
+    border: 0;
+  }
+  table.list.issues:has(> tbody > tr.group) > tbody > tr.group:first-child, table.list.time-entries:has(> tbody > tr.group) > tbody > tr.group:first-child {
+    padding-top: 0;
+  }
+  table.list.issues:has(> tbody > tr.group) > tbody > tr:not(.group), table.list.time-entries:has(> tbody > tr.group) > tbody > tr:not(.group) {
+    background-color: #ffffff;
+    border-right: 1px solid #e5e5e5;
+    border-left: 1px solid #e5e5e5;
+  }
+  table.list.issues:has(> tbody > tr.group) > tbody > tr.group + tr:not(.group), table.list.time-entries:has(> tbody > tr.group) > tbody > tr.group + tr:not(.group) {
+    border-top: 1px solid #e5e5e5;
+    border-radius: 10px 10px 0 0;
+  }
+  table.list.issues:has(> tbody > tr.group) > tbody > tr:not(.group):is(:has(+ tr.group), :last-child), table.list.time-entries:has(> tbody > tr.group) > tbody > tr:not(.group):is(:has(+ tr.group), :last-child) {
+    border-bottom: 1px solid #e5e5e5;
+    border-radius: 0 0 10px 10px;
+  }
+  table.list.issues:has(> tbody > tr.group) > tbody > tr.group + tr:not(.group):is(:has(+ tr.group), :last-child), table.list.time-entries:has(> tbody > tr.group) > tbody > tr.group + tr:not(.group):is(:has(+ tr.group), :last-child) {
+    border-radius: 10px;
   }
   table.list.time-entries > tbody > tr.time-entry {
     padding-right: 12px;
@@ -566,7 +648,7 @@
   }
   :is(#issue_tree, #relations) table.list.issues > tbody > tr.issue {
     padding-left: 0;
-    padding-right: 68px;
+    padding-right: 84px;
   }
   :is(#issue_tree, #relations) table.list.issues > tbody > tr.issue > td {
     width: auto;
@@ -584,7 +666,7 @@
   }
   #my-page table.list.issues > tbody > tr.issue {
     padding-left: 0;
-    padding-right: 22px;
+    padding-right: 30px;
   }
   table.list.issues,
   table.list.time-entries {
@@ -646,6 +728,12 @@
   .journals h4.journal-header {
     flex-wrap: wrap;
     gap: 4px 8px;
+  }
+  .journals h4.journal-header > span.journal-info {
+    display: block;
+  }
+  .journals h4.journal-header > span.journal-info .avatar {
+    vertical-align: middle;
   }
   .journals .journal-content {
     padding: 0 8px;

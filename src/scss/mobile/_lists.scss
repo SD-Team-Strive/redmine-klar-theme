@@ -2,12 +2,16 @@
 // Mobil: Ticket- und Zeitlisten als Zeilen statt breiter Tabellen
 //
 //   [☐]  Betreff (volle Breite)                         [⋯]
-//        #23 · Fehler · Neu · Sofort · Anna Becker · 19.11.
+//        #23 · Website Relaunch · Fehler                    (wer/was)
+//        [Neu] ● Sofort · Anna Becker                       (Zustand)
+//        19.11.2026 · ▬▬▬ · 6:00                            (weitere Spalten)
 //
 // Die Tabelle bleibt im HTML eine Tabelle; nur die Darstellung ändert sich.
-// Der Betreff steht vorne, alle übrigen Spalten folgen als kleine Metazeile
-// in der Reihenfolge, die die Abfrage vorgibt. Spaltenköpfe entfallen
-// (Sortierung bleibt über "Optionen" erreichbar).
+// Die Zeilen entstehen über die Reihenfolge (order) der Zellen und zwei
+// unsichtbare Umbrüche (::before/::after der Zeile). Spalten, die hier nicht
+// genannt sind, landen in der letzten Zeile – die Abfrage bestimmt weiter,
+// welche Spalten es gibt. Spaltenköpfe entfallen (Sortierung bleibt über
+// "Optionen" erreichbar).
 // =============================================================================
 
 @use "../variables" as *;
@@ -86,19 +90,20 @@ $listTables: "table.list.issues, table.list.time-entries";
       color: $colorTextPrimary;
     }
 
-    // Checkbox links oben, "⋯" rechts oben
+    // Checkbox links auf Höhe der ersten Titelzeile, "⋯" rechts ebenso
     > tbody > tr > td.checkbox {
       position: absolute;
-      top: $mobileListRowPaddingY + 2px;
+      top: calc(#{$mobileListRowPaddingY} + (#{$fontSizeBase} * #{$lineHeightBase} - #{$mobileCheckSize}) / 2);
       left: $mobileListRowPaddingX;
       width: auto;
       padding: 0;
+      line-height: 0;
     }
 
     > tbody > tr > td.buttons {
       position: absolute;
-      top: $mobileListRowPaddingY - $spaceXxs;
-      right: $spaceXxs;
+      top: calc(#{$mobileListRowPaddingY} + (#{$fontSizeBase} * #{$lineHeightBase} - #{$mobileActionHeight}) / 2);
+      right: $mobileListButtonsInset;
     }
 
     // Beschreibung/letzter Kommentar als eigene Zeile
@@ -123,6 +128,127 @@ $listTables: "table.list.issues, table.list.time-entries";
     > tbody > tr:not(.issue):not(.group):not(.time-entry) {
       display: block;
       padding: 0 $mobileListButtonsSpace $mobileListRowPaddingY $mobileListCheckboxSpace;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Ticketliste: feste Zeilen statt einer langen Metazeile
+  // ---------------------------------------------------------------------------
+
+  table.list.issues > tbody > tr.issue {
+    row-gap: $mobileListLineGap;
+    // Mittig statt Grundlinie: Projekt-Icons (Plugin redmine_project_icons)
+    // haben keine Grundlinie und würden die Zeile verschieben
+    align-items: center;
+
+    // Unsichtbare Umbrüche zwischen den Zeilen
+    &::before,
+    &::after {
+      content: "";
+      flex: 0 0 100%;
+      height: 0;
+    }
+
+    &::before {
+      order: 2;
+    }
+
+    &::after {
+      order: 4;
+    }
+
+    // Standard: alles, was nicht genannt ist, in die letzte Zeile
+    > td {
+      order: 5;
+    }
+
+    > td.subject {
+      order: 0;
+
+      a {
+        font-weight: $fontWeightMedium;
+      }
+    }
+
+    // Zeile 2: wer/was
+    > td:is(.id, .project, .tracker, .parent) {
+      order: 1;
+    }
+
+    // Zeile 3: Zustand
+    > td:is(.status, .priority, .assigned_to, .author, .fixed_version, .category) {
+      order: 3;
+    }
+
+    > td.status {
+      padding: 0 $spaceXs;
+      color: $colorTextSecondary;
+      background-color: $colorBgMuted;
+      border-radius: $radiusSm;
+    }
+
+    > td.assigned_to {
+      color: $colorTextSecondary;
+    }
+
+    // Leere Werte weglassen: Priorität "Normal" (Standard), 0 %, keine
+    // aufgewendete Zeit (Redmine verlinkt die Zeit nur, wenn es welche gibt)
+    &.priority-default > td.priority,
+    > td.done_ratio:has(table.progress-0),
+    > td:is(.spent_hours, .total_spent_hours):not(:has(a)) {
+      display: none;
+    }
+
+    // Fortschritt als kurzer Balken
+    > td.done_ratio table.progress {
+      width: 56px;
+      margin: 0;
+    }
+
+    > td.done_ratio p.percent {
+      display: none;
+    }
+  }
+
+  // Gruppierte Listen: wie auf dem Desktop Abschnitte mit eigenen Karten
+  // (die Zeilen sind hier Blöcke, Rahmen und Ecken sitzen an den Zeilen)
+  #{$listTables} {
+    &:has(> tbody > tr.group) {
+      overflow: visible;
+      background-color: transparent;
+      border: 0;
+      border-radius: 0;
+
+      > tbody > tr.group {
+        padding: $spaceLg $spaceXxs $spaceXs;
+        background-color: transparent;
+        border: 0;
+      }
+
+      > tbody > tr.group:first-child {
+        padding-top: 0;
+      }
+
+      > tbody > tr:not(.group) {
+        background-color: $colorBgCard;
+        border-right: $borderWidth solid $colorBorder;
+        border-left: $borderWidth solid $colorBorder;
+      }
+
+      > tbody > tr.group + tr:not(.group) {
+        border-top: $borderWidth solid $colorBorder;
+        border-radius: $radiusMd $radiusMd 0 0;
+      }
+
+      > tbody > tr:not(.group):is(:has(+ tr.group), :last-child) {
+        border-bottom: $borderWidth solid $colorBorder;
+        border-radius: 0 0 $radiusMd $radiusMd;
+      }
+
+      // Gruppe mit nur einem Ticket: alle Ecken rund
+      > tbody > tr.group + tr:not(.group):is(:has(+ tr.group), :last-child) {
+        border-radius: $radiusMd;
+      }
     }
   }
 

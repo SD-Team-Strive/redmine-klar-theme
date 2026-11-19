@@ -11,4 +11,7 @@ $tableHeadFontSize:      $fontSizeXs !default;
 $tableHeadFontWeight:    $fontWeightMedium !default;
 $tableRowHoverBackground: $colorBgSubtle !default;
 $tableGroupBackground:   $colorBgCard !default;
+// Gruppierte Listen: Abstand vor jeder Gruppe, Schrift des Gruppenkopfs
+$tableGroupGap:          $spaceLg !default;
+$tableGroupFontSize:     $fontSizeBase !default;
 $tableMutedColor:        $colorTextTertiary !default;

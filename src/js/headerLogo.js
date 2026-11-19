@@ -14,6 +14,9 @@
 //                 Theme-Ordner, siehe src/scss/layout/variables/_headerVariables.scss)
 //   Fallback:  fehlt das Bild oder lädt es nicht, eine Kachel mit dem ersten
 //              Buchstaben des Applikationstitels
+//   Projekt:   auf Projektseiten auf dem Desktop stattdessen das Icon des
+//              Projekts (Plugin redmine_project_icons, <meta name="project-icon">)
+//              – eine Kachel statt zwei nebeneinander; mobil bleibt das Logo
 //
 // Vertrag mit redmine_branding: das Theme setzt data-branding-logo="theme"
 // an <html> (claimBrandingLogo, sofort beim Laden des Scripts), dann setzt
@@ -61,11 +64,45 @@ function logoUrl() {
   return match ? match[1] : '';
 }
 
-function showFallback(link) {
-  link.textContent = applicationInitial();
-  link.setAttribute('data-fallback', '');
+// Projektseiten: Icon des Projekts (Plugin redmine_project_icons) –
+// Bild, oder Kachel mit Anfangsbuchstabe in Projektfarbe
+function projectIcon() {
+  const meta = document.querySelector('meta[name="project-icon"]');
+  if (!meta) {
+    return null;
+  }
+  return { url: meta.content, color: meta.dataset.color || '', letter: meta.dataset.letter || '' };
 }
 
+// Eine Fläche der Kachel: Bild oder Anfangsbuchstabe
+function face(className, url, letter) {
+  const element = document.createElement('span');
+  element.className = `theme-logo-face ${className}`;
+
+  const showLetter = () => {
+    element.textContent = letter;
+    element.setAttribute('data-letter', '');
+  };
+
+  if (url) {
+    const image = document.createElement('img');
+    image.src = url;
+    image.alt = '';
+    image.addEventListener('error', () => {
+      image.remove();
+      showLetter();
+    });
+    element.appendChild(image);
+  } else {
+    showLetter();
+  }
+  return element;
+}
+
+// Kachel mit bis zu zwei Flächen: Logo der Installation und – auf
+// Projektseiten – Projekt-Icon. Welche sichtbar ist, entscheidet das CSS:
+// Desktop das Projekt-Icon, mobil immer das Logo (dort der einzige Weg
+// zurück zur Startseite; das Projekt-Icon steht im Projekt-Dropdown).
 export function insertHeaderLogo() {
   const header = document.getElementById('header');
   if (!header || header.querySelector('.theme-logo')) {
@@ -80,15 +117,16 @@ export function insertHeaderLogo() {
     link.setAttribute('aria-label', target.label);
   }
 
-  const url = logoUrl();
-  if (url) {
-    const image = document.createElement('img');
-    image.src = url;
-    image.alt = '';
-    image.addEventListener('error', () => showFallback(link));
-    link.appendChild(image);
-  } else {
-    showFallback(link);
+  link.appendChild(face('theme-logo-instance', logoUrl(), applicationInitial()));
+
+  const project = projectIcon();
+  if (project) {
+    const projectFace = face('theme-logo-project', project.url, project.letter);
+    if (project.color) {
+      projectFace.style.setProperty('--project-color', project.color);
+    }
+    link.appendChild(projectFace);
+    link.setAttribute('data-project-icon', '');
   }
 
   header.insertBefore(link, header.firstChild);

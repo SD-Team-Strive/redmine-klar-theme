@@ -15,6 +15,8 @@ services:
     environment:
       REDMINE_SECRET_KEY_BASE: local-theme-development-only
       SECRET_KEY_BASE: local-theme-development-only
+      # Migrationen eingehängter Plugins beim Start ausführen
+      REDMINE_PLUGINS_MIGRATE: "1"
     volumes:
       - redmine-files:/usr/src/redmine/files
       - redmine-sqlite-${REDMINE_VERSION:-7.0}:/usr/src/redmine/sqlite

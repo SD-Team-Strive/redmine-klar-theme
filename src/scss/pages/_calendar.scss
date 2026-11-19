@@ -87,6 +87,24 @@ ul.cal {
   padding: 0;
 }
 
+// Versionen ("Projekt - Version" im übergreifenden Kalender): Text und Link
+// als Fließtext. Als Flex-Container (.icon) würden beide zu schmalen
+// Spalten nebeneinander.
+// Das Icon steht davor, mittig zur ersten Zeile.
+.cal .calbody span.icon-package {
+  position: relative;
+  display: block;
+  padding-left: $calendarVersionIconSize + $spaceXxs;
+
+  svg.icon-svg {
+    position: absolute;
+    top: calc((1lh - #{$calendarVersionIconSize}) * 0.5);
+    left: 0;
+    width: $calendarVersionIconSize;
+    height: $calendarVersionIconSize;
+  }
+}
+
 // Tooltips an Kalendereinträgen
 div.tooltip:hover span.tip {
   padding: $spaceXs $spaceSm;

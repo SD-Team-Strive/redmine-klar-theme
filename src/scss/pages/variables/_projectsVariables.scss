@@ -1,0 +1,6 @@
+@use "../../variables" as *;
+
+// Projektliste: Karten im Raster, ab dieser Breite nebeneinander
+$projectCardMinWidth:     360px !default;
+// Trenner zwischen Unterprojekten: heller als der Kartenrand
+$projectChildDivider:     $neutral100 !default;

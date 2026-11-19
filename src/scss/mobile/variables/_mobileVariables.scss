@@ -7,8 +7,10 @@ $mobileActionGap:         $spaceXs * 0.75 !default;
 // Listen als Zeilen (statt breiter Tabellen)
 $mobileListRowPaddingY:   $spaceSm !default;
 $mobileListRowPaddingX:   $spaceSm !default;
-$mobileListCheckboxSpace: $spaceXl !default;   // links: Checkbox
-$mobileListButtonsSpace:  $spaceXl + $spaceXxs !default;   // rechts: "⋯"
+$mobileListCheckboxSpace: $spaceXl + $spaceXs !default;   // links: Checkbox + Abstand zum Titel
+$mobileListButtonsSpace:  $spaceXl + $spaceSm !default;   // rechts: "⋯" mit Abstand zum Rand
+$mobileListButtonsInset:  $spaceXs !default;              // "⋯" vom rechten Rand
+$mobileListLineGap:       $spaceXxs !default;             // Abstand zwischen den Zeilen eines Tickets
 $mobileListMetaGap:       $spaceXxs $spaceSm !default;
 
 // Reaktion am Ende der Ticket-Karte (Höhe wie auf dem Desktop)

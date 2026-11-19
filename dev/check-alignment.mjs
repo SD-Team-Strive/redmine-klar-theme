@@ -296,6 +296,36 @@ if (!filter || filter.includes('issue') || 'overlap'.includes(filter)) {
   }
 }
 
+// -----------------------------------------------------------------------------
+// Fließtext darf kein Flex-Container sein: Textstücke und Links würden
+// sonst zu schmalen Spalten nebeneinander, die einzeln umbrechen.
+// Anlass (19.11.2026): Version im übergreifenden Kalender ("Projekt -
+// Version") und mobil die Kopfzeile der Historie ("Von Anna Becker vor
+// weniger als 1 Minute aktualisiert") standen in mehreren Spalten.
+// -----------------------------------------------------------------------------
+
+const flowChecks = [
+  { path: '/issues/calendar', selector: '.cal span.icon-package', desktop: true },
+  { path: '/issues/1', selector: '.journals h4.journal-header > span.journal-info', desktop: false },
+];
+
+for (const check of flowChecks) {
+  if ((!mobile && !check.desktop) || (filter && !check.path.includes(filter) && !'flow'.includes(filter))) continue;
+  await page.goto(`${baseUrl}${check.path}`);
+  await page.waitForTimeout(300);
+
+  const split = await page.evaluate((selector) => [...document.querySelectorAll(selector)]
+    .filter((el) => getComputedStyle(el).display.includes('flex')
+      && [...el.childNodes].some((node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim()))
+    .map((el) => el.textContent.replace(/\s+/g, ' ').trim().slice(0, 60)), check.selector);
+
+  if (split.length) {
+    console.log(`\n## Fließtext als Flex-Container (${check.path}, ${check.selector})`);
+    for (const text of split) console.log(`  ${text}`);
+    total += split.length;
+  }
+}
+
 await browser.close();
 console.log(`\n${total} Befunde (Toleranz ${tolerance}px, ${mobile ? 'mobil' : 'Desktop'})`);
 process.exit(total ? 1 : 0);

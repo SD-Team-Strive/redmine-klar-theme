@@ -74,6 +74,17 @@
     gap: $spaceXxs $spaceXs;
   }
 
+  // "Von Anna Becker vor weniger als 1 Minute aktualisiert" als Fließtext:
+  // als Flex-Container (Desktop) würde jedes Textstück eine eigene Spalte
+  // und einzeln umbrechen, sobald die Zeile zu lang ist
+  .journals h4.journal-header > span.journal-info {
+    display: block;
+
+    .avatar {
+      vertical-align: middle;
+    }
+  }
+
   .journals .journal-content {
     padding: 0 $spaceXs;
   }

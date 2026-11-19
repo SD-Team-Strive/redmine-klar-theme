@@ -1,8 +1,9 @@
 @use "../../variables" as *;
 
 $editorBorder:            $colorBorder !default;
-$editorFocusBorder:       $neutral500 !default;
-$editorFocusGlow:         rgba($neutral400, 0.25) !default;
+// Fokus wie bei Eingabefeldern: nach innen, nichts ragt nach außen
+$editorFocusBorder:       $neutral700 !default;
+$editorFocusShadow:       inset 0 0 0 $borderWidth $editorFocusBorder !default;
 $editorRadius:            $radiusMd !default;
 $editorToolbarBackground: $colorBgSubtle !default;
 $editorToolbarPadding:    $spaceXxs $spaceXs !default;

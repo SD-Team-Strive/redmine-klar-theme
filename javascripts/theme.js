@@ -26,9 +26,33 @@
     const match = value.match(/^url\(["']?(.*?)["']?\)$/);
     return match ? match[1] : "";
   }
-  function showFallback(link) {
-    link.textContent = applicationInitial();
-    link.setAttribute("data-fallback", "");
+  function projectIcon() {
+    const meta = document.querySelector('meta[name="project-icon"]');
+    if (!meta) {
+      return null;
+    }
+    return { url: meta.content, color: meta.dataset.color || "", letter: meta.dataset.letter || "" };
+  }
+  function face(className, url, letter) {
+    const element = document.createElement("span");
+    element.className = `theme-logo-face ${className}`;
+    const showLetter = () => {
+      element.textContent = letter;
+      element.setAttribute("data-letter", "");
+    };
+    if (url) {
+      const image = document.createElement("img");
+      image.src = url;
+      image.alt = "";
+      image.addEventListener("error", () => {
+        image.remove();
+        showLetter();
+      });
+      element.appendChild(image);
+    } else {
+      showLetter();
+    }
+    return element;
   }
   function insertHeaderLogo() {
     const header = document.getElementById("header");
@@ -42,15 +66,15 @@
     if (target.label) {
       link.setAttribute("aria-label", target.label);
     }
-    const url = logoUrl();
-    if (url) {
-      const image = document.createElement("img");
-      image.src = url;
-      image.alt = "";
-      image.addEventListener("error", () => showFallback(link));
-      link.appendChild(image);
-    } else {
-      showFallback(link);
+    link.appendChild(face("theme-logo-instance", logoUrl(), applicationInitial()));
+    const project = projectIcon();
+    if (project) {
+      const projectFace = face("theme-logo-project", project.url, project.letter);
+      if (project.color) {
+        projectFace.style.setProperty("--project-color", project.color);
+      }
+      link.appendChild(projectFace);
+      link.setAttribute("data-project-icon", "");
     }
     header.insertBefore(link, header.firstChild);
   }
@@ -150,9 +174,9 @@
     const preview = block.querySelector(".wiki-preview");
     return Boolean(textarea && preview) && getComputedStyle(textarea).display !== "none" && getComputedStyle(preview).display !== "none";
   }
-  function previewBody(block, text) {
+  function previewBody(block, text2) {
     const body = new URLSearchParams();
-    body.append("text", text);
+    body.append("text", text2);
     const form = block.closest("form");
     if (form) {
       form.querySelectorAll(".attachments_fields input, [data-preview-param]").forEach((field) => {
@@ -170,11 +194,11 @@
     if (!textarea || !preview || !url) {
       return;
     }
-    const text = textarea.value;
-    if (lastRendered.get(block) === text) {
+    const text2 = textarea.value;
+    if (lastRendered.get(block) === text2) {
       return;
     }
-    lastRendered.set(block, text);
+    lastRendered.set(block, text2);
     const token = document.querySelector('meta[name="csrf-token"]')?.content;
     const response = await fetch(url, {
       method: "POST",
@@ -184,9 +208,9 @@
         "X-Requested-With": "XMLHttpRequest",
         ...token ? { "X-CSRF-Token": token } : {}
       },
-      body: previewBody(block, text)
+      body: previewBody(block, text2)
     });
-    if (response.ok && lastRendered.get(block) === text) {
+    if (response.ok && lastRendered.get(block) === text2) {
       preview.innerHTML = await response.text();
     }
   }
@@ -247,12 +271,12 @@
   var AUTHOR_URL = "https://stbt.de/";
   var BY_WORD = { de: "von" };
   var DEFAULT_BY_WORD = "by";
-  function externalLink(text, href) {
+  function externalLink(text2, href) {
     const link = document.createElement("a");
     link.href = href;
     link.target = "_blank";
     link.rel = "noopener";
-    link.textContent = text;
+    link.textContent = text2;
     return link;
   }
   function insertFooterCredit() {
@@ -277,12 +301,98 @@
     footer.append(credit);
   }
 
+  // src/js/queryFilters.js
+  var STORAGE_KEY2 = "klar-theme.query-filters";
+  function readOpen() {
+    try {
+      return localStorage.getItem(STORAGE_KEY2) === "open";
+    } catch {
+      return false;
+    }
+  }
+  function saveOpen(open) {
+    try {
+      localStorage.setItem(STORAGE_KEY2, open ? "open" : "closed");
+    } catch {
+    }
+  }
+  function text(element) {
+    return element ? element.textContent.replace(/\s+/g, " ").trim().replace(/^<<\s*(.*?)\s*>>$/, "$1") : "";
+  }
+  function filterValues(filter) {
+    const holder = filter.querySelector(".values > span");
+    if (!holder || holder.style.display === "none") {
+      return [];
+    }
+    const values = [];
+    holder.querySelectorAll("select").forEach((select) => {
+      [...select.selectedOptions].forEach((option) => values.push(text(option)));
+    });
+    holder.querySelectorAll('input:not([type="hidden"])').forEach((input) => {
+      if (input.value.trim()) {
+        values.push(input.value.trim());
+      }
+    });
+    return values;
+  }
+  function describeFilter(filter) {
+    const label = text(filter.querySelector(".field label"));
+    const operatorSelect = filter.querySelector(".operator select");
+    const operator = operatorSelect ? text(operatorSelect.selectedOptions[0]) : "";
+    const values = filterValues(filter);
+    if (!values.length) {
+      return operator ? `${label}: ${operator}` : label;
+    }
+    const isEquals = operatorSelect && operatorSelect.value === "=";
+    return isEquals ? `${label}: ${values.join(", ")}` : `${label} ${operator}: ${values.join(", ")}`;
+  }
+  function buildSummary(fieldset) {
+    return [...fieldset.querySelectorAll("#filters-table .filter")].filter((filter) => filter.querySelector('.field input[type="checkbox"]')?.checked).map(describeFilter).filter(Boolean).join(" \xB7 ");
+  }
+  function updateSummary(fieldset, legend) {
+    let summary = legend.querySelector(".query-filter-summary");
+    if (!summary) {
+      summary = document.createElement("span");
+      summary.className = "query-filter-summary";
+      legend.appendChild(summary);
+    }
+    const value = buildSummary(fieldset);
+    summary.textContent = value;
+    summary.title = value;
+  }
+  function setUp() {
+    const fieldset = document.querySelector("#query_form fieldset#filters");
+    const legend = fieldset?.querySelector(":scope > legend");
+    if (!legend || typeof window.toggleFieldset !== "function") {
+      return;
+    }
+    updateSummary(fieldset, legend);
+    if (!readOpen() && !fieldset.classList.contains("collapsed")) {
+      window.toggleFieldset(legend);
+    }
+    legend.addEventListener("click", () => {
+      const open = !fieldset.classList.contains("collapsed");
+      saveOpen(open);
+      if (!open) {
+        updateSummary(fieldset, legend);
+      }
+    });
+  }
+  function collapseQueryFilters() {
+    if (window.jQuery) {
+      window.jQuery(setUp);
+    } else {
+      setUp();
+    }
+  }
+
   // src/js/theme.js
   function init() {
     insertHeaderLogo();
     promoteIssueSubject();
     enableEditorLivePreview();
     insertFooterCredit();
+    collapseQueryFilters();
   }
   claimBrandingLogo();
   if (document.readyState === "loading") {

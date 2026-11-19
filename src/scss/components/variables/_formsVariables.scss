@@ -5,7 +5,10 @@ $formControlPaddingX:     $spaceSm * 0.8 !default;
 $formControlRadius:       $radiusBase !default;
 $formControlBorder:       $colorBorder !default;
 $formControlHoverBorder:  $colorBorderStrong !default;
-$formControlFocusBorder:  $neutral500 !default;
+$formControlFocusBorder:  $neutral700 !default;
+// Fokus nach innen: Rahmen wirkt doppelt so stark, nichts ragt nach außen
+// (ein äußerer Ring wurde in vollbreiten Feldern abgeschnitten)
+$formControlFocusShadow:  inset 0 0 0 $borderWidth $formControlFocusBorder !default;
 $formControlDisabledBg:   $colorBgMuted !default;
 $formPlaceholderColor:    $colorTextPlaceholder !default;
 $formCheckAccent:         $neutral900 !default;

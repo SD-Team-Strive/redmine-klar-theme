@@ -37,7 +37,8 @@ enough, a small script fills the gap; without JavaScript Redmine keeps working a
   text colour instead of coloured borders.
 - Consistent icons: characters Redmine renders as text (≡, ^, ×, ✓ …) are replaced by
   clean line icons, vertically centred with their labels.
-- Inputs, selects, checkboxes and buttons share one style, with a clear focus ring.
+- Inputs, selects, checkboxes and buttons share one style; focused text fields get a
+  strong inner border that is never clipped.
 
 **Header and navigation**
 - Logo of your installation in the header (or a tile with the first letter of the
@@ -58,14 +59,23 @@ enough, a small script fills the gap; without JavaScript Redmine keeps working a
   a button in the toolbar, the choice is remembered.
 
 **Lists and pages**
-- Filters as a card with a clear footer, calmer and more spacious tables.
+- Filters as a card with a clear footer, collapsed on load with a one-line summary of
+  the active filters ("Status is not: Resolved · Assignee: me"); the open/closed state
+  is remembered.
+- Grouped lists (e.g. by status) as sections: every group its own card with a clear
+  heading.
+- Project list as a grid of cards, equal in height per row; subprojects as a quiet list
+  at the foot of their project's card.
+- Calmer and more spacious tables.
 - Activity, roadmap, calendar, Gantt, wiki, forums, "My page", login and administration
   in the same style; many small alignment issues fixed.
 
 **Mobile**
 - Header with logo, project selector and menu button; the menu is an animated side
   panel with separated sections.
-- Lists as rows instead of wide tables, compact pagination.
+- Lists as rows instead of wide tables, with a fixed order: subject; number and
+  project; status, priority and assignee; date and time. Empty values (0 %, 0:00,
+  normal priority) are left out. Compact pagination.
 - Forms with the label above the field and 16 px text (no zooming on iOS).
 
 ## Installation
@@ -123,6 +133,17 @@ yellow tile with the first letter of the application title is shown.
 **Favicon:** Klar ships its own mark (`favicon/favicon.ico`). A custom favicon can be
 uploaded with the redmine-branding plugin.
 
+**Profile pictures:** with the plugin
+[redmine-avatars](https://github.com/stbt-de/redmine-avatars) users upload their own
+picture instead of using Gravatar; Klar shows it round like the initials.
+
+**Project icons:** with the plugin
+[redmine-project-icons](https://github.com/stbt-de/redmine-project-icons) every project
+gets an icon and a colour, inherited by its subprojects – in the project list, issue
+lists, the header, the project selector, calendar and Gantt. On desktop the project icon
+takes the place of the logo on project pages; on mobile the logo stays (the way back to
+the start page) and the project icon appears in the project selector.
+
 ## Development
 
 Requirements: Docker, Node.js.
@@ -179,7 +200,8 @@ src/js/                  → javascripts/theme.js (esbuild)
 ├── headerLogo.js         logo link in the header + fallback tile
 ├── issueSubjectTitle.js  issue view: subject as page title
 ├── editorLivePreview.js  text editor: preview on/off and live
-└── footerCredit.js       footer: "Theme: Klar by stbt.de"
+├── footerCredit.js       footer: "Theme: Klar by stbt.de"
+└── queryFilters.js       lists: filters collapsed with a summary
 ```
 
 - Every entry file first imports its **Redmine original** and layers the changes on

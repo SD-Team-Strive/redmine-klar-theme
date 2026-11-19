@@ -67,6 +67,18 @@ div + .drdn-items {
   margin: 2px $spaceXs 0 0;
 }
 
+// Projektauswahl: kein Platz für ein Häkchen (Einträge und Überschriften
+// rückten sonst weit ein) – das aktuelle Projekt steht ohnehin im Auslöser,
+// in der Liste ist es leicht hinterlegt
+#project-jump .drdn-items.selection > *::before,
+#project-jump .drdn-items.selection > *.selected::before {
+  content: none;
+}
+
+#project-jump .drdn-items.selection > *.selected {
+  background-color: $colorActiveBg;
+}
+
 // "…"-Menüs neben Überschriften und Journalen
 .contextual .drdn-content,
 .journal-actions .drdn-content {

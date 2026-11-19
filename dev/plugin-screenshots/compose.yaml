@@ -1,0 +1,26 @@
+# Eigene Redmine-Instanz für die Screenshots der Plugins – mit erfundenen
+# Daten, getrennt von der lokalen Testinstanz (eigener Port, eigene Volumes).
+# Aufruf über dev/plugin-screenshots/run.sh
+services:
+  redmine:
+    image: redmine:${REDMINE_VERSION:-7.0}
+    ports:
+      - "3091:3000"
+    environment:
+      SECRET_KEY_BASE: plugin-screenshots-only
+      REDMINE_PLUGINS_MIGRATE: "1"
+    volumes:
+      - files:/usr/src/redmine/files
+      - sqlite:/usr/src/redmine/sqlite
+      - ../../stylesheets:/usr/src/redmine/themes/klar/stylesheets:ro
+      - ../../fonts:/usr/src/redmine/themes/klar/fonts:ro
+      - ../../javascripts:/usr/src/redmine/themes/klar/javascripts:ro
+      - ../../favicon:/usr/src/redmine/themes/klar/favicon:ro
+      - ../../dev:/usr/src/redmine/dev:ro
+      - ../../../redmine-branding:/usr/src/redmine/plugins/redmine_branding:ro
+      - ../../../redmine-avatars:/usr/src/redmine/plugins/redmine_avatars:ro
+      - ../../../redmine-project-icons:/usr/src/redmine/plugins/redmine_project_icons:ro
+
+volumes:
+  files:
+  sqlite:

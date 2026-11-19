@@ -1,6 +1,6 @@
 {
   "name": "redmine-klar-theme",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Nüchternes, klar strukturiertes Redmine-Theme mit Inter",
   "scripts": {
@@ -11,7 +11,8 @@
     "reload": "npm run build && docker compose restart redmine && node dev/wait-for-redmine.mjs",
     "screenshots": "node dev/screenshots.mjs",
     "screenshots:readme": "node dev/readme-screenshots.mjs",
-    "check:alignment": "node dev/check-alignment.mjs"
+    "check:alignment": "node dev/check-alignment.mjs",
+    "screenshots:plugins": "dev/plugin-screenshots/run.sh"
   },
   "devDependencies": {
     "esbuild": "0.28.2",

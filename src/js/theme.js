@@ -12,18 +12,21 @@
 //   issueSubjectTitle.js  Ticket-Ansicht: Betreff als Seitentitel
 //   editorLivePreview.js  Text-Editor: Vorschau ein/aus und live
 //   footerCredit.js       Footer: "Theme: Klar von stbt.de"
+//   queryFilters.js       Listen: Filter eingeklappt mit Zusammenfassung
 // =============================================================================
 
 import { claimBrandingLogo, insertHeaderLogo } from './headerLogo.js';
 import { promoteIssueSubject } from './issueSubjectTitle.js';
 import { enableEditorLivePreview } from './editorLivePreview.js';
 import { insertFooterCredit } from './footerCredit.js';
+import { collapseQueryFilters } from './queryFilters.js';
 
 function init() {
   insertHeaderLogo();
   promoteIssueSubject();
   enableEditorLivePreview();
   insertFooterCredit();
+  collapseQueryFilters();
 }
 
 // Logo stellt das Theme selbst dar (Plugin redmine_branding fügt dann keins ein)

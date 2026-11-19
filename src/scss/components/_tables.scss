@@ -4,6 +4,7 @@
 // =============================================================================
 
 @use "../variables" as *;
+@use "../mixins" as *;
 @use "variables/tablesVariables" as *;
 
 table.list,
@@ -124,6 +125,105 @@ tr.group td {
   a.toggle-all {
     color: $tableMutedColor;
   }
+}
+
+// -----------------------------------------------------------------------------
+// Gruppierte Listen als Abschnitte (Desktop):
+//   [ Spaltenkopf                     ]
+//   ⌄ Neu  15
+//   [ Ticket … / Ticket …             ]
+//   ⌄ In Bearbeitung  4
+//   [ Ticket …                        ]
+// Die Tabelle verliert ihren gemeinsamen Rahmen; Kopf und jede Gruppe werden
+// eigene Karten, die Gruppenköpfe stehen auf Seitengrau mit Luft davor.
+// Rahmen und Ecken sitzen deshalb an den Zellen (border-collapse: separate).
+// Mobil sind die Zeilen Blöcke: eigene Variante in mobile/_lists.scss.
+// -----------------------------------------------------------------------------
+
+$groupedList: "table.list:has(> tbody > tr.group)";
+
+@include desktop {
+#{$groupedList} {
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+
+  // Spaltenkopf als eigene Karte
+  > thead th {
+    border-top: $borderWidth solid $tableBorderColor;
+
+    &:first-child {
+      border-left: $borderWidth solid $tableBorderColor;
+      border-radius: $tableRadius 0 0 $tableRadius;
+    }
+
+    &:last-child {
+      border-right: $borderWidth solid $tableBorderColor;
+      border-radius: 0 $tableRadius $tableRadius 0;
+    }
+  }
+
+  // Gruppenkopf: ohne Fläche und Rahmen, mit Abstand davor
+  > tbody > tr.group > td {
+    padding: $tableGroupGap $spaceXxs $spaceXs;
+    font-size: $tableGroupFontSize;
+    background-color: transparent;
+    border: 0;
+
+    span.name {
+      font-weight: $fontWeightSemibold;
+      color: $colorTextPrimary;
+    }
+  }
+
+  > tbody > tr.group:hover {
+    background-color: transparent;
+  }
+
+  // Tickets einer Gruppe: Karte aus den Zellen
+  > tbody > tr:not(.group) > td {
+    background-color: $colorBgCard;
+
+    &:first-child {
+      border-left: $borderWidth solid $tableBorderColor;
+    }
+
+    &:last-child {
+      border-right: $borderWidth solid $tableBorderColor;
+    }
+  }
+
+  // Erste Zeile einer Gruppe: obere Ecken
+  > tbody > tr.group + tr:not(.group) > td {
+    border-top: $borderWidth solid $tableBorderColor;
+
+    &:first-child {
+      border-top-left-radius: $tableRadius;
+    }
+
+    &:last-child {
+      border-top-right-radius: $tableRadius;
+    }
+  }
+
+  // Letzte Zeile einer Gruppe: Rahmen unten, untere Ecken
+  > tbody > tr:not(.group):is(:has(+ tr.group), :last-child) > td {
+    border-bottom: $borderWidth solid $tableBorderColor;
+
+    &:first-child {
+      border-bottom-left-radius: $tableRadius;
+    }
+
+    &:last-child {
+      border-bottom-right-radius: $tableRadius;
+    }
+  }
+
+  // Hover über die Zellen (die Zeile selbst hat keine Fläche mehr)
+  > tbody > tr:not(.group):hover > td {
+    background-color: $tableRowHoverBackground;
+  }
+}
 }
 
 // Ticketliste: Text links, Werte nicht umbrechen

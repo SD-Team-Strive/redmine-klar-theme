@@ -357,11 +357,17 @@ span.icon-checked:has(:not(a svg.icon-svg)) svg.icon-svg {
   }
   #header > .theme-logo {
     grid-area: logo;
+    align-self: end;
   }
   #header > h1 {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    min-height: 40px;
+  }
+  #header > h1 > .current-project {
+    display: flex;
+    align-items: center;
     min-height: 40px;
   }
   #header > #quick-search {
@@ -389,20 +395,44 @@ span.icon-checked:has(:not(a svg.icon-svg)) svg.icon-svg {
 .theme-logo:hover {
   text-decoration: none;
 }
+.theme-logo .theme-logo-face {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
 .theme-logo img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
+  border-radius: inherit;
 }
-.theme-logo[data-fallback] {
+.theme-logo .theme-logo-face[data-letter] {
   font-size: 18px;
   font-weight: 600;
   line-height: 1;
   color: #0a0a0a;
   background-color: #fcea2b;
 }
+.theme-logo .theme-logo-project[data-letter] {
+  color: #ffffff;
+  background-color: var(--project-color, #fcea2b);
+}
+.theme-logo[data-project-icon] .theme-logo-instance {
+  display: none;
+}
 
+@media screen and (max-width: 899px) {
+  .theme-logo[data-project-icon] .theme-logo-instance {
+    display: flex;
+  }
+  .theme-logo .theme-logo-project {
+    display: none;
+  }
+}
 #quick-search {
   float: none;
   display: flex;
@@ -616,6 +646,12 @@ span.icon-checked:has(:not(a svg.icon-svg)) svg.icon-svg {
   font-size: 1.5rem;
   font-weight: 600;
   line-height: 32px;
+}
+#content > h2 img.avatar {
+  width: 32px;
+  height: 32px;
+  margin: 0 8px 0 0;
+  vertical-align: top;
 }
 #content h3 {
   margin: 20px 0 12px;
@@ -1048,9 +1084,9 @@ textarea:disabled {
 :is(input[type=text], input[type=password], input[type=date], input[type=number],
 input[type=email], input[type=url], input[type=search], input[type=tel],
 input[type=time], input:not([type]), select, textarea):is(:focus, :active) {
-  border-color: #737373;
+  border-color: #404040;
   outline: none;
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #a1a1a1;
+  box-shadow: inset 0 0 0 1px #404040;
 }
 
 textarea {
@@ -1436,6 +1472,67 @@ tr.group td a.toggle-all {
   color: #737373;
 }
 
+@media screen and (min-width: 900px) {
+  table.list:has(> tbody > tr.group) {
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+  table.list:has(> tbody > tr.group) > thead th {
+    border-top: 1px solid #e5e5e5;
+  }
+  table.list:has(> tbody > tr.group) > thead th:first-child {
+    border-left: 1px solid #e5e5e5;
+    border-radius: 10px 0 0 10px;
+  }
+  table.list:has(> tbody > tr.group) > thead th:last-child {
+    border-right: 1px solid #e5e5e5;
+    border-radius: 0 10px 10px 0;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr.group > td {
+    padding: 20px 4px 8px;
+    font-size: 0.875rem;
+    background-color: transparent;
+    border: 0;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr.group > td span.name {
+    font-weight: 600;
+    color: #0a0a0a;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr.group:hover {
+    background-color: transparent;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr:not(.group) > td {
+    background-color: #ffffff;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr:not(.group) > td:first-child {
+    border-left: 1px solid #e5e5e5;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr:not(.group) > td:last-child {
+    border-right: 1px solid #e5e5e5;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr.group + tr:not(.group) > td {
+    border-top: 1px solid #e5e5e5;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr.group + tr:not(.group) > td:first-child {
+    border-top-left-radius: 10px;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr.group + tr:not(.group) > td:last-child {
+    border-top-right-radius: 10px;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr:not(.group):is(:has(+ tr.group), :last-child) > td {
+    border-bottom: 1px solid #e5e5e5;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr:not(.group):is(:has(+ tr.group), :last-child) > td:first-child {
+    border-bottom-left-radius: 10px;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr:not(.group):is(:has(+ tr.group), :last-child) > td:last-child {
+    border-bottom-right-radius: 10px;
+  }
+  table.list:has(> tbody > tr.group) > tbody > tr:not(.group):hover > td {
+    background-color: #fafafa;
+  }
+}
 tr.issue,
 tr.time-entry {
   text-align: left;
@@ -1955,6 +2052,15 @@ div + .drdn-items {
   margin: 2px 8px 0 0;
 }
 
+#project-jump .drdn-items.selection > *::before,
+#project-jump .drdn-items.selection > *.selected::before {
+  content: none;
+}
+
+#project-jump .drdn-items.selection > *.selected {
+  background-color: #e5e5e5;
+}
+
 .contextual .drdn-content,
 .journal-actions .drdn-content {
   top: 100%;
@@ -2271,6 +2377,29 @@ span[role=img].avatar {
   border-radius: 13px 13px 0 0;
 }
 
+.query-filter-summary {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-left: 8px;
+  overflow: hidden;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: #585858;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+fieldset:not(.collapsed) > legend > .query-filter-summary {
+  display: none;
+}
+@media screen and (max-width: 899px) {
+  .query-filter-summary {
+    display: -webkit-box;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
 #filters-table {
   float: none;
   display: grid;
@@ -2440,6 +2569,7 @@ span[role=img].avatar {
 #query_form_with_buttons > p.buttons > a.icon {
   gap: 4px;
   height: 30px;
+  margin-left: 0;
   padding: 0 12px;
   font-weight: 500;
   color: #404040;
@@ -3369,7 +3499,13 @@ ul.pages-hierarchy {
 }
 
 #projects-index {
-  column-gap: 16px;
+  columns: auto;
+}
+#projects-index > ul.projects.root {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+  gap: 16px;
+  margin: 0 0 16px;
 }
 #projects-index ul.projects li.root {
   background-color: #ffffff;
@@ -3377,9 +3513,25 @@ ul.pages-hierarchy {
   border-radius: 14px;
   box-shadow: 0 1px 2px rgba(10, 10, 10, 0.05);
   padding: 20px;
-  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  break-inside: auto;
+}
+#projects-index ul.projects :is(div.root, div.child) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 4px;
+}
+#projects-index ul.projects :is(div.root, div.child) > div.description {
+  flex: 0 0 100%;
+}
+#projects-index ul.projects :is(div.root, div.child) :is(.my-project, .icon-bookmarked-project) svg {
+  margin: 0;
 }
 #projects-index ul.projects div.root a.project {
+  margin: 0;
   font-size: 1rem;
   font-weight: 600;
 }
@@ -3388,13 +3540,42 @@ ul.pages-hierarchy {
   font-size: 0.8125rem;
   color: #585858;
 }
-#projects-index li.root ul.projects {
-  margin-top: 12px;
-  padding-left: 16px;
-  border-left: 1px solid #e5e5e5;
+#projects-index ul.projects div.description > :last-child {
+  margin-bottom: 0;
+}
+#projects-index li.root > ul.projects {
+  margin: 16px 0 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid #e5e5e5;
 }
 #projects-index ul.projects li.child {
-  margin-top: 12px;
+  margin: 0;
+}
+#projects-index ul.projects li.child > div.child {
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+#projects-index ul.projects li.child > div.child a.project {
+  font-weight: 500;
+  color: #0a0a0a;
+}
+#projects-index ul.projects li.child > div.child div.description {
+  padding-top: 0;
+}
+#projects-index li.root > ul.projects > li.child:last-child > div.child:only-child,
+#projects-index li.root > ul.projects > li.child:last-child:not(:has(ul.projects)) > div.child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+#projects-index li.child > ul.projects {
+  margin: 0;
+  padding: 0 0 0 16px;
+  border: 0;
+}
+
+body.controller-projects.action-index span.my-project {
+  display: none;
 }
 
 ul.projects li.root div.archived,
@@ -3823,6 +4004,19 @@ ul.cal {
 
 .cal .calbody .icon {
   padding: 0;
+}
+
+.cal .calbody span.icon-package {
+  position: relative;
+  display: block;
+  padding-left: 20px;
+}
+.cal .calbody span.icon-package svg.icon-svg {
+  position: absolute;
+  top: calc((1lh - 16px) * 0.5);
+  left: 0;
+  width: 16px;
+  height: 16px;
 }
 
 div.tooltip:hover span.tip {

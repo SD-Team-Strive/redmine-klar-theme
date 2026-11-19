@@ -30,11 +30,11 @@
     border-color: $colorBorderStrong;
   }
 
-  // Fokus: dunklerer Rand mit weichem Schein (der Ring der Eingabefelder
-  // wirkt um die große Fläche wie eine doppelte Linie)
+  // Fokus: dunklerer, doppelt starker Rand nach innen – wie bei den
+  // Eingabefeldern; ein Schein außen wurde mobil abgeschnitten
   &:focus-within {
     border-color: $editorFocusBorder;
-    box-shadow: 0 0 0 3px $editorFocusGlow;
+    box-shadow: $editorFocusShadow;
   }
 }
 

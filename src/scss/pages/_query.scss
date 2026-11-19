@@ -82,6 +82,32 @@
   border-radius: ($queryPanelRadius - 1px) ($queryPanelRadius - 1px) 0 0;
 }
 
+// Eingeklappte Filter: aktive Filter kompakt in der Zeile
+// (src/js/queryFilters.js); ausgeklappt sieht man die Felder selbst
+.query-filter-summary {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-left: $spaceXs;
+  overflow: hidden;
+  font-size: $fontSizeSm;
+  font-weight: $fontWeightRegular;
+  color: $colorTextMuted;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  fieldset:not(.collapsed) > legend > & {
+    display: none;
+  }
+
+  // mobil darf die Zusammenfassung umbrechen (höchstens zwei Zeilen)
+  @include mobile {
+    display: -webkit-box;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
 // -----------------------------------------------------------------------------
 // Filterzeilen
 // -----------------------------------------------------------------------------
@@ -286,6 +312,9 @@
   > a.icon {
     gap: $spaceXxs;
     height: $queryFooterControlHeight;
+    // Abstand kommt vom gap der Zeile; Redmines margin-left liefe beim
+    // Umbruch (mobil) als Einzug mit
+    margin-left: 0;
     padding: 0 $spaceSm;
     font-weight: $fontWeightMedium;
     color: $colorTextSecondary;

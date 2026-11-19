@@ -30,6 +30,16 @@
     line-height: $titleRowHeight;
   }
 
+  // Avatar im Seitentitel ("Mein Konto", Benutzer bearbeiten): höchstens so
+  // hoch wie die Titelzeile – Redmine setzt 50px (bei eigenen Bildern aus
+  // dem Plugin redmine_avatars immer), die Aktionen daneben verrutschten
+  > h2 img.avatar {
+    width: $titleRowHeight;
+    height: $titleRowHeight;
+    margin: 0 $spaceXs 0 0;
+    vertical-align: top;
+  }
+
   h3 {
     margin: $spaceLg 0 $spaceSm;
   }
