@@ -33,8 +33,9 @@
     line-height: $lineHeightBase;
   }
 
-  // Felder volle Breite (Redmine setzt z. B. Auswahlfelder im Ticket auf 60%)
-  #content .tabular :is(
+  // Felder volle Breite (Redmine setzt z. B. Auswahlfelder im Ticket auf 60%).
+  // Auch in Dialogen: jQuery UI hängt sie an body, außerhalb von #content
+  :is(#content, .ui-dialog) .tabular :is(
     input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="submit"]),
     select,
     textarea
@@ -45,7 +46,8 @@
 
   // responsive.css setzt Checkboxen in Formularen auf width: auto – mit
   // eigenem Aussehen (appearance: none) würde das Kästchen schrumpfen
-  #content .tabular input:is([type="checkbox"], [type="radio"]) {
+  // (in Dialogen sonst 2px breit: "Neue Wiki-Seite" → Übergeordnete Seite)
+  :is(#content, .ui-dialog) .tabular input:is([type="checkbox"], [type="radio"]) {
     width: $mobileCheckSize;
     max-width: none;   // responsive.css: 95% – in der 16px-Hülle sonst 15,2px
     height: $mobileCheckSize;

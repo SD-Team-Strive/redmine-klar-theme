@@ -15,6 +15,7 @@
 //   queryFilters.js       Listen: Filter eingeklappt mit Zusammenfassung
 //   issueListMobile.js    Ticketliste mobil: ohne Doppeltes, Auswahl auf Wunsch
 //   myPageAddBlock.js     Meine Seite: "Hinzufügen" als ein Knopf
+//   dialogs.js            Dialoge: "Schließen" übersetzt, Kontextmenü zu
 // =============================================================================
 
 import { claimBrandingLogo, insertHeaderLogo } from './headerLogo.js';
@@ -24,6 +25,7 @@ import { insertFooterCredit } from './footerCredit.js';
 import { collapseQueryFilters } from './queryFilters.js';
 import { enhanceIssueListMobile } from './issueListMobile.js';
 import { labelMyPageAddBlock } from './myPageAddBlock.js';
+import { enhanceDialogs } from './dialogs.js';
 
 function init() {
   insertHeaderLogo();
@@ -33,6 +35,7 @@ function init() {
   collapseQueryFilters();
   enhanceIssueListMobile();
   labelMyPageAddBlock();
+  enhanceDialogs();
 }
 
 // Logo stellt das Theme selbst dar (Plugin redmine_branding fügt dann keins ein)

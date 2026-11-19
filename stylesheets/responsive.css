@@ -947,13 +947,13 @@
     text-align: left;
     line-height: 1.5;
   }
-  #content .tabular :is(input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=submit]),
+  :is(#content, .ui-dialog) .tabular :is(input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=submit]),
   select,
   textarea) {
     width: 100%;
     max-width: 100%;
   }
-  #content .tabular input:is([type=checkbox], [type=radio]) {
+  :is(#content, .ui-dialog) .tabular input:is([type=checkbox], [type=radio]) {
     width: 16px;
     max-width: none;
     height: 16px;

@@ -83,6 +83,10 @@ enough, a small script fills the gap; without JavaScript Redmine keeps working a
   values (0 %, 0:00) are left out. Compact pagination.
 - Forms with the label above the field and 16 px text (no zooming on iOS).
 
+**Dialogs** (add watchers, CSV/PDF export, new category or version, members, new wiki
+page …): a card like the blocks, the title as a heading and a quiet close button instead
+of jQuery UI's grey title bar; at most 760 px wide, on mobile the screen width.
+
 ## Installation
 
 The folder in `themes/` must be named `klar` – that is the name shown in Redmine's
@@ -170,6 +174,7 @@ npm run screenshots:readme              # the screenshots of this README to docs
 npm run check:alignment                 # icons/rows vertically aligned? (desktop)
 npm run check:alignment -- --mobile     # the same on mobile
 npm run check:issue-list                # mobile issue list: hidden columns, Select, tap, long press
+npm run check:dialogs                   # dialogs (watchers, CSV export, new category …): width, close, checkboxes
 ```
 
 `check:alignment` measures on every page whether icons are centred with their text and

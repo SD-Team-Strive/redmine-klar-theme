@@ -610,6 +610,22 @@
     new MutationObserver(run).observe(form, { childList: true });
   }
 
+  // src/js/dialogs.js
+  var CLOSE_LABELS = { de: "Schlie\xDFen", en: "Close" };
+  function enhanceDialogs() {
+    const $ = window.jQuery;
+    if (!$?.ui?.dialog) {
+      return;
+    }
+    const language = (document.documentElement.lang || "").slice(0, 2).toLowerCase();
+    $.ui.dialog.prototype.options.closeText = CLOSE_LABELS[language] || CLOSE_LABELS.en;
+    $(document).on("dialogopen", () => {
+      if (typeof window.contextMenuHide === "function") {
+        window.contextMenuHide();
+      }
+    });
+  }
+
   // src/js/theme.js
   function init() {
     insertHeaderLogo();
@@ -619,6 +635,7 @@
     collapseQueryFilters();
     enhanceIssueListMobile();
     labelMyPageAddBlock();
+    enhanceDialogs();
   }
   claimBrandingLogo();
   if (document.readyState === "loading") {

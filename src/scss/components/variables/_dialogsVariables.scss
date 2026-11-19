@@ -1,0 +1,10 @@
+@use "../../variables" as *;
+
+// Dialoge (jQuery UI, Redmines showModal)
+$dialogPadding:        $spaceLg !default;
+$dialogMaxWidth:       760px !default;
+$dialogPaddingMobile:  $spaceMd !default;
+$dialogCloseSize:      32px !default;   // Schließen-Knopf, wie die Icon-Knöpfe
+$dialogCloseIconSize:  14px !default;   // Kreuz darin
+$dialogCloseStroke:    1.75px !default; // Strichstärke wie die SVG-Icons
+$dialogOverlayOpacity: 0.4 !default;

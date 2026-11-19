@@ -1,0 +1,147 @@
+// =============================================================================
+// Dialoge (jQuery UI): alle über Redmines showModal – Beobachter, neue
+// Kategorie/Version im Ticket, Mitglieder, Gruppenbenutzer, E-Mail-Adressen,
+// Passwortabfrage, neue Wiki-Seite, CSV/PDF-Export der Listen …
+//
+// Statt grauer Titelleiste und Bild-Icon: Karte wie die Blöcke, Titel als
+// Überschrift, Schließen als ruhiges Kreuz im Stil der Icon-Knöpfe.
+// Tooltip des Schließen-Knopfs auf Deutsch und offenes Kontextmenü
+// schließen: js/dialogs.js.
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/dialogsVariables" as *;
+
+.ui-dialog.modal {
+  // Redmine öffnet manche Dialoge fast so breit wie der Bildschirm
+  // ("Neues Mitglied"); jQuery UI zentriert mit der tatsächlichen Breite
+  max-width: $dialogMaxWidth;
+  padding: 0;
+  color: $colorTextPrimary;
+  background: $colorBgCard;
+  border: $borderWidth solid $colorBorder;
+  border-radius: $radiusLg;
+  box-shadow: $shadowLg;
+
+  // Kopf: Titel als Überschrift, Platz rechts für das Kreuz
+  .ui-dialog-titlebar {
+    padding: $dialogPadding ($dialogPadding + $dialogCloseSize) $spaceSm $dialogPadding;
+    color: $colorTextPrimary;
+    background: none;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .ui-dialog-title {
+    float: none;
+    width: auto;
+    margin: 0;
+    font-size: $fontSizeLg;
+    font-weight: $fontWeightSemibold;
+    line-height: $lineHeightTight;
+    white-space: normal;
+  }
+
+  // Schließen: Kreuz aus zwei Strichen statt jQuery-UI-Bild, Text nur für
+  // Screenreader (font-size 0, Beschriftung über title/aria)
+  .ui-dialog-titlebar-close {
+    position: absolute;
+    // mittig zur ersten Titelzeile
+    top: calc(#{$dialogPadding} - (#{$dialogCloseSize} - #{$fontSizeLg} * #{$lineHeightTight}) / 2);
+    right: $spaceSm;
+    width: $dialogCloseSize;
+    height: $dialogCloseSize;
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+    color: $colorTextMuted;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-radius: $radiusSm;
+
+    .ui-icon,
+    .ui-button-icon,
+    .ui-button-icon-space {
+      display: none;
+    }
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: $dialogCloseIconSize;
+      height: $dialogCloseStroke;
+      background-color: currentColor;
+      border-radius: $dialogCloseStroke;
+    }
+
+    &::before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &::after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    &:hover {
+      color: $colorTextPrimary;
+      background-color: $colorHoverBg;
+    }
+
+    &:focus-visible {
+      @include focusRing;
+    }
+  }
+
+  .ui-dialog-content {
+    padding: 0 $dialogPadding $dialogPadding;
+    color: inherit;
+    background: none;
+  }
+
+  // Formulare im Dialog (neue Kategorie, Version, Wiki-Seite …) bringen
+  // Redmines .box mit – im Dialog keine zweite Karte
+  .ui-dialog-content .box {
+    margin: 0 0 $spaceMd;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+
+  // Aktionen am Ende ohne zusätzlichen Abstand nach unten
+  .ui-dialog-content > form > p.buttons:last-child,
+  .ui-dialog-content > p.buttons:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.ui-widget-overlay {
+  background: $neutral950;
+  opacity: $dialogOverlayOpacity;
+}
+
+// Mobil: höchstens Bildschirmbreite (jQuery UI setzt die Breite fest,
+// z. B. 400px), weniger Innenabstand
+@include mobile {
+  .ui-dialog.modal {
+    max-width: calc(100vw - #{2 * $spaceMd});
+
+    .ui-dialog-titlebar {
+      padding: $dialogPaddingMobile ($dialogPaddingMobile + $dialogCloseSize) $spaceSm $dialogPaddingMobile;
+    }
+
+    .ui-dialog-titlebar-close {
+      top: calc(#{$dialogPaddingMobile} - (#{$dialogCloseSize} - #{$fontSizeLg} * #{$lineHeightTight}) / 2);
+      right: $spaceXs;
+    }
+
+    .ui-dialog-content {
+      padding: 0 $dialogPaddingMobile $dialogPaddingMobile;
+    }
+  }
+}
