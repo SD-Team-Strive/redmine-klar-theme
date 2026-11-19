@@ -38,6 +38,17 @@ const shots = [
     }),
   },
   { repo: 'redmine-project-icons', name: 'mobile-issues', path: `/projects/nordlicht${issueList}`, device: 'mobile' },
+  // Dashboard Blocks
+  { repo: 'redmine-dashboard-blocks', name: 'my-page', path: '/my/page', device: 'desktop', fullPage: true },
+  {
+    repo: 'redmine-dashboard-blocks', name: 'log-time', path: '/my/page', device: 'desktop',
+    element: '#block-quick_time_entry', padBottom: 220,
+    action: async (page) => {
+      await page.fill('.dashboard-blocks-issue-search', 'versand');
+      await page.waitForSelector('.dashboard-blocks-issue-option');
+    },
+  },
+  { repo: 'redmine-dashboard-blocks', name: 'mobile-my-page', path: '/my/page', device: 'mobile' },
 ];
 
 const devices = {
@@ -83,8 +94,13 @@ for (const [device, options] of Object.entries(devices)) {
         const outDir = resolve(workspace, shot.repo, 'docs/screenshots');
         mkdirSync(outDir, { recursive: true });
         const file = resolve(outDir, `${shot.name}.png`);
-        const clip = shot.clip ? { x: 0, y: 0, width: options.viewport.width, height: shot.clip.height } : undefined;
-        await page.screenshot({ path: file, clip });
+        let clip = shot.clip ? { x: 0, y: 0, width: options.viewport.width, height: shot.clip.height } : undefined;
+        // Einzelner Block, nach unten Platz für eine offene Trefferliste
+        if (shot.element) {
+          const box = await page.locator(shot.element).boundingBox();
+          clip = { x: box.x - 16, y: box.y - 16, width: box.width + 32, height: box.height + 32 + (shot.padBottom || 0) };
+        }
+        await page.screenshot({ path: file, clip, fullPage: Boolean(shot.fullPage) });
         console.log(`${shot.repo}/docs/screenshots/${shot.name}.png`);
       } catch (error) {
         failures++;

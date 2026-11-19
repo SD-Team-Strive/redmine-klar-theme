@@ -340,6 +340,7 @@
     padding: 0;
   }
   #content > .contextual > a,
+  #content > .contextual > .issue-list-select-toggle,
   #content > .contextual .drdn,
   p.buttons a {
     display: inline-flex;
@@ -356,15 +357,25 @@
     border-radius: 8px;
   }
   #content > .contextual > a:hover,
+  #content > .contextual > .issue-list-select-toggle:hover,
   #content > .contextual .drdn:hover,
   p.buttons a:hover {
     color: #0a0a0a;
     text-decoration: none;
   }
   #content > .contextual > a .icon-label,
+  #content > .contextual > .issue-list-select-toggle .icon-label,
   #content > .contextual .drdn .icon-label,
   p.buttons a .icon-label {
     margin-left: 0;
+  }
+  #content > .contextual > .issue-list-select-toggle {
+    font-family: inherit;
+    cursor: pointer;
+  }
+  #content > .contextual > .issue-list-select-toggle[aria-pressed=true] {
+    color: #0a0a0a;
+    background-color: #e5e5e5;
   }
   #content > .contextual .drdn {
     justify-content: center;
@@ -486,7 +497,7 @@
     flex-wrap: wrap;
     align-items: baseline;
     gap: 4px 12px;
-    padding: 12px 42px 12px 38px;
+    padding: 12px 48px 12px 38px;
     border-top: 1px solid #e5e5e5;
     white-space: normal;
   }
@@ -528,7 +539,8 @@
   table.list.issues > tbody > tr > td.checkbox, table.list.time-entries > tbody > tr > td.checkbox {
     position: absolute;
     top: calc(12px + (0.875rem * 1.5 - 16px) / 2);
-    left: 12px;
+    left: var(--list-check-left, 12px);
+    z-index: 2;
     width: auto;
     padding: 0;
     line-height: 0;
@@ -536,7 +548,8 @@
   table.list.issues > tbody > tr > td.buttons, table.list.time-entries > tbody > tr > td.buttons {
     position: absolute;
     top: calc(12px + (0.875rem * 1.5 - 36px) / 2);
-    right: 8px;
+    right: 12px;
+    z-index: 2;
   }
   table.list.issues > tbody > tr > td.block_column, table.list.time-entries > tbody > tr > td.block_column {
     flex: 0 0 100%;
@@ -553,37 +566,100 @@
   }
   table.list.issues > tbody > tr:not(.issue):not(.group):not(.time-entry), table.list.time-entries > tbody > tr:not(.issue):not(.group):not(.time-entry) {
     display: block;
-    padding: 0 42px 12px 38px;
+    padding: 0 48px 12px 38px;
   }
   table.list.issues > tbody > tr.issue {
+    --list-dot-left: 38px;
+    --list-text-start: 57px;
+    --list-row-end: 48px;
     row-gap: 4px;
+    padding-right: var(--list-row-end);
+    padding-left: var(--list-text-start);
     align-items: center;
+    -webkit-touch-callout: none;
   }
-  table.list.issues > tbody > tr.issue::before, table.list.issues > tbody > tr.issue::after {
+  table.list.issues > tbody > tr.issue::before {
     content: "";
+    order: 1;
     flex: 0 0 100%;
     height: 0;
   }
-  table.list.issues > tbody > tr.issue::before {
-    order: 2;
-  }
   table.list.issues > tbody > tr.issue::after {
-    order: 4;
+    content: "";
+    order: 5;
+    flex: 0 0 100%;
+    height: 0;
   }
   table.list.issues > tbody > tr.issue > td {
-    order: 5;
+    order: 6;
+  }
+  table.list.issues > tbody > tr.issue > td.assigned_to {
+    order: 2;
+  }
+  table.list.issues > tbody > tr.issue > td.project {
+    order: 3;
+    flex: 0 1 auto;
+    max-width: calc(100% - 20px - 5rem);
+    overflow: hidden;
+  }
+  table.list.issues > tbody > tr.issue > td.project > a {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  table.list.issues > tbody > tr.issue > td.id {
+    order: 4;
   }
   table.list.issues > tbody > tr.issue > td.subject {
     order: 0;
+    flex: 1 1 0;
   }
   table.list.issues > tbody > tr.issue > td.subject a {
+    display: -webkit-box;
+    overflow: hidden;
     font-weight: 500;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
-  table.list.issues > tbody > tr.issue > td:is(.id, .project, .tracker, .parent) {
-    order: 1;
+  table.list.issues > tbody > tr.issue > td.subject a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
   }
-  table.list.issues > tbody > tr.issue > td:is(.status, .priority, .assigned_to, .author, .fixed_version, .category) {
-    order: 3;
+  table.list.issues > tbody > tr.issue > td:not(.subject) a {
+    position: relative;
+    z-index: 1;
+  }
+  table.list.issues > tbody > tr.issue > td.tracker {
+    display: none;
+  }
+  table.list.issues > tbody > tr.issue > td.priority {
+    position: absolute;
+    top: calc(12px + (0.875rem * 1.5 - 7px) / 2);
+    left: var(--list-dot-left);
+    display: block;
+    width: 7px;
+    height: 7px;
+    overflow: hidden;
+    font-size: 0;
+    border-radius: 50%;
+  }
+  table.list.issues > tbody > tr.issue > td.priority::before {
+    content: none;
+  }
+  table.list.issues > tbody > tr.issue[class*=priority-high] > td.priority {
+    background-color: #8a6100;
+  }
+  table.list.issues > tbody > tr.issue.priority-high2 > td.priority {
+    background-color: #ffb900;
+  }
+  table.list.issues > tbody > tr.issue.priority-highest > td.priority {
+    background-color: #f54a00;
+  }
+  table.list.issues > tbody > tr.issue.closed > td.priority {
+    background-color: transparent;
   }
   table.list.issues > tbody > tr.issue > td.status {
     padding: 0 8px;
@@ -592,9 +668,40 @@
     border-radius: 6px;
   }
   table.list.issues > tbody > tr.issue > td.assigned_to {
-    color: #404040;
+    flex: 0 0 auto;
   }
-  table.list.issues > tbody > tr.issue.priority-default > td.priority,
+  table.list.issues > tbody > tr.issue > td.assigned_to .list-user-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+  table.list.issues > tbody > tr.issue > td.assigned_to .list-user-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1;
+    color: #404040;
+    background-color: #f5f5f5;
+    border-radius: 50%;
+  }
+  table.list.issues > tbody > tr.issue > td.assigned_to:empty {
+    display: block;
+    box-sizing: border-box;
+    width: 20px;
+    height: 20px;
+    border: 1.5px dashed #d4d4d4;
+    border-radius: 50%;
+  }
   table.list.issues > tbody > tr.issue > td.done_ratio:has(table.progress-0),
   table.list.issues > tbody > tr.issue > td:is(.spent_hours, .total_spent_hours):not(:has(a)) {
     display: none;
@@ -604,6 +711,42 @@
     margin: 0;
   }
   table.list.issues > tbody > tr.issue > td.done_ratio p.percent {
+    display: none;
+  }
+  table.list.issues[data-selection=off] > tbody > tr.issue {
+    --list-dot-left: 8px;
+    --list-text-start: 25px;
+  }
+  table.list.issues[data-selection=off] > tbody > tr.issue > td.checkbox {
+    display: none;
+  }
+  table.list.issues[data-selection=on] > tbody > tr.issue {
+    --list-dot-left: 8px;
+    --list-check-left: 19px;
+    --list-text-start: 43px;
+  }
+  table.list.issues[data-selection=on] > tbody > tr.issue > td.subject a::after {
+    content: none;
+  }
+  table.list.issues[data-mobile-hide~=status] > tbody > tr.issue > td.status {
+    display: none;
+  }
+  table.list.issues[data-mobile-hide~=assigned_to] > tbody > tr.issue > td.assigned_to {
+    display: none;
+  }
+  table.list.issues[data-mobile-hide~=project] > tbody > tr.issue > td.project {
+    display: none;
+  }
+  table.list.issues[data-mobile-hide~=tracker] > tbody > tr.issue > td.tracker {
+    display: none;
+  }
+  table.list.issues[data-mobile-hide~=author] > tbody > tr.issue > td.author {
+    display: none;
+  }
+  table.list.issues[data-mobile-hide~=category] > tbody > tr.issue > td.category {
+    display: none;
+  }
+  table.list.issues[data-mobile-hide~=fixed_version] > tbody > tr.issue > td.fixed_version {
     display: none;
   }
   table.list.issues:has(> tbody > tr.group), table.list.time-entries:has(> tbody > tr.group) {
@@ -647,8 +790,9 @@
     margin-left: auto;
   }
   :is(#issue_tree, #relations) table.list.issues > tbody > tr.issue {
-    padding-left: 0;
-    padding-right: 84px;
+    --list-dot-left: 0px;
+    --list-text-start: 19px;
+    --list-row-end: 96px;
   }
   :is(#issue_tree, #relations) table.list.issues > tbody > tr.issue > td {
     width: auto;
@@ -661,12 +805,28 @@
     padding-right: 0;
   }
   #my-page table.list.issues {
+    overflow: visible;
     border: 0;
     border-radius: 0;
   }
   #my-page table.list.issues > tbody > tr.issue {
-    padding-left: 0;
-    padding-right: 30px;
+    --list-dot-left: -15px;
+    --list-text-start: 0px;
+    --list-row-end: 36px;
+  }
+  #my-page table.list.issues:not(:has(> tbody > tr.group)) {
+    width: calc(100% + 32px);
+    margin-inline: -16px;
+  }
+  #my-page table.list.issues:not(:has(> tbody > tr.group)) > tbody > tr.issue {
+    --list-dot-left: 1px;
+    --list-text-start: 16px;
+    --list-row-end: 48px;
+  }
+  #my-page table.list.issues:has(> tbody > tr.group) > tbody > tr.issue {
+    --list-dot-left: 8px;
+    --list-text-start: 25px;
+    --list-row-end: 48px;
   }
   table.list.issues,
   table.list.time-entries {
@@ -679,6 +839,16 @@
   .query-totals {
     margin-top: 0;
     text-align: left;
+  }
+}
+.issue-list-select-toggle,
+.list-user-initials {
+  display: none;
+}
+
+@media screen and (max-width: 899px) {
+  .issue-list-select-toggle {
+    display: inline-flex;
   }
 }
 @media screen and (max-width: 899px) {

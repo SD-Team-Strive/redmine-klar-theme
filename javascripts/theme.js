@@ -386,6 +386,230 @@
     }
   }
 
+  // src/js/issueListMobile.js
+  var FILTER_COLUMNS = {
+    status_id: "status",
+    assigned_to_id: "assigned_to",
+    project_id: "project",
+    tracker_id: "tracker",
+    author_id: "author",
+    category_id: "category",
+    fixed_version_id: "fixed_version"
+  };
+  var LABELS = {
+    de: { select: "Ausw\xE4hlen", done: "Fertig" },
+    en: { select: "Select", done: "Done" }
+  };
+  var LONG_PRESS_MS = 500;
+  var LONG_PRESS_TOLERANCE_PX = 10;
+  function labels() {
+    const language = (document.documentElement.lang || "").slice(0, 2).toLowerCase();
+    return LABELS[language] || LABELS.en;
+  }
+  function redundantColumns(form) {
+    const columns = /* @__PURE__ */ new Set();
+    const groupBy = form.querySelector("#group_by")?.value;
+    if (groupBy) {
+      columns.add(groupBy);
+    }
+    form.querySelectorAll("#filters-table .filter").forEach((filter) => {
+      const column = FILTER_COLUMNS[filter.id.replace(/^tr_/, "")];
+      const enabled = filter.querySelector('.field input[type="checkbox"]')?.checked;
+      const operator = filter.querySelector(".operator select")?.value;
+      const values = filter.querySelector(".values select");
+      if (column && enabled && operator === "=" && values?.selectedOptions.length === 1) {
+        columns.add(column);
+      }
+    });
+    return [...columns];
+  }
+  function initials(name) {
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    const first = parts[0]?.charAt(0) || "";
+    const last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : "";
+    return (first + last).toUpperCase();
+  }
+  function decorateAssignees(table) {
+    table.querySelectorAll("tbody td.assigned_to > a.user").forEach((link) => {
+      if (link.querySelector(".list-user-initials")) {
+        return;
+      }
+      const name = link.textContent.trim();
+      const badge = document.createElement("span");
+      badge.className = "list-user-initials";
+      badge.setAttribute("aria-hidden", "true");
+      badge.textContent = initials(name);
+      const label = document.createElement("span");
+      label.className = "list-user-name";
+      label.textContent = name;
+      link.title = name;
+      link.replaceChildren(badge, label);
+    });
+  }
+  function setSelection(table, button, on) {
+    table.dataset.selection = on ? "on" : "off";
+    button.setAttribute("aria-pressed", on ? "true" : "false");
+    button.textContent = on ? labels().done : labels().select;
+    if (!on && typeof window.contextMenuUnselectAll === "function") {
+      window.contextMenuUnselectAll();
+      window.contextMenuHide?.();
+    }
+  }
+  function addSelectionToggle(table) {
+    const actions = document.querySelector("#content > .contextual");
+    if (!actions || actions.querySelector(".issue-list-select-toggle")) {
+      return;
+    }
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "issue-list-select-toggle";
+    button.addEventListener("click", () => {
+      setSelection(table, button, table.dataset.selection !== "on");
+    });
+    actions.insertBefore(button, actions.querySelector(":scope > .drdn"));
+    setSelection(table, button, false);
+  }
+  function enableLongPress(table) {
+    let timer = null;
+    let origin = null;
+    let pressed = false;
+    const cancel = () => {
+      clearTimeout(timer);
+      timer = null;
+    };
+    table.addEventListener("touchstart", (event) => {
+      const row = event.target.closest("tr.hascontextmenu");
+      if (!row || table.dataset.selection === "on" || event.touches.length !== 1) {
+        return;
+      }
+      const touch = event.touches[0];
+      origin = { x: touch.clientX, y: touch.clientY };
+      pressed = false;
+      timer = setTimeout(() => {
+        const trigger = row.querySelector(".js-contextmenu");
+        if (!trigger) {
+          return;
+        }
+        pressed = true;
+        trigger.dispatchEvent(new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+          clientX: origin.x,
+          clientY: origin.y
+        }));
+      }, LONG_PRESS_MS);
+    }, { passive: true });
+    table.addEventListener("touchmove", (event) => {
+      const touch = event.touches[0];
+      if (origin && Math.hypot(touch.clientX - origin.x, touch.clientY - origin.y) > LONG_PRESS_TOLERANCE_PX) {
+        cancel();
+      }
+    }, { passive: true });
+    table.addEventListener("touchend", (event) => {
+      cancel();
+      if (pressed) {
+        event.preventDefault();
+      }
+    });
+    table.addEventListener("touchcancel", cancel);
+    document.addEventListener("click", (event) => {
+      if (!event.isTrusted) {
+        return;
+      }
+      if (pressed) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      pressed = false;
+    }, true);
+  }
+  function setUp2() {
+    const form = document.getElementById("query_form");
+    document.querySelectorAll("table.list.issues").forEach((table2) => {
+      decorateAssignees(table2);
+    });
+    document.querySelectorAll("#my-page table.list.issues").forEach((table2) => {
+      table2.dataset.selection = "off";
+      enableLongPress(table2);
+    });
+    if (!document.body.matches(".controller-issues.action-index") || !form) {
+      return;
+    }
+    const table = document.querySelector("#content table.list.issues");
+    if (!table) {
+      return;
+    }
+    const hidden = redundantColumns(form);
+    if (hidden.length) {
+      table.dataset.mobileHide = hidden.join(" ");
+    }
+    addSelectionToggle(table);
+    enableLongPress(table);
+  }
+  function enhanceIssueListMobile() {
+    if (window.jQuery) {
+      window.jQuery(setUp2);
+    } else {
+      setUp2();
+    }
+  }
+
+  // src/js/myPageAddBlock.js
+  function textWidth(text2, element) {
+    const context = document.createElement("canvas").getContext("2d");
+    context.font = getComputedStyle(element).font;
+    return context.measureText(text2).width;
+  }
+  function labelPlaceholder(form) {
+    const label = form.querySelector('label[for="block-select"]');
+    const select = form.querySelector("#block-select");
+    const placeholder = select?.querySelector(":scope > option:first-child");
+    if (!label || !placeholder || placeholder.dataset.placeholder) {
+      return;
+    }
+    const text2 = label.textContent.trim();
+    placeholder.textContent = text2;
+    placeholder.value = "";
+    placeholder.disabled = true;
+    placeholder.dataset.placeholder = "true";
+    select.value = "";
+    const style = getComputedStyle(select);
+    const chrome = ["paddingLeft", "paddingRight", "borderLeftWidth", "borderRightWidth"].reduce((sum, property) => sum + parseFloat(style[property]), 0);
+    select.style.width = `${Math.ceil(textWidth(text2, select) + chrome)}px`;
+  }
+  function addIcon(form) {
+    if (form.querySelector(".my-page-add-icon")) {
+      return;
+    }
+    const sample = document.querySelector('svg.icon-svg use[href*="#icon--"]');
+    if (!sample) {
+      return;
+    }
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("class", "s18 icon-svg my-page-add-icon");
+    svg.setAttribute("aria-hidden", "true");
+    const use = document.createElementNS(ns, "use");
+    use.setAttribute("href", `${sample.getAttribute("href").split("#")[0]}#icon--add`);
+    svg.appendChild(use);
+    form.prepend(svg);
+  }
+  function labelMyPageAddBlock() {
+    const form = document.getElementById("block-form");
+    if (!form) {
+      return;
+    }
+    addIcon(form);
+    const run = () => labelPlaceholder(form);
+    if (window.jQuery) {
+      window.jQuery(run);
+    } else {
+      run();
+    }
+    new MutationObserver(run).observe(form, { childList: true });
+  }
+
   // src/js/theme.js
   function init() {
     insertHeaderLogo();
@@ -393,6 +617,8 @@
     enableEditorLivePreview();
     insertFooterCredit();
     collapseQueryFilters();
+    enhanceIssueListMobile();
+    labelMyPageAddBlock();
   }
   claimBrandingLogo();
   if (document.readyState === "loading") {

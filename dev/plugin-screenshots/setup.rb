@@ -82,4 +82,47 @@ end
   (project.project_icon || project.build_project_icon).update!(color: color)
 end
 
-puts "Fertig: #{Project.count} Projekte, #{Issue.count} Tickets"
+# --- Dashboard Blocks -------------------------------------------------------
+# Meine Seite mit den Blöcken des Plugins, gebuchte Zeiten der laufenden Woche
+# Redmines Block "Tickets" mit gespeicherter Abfrage (Zeilenzahl aus dem Plugin)
+open_query = IssueQuery.find_or_initialize_by(name: 'Meine offenen Tickets', user_id: admin.id)
+open_query.project = nil
+open_query.visibility = IssueQuery::VISIBILITY_PRIVATE
+open_query.filters = { 'assigned_to_id' => { operator: '=', values: ['me'] }, 'status_id' => { operator: 'o', values: [''] } }
+open_query.column_names = %i[project status priority subject updated_on]
+open_query.sort_criteria = [%w[priority desc], %w[id desc]]
+open_query.group_by = 'status'
+open_query.save!
+
+admin.pref.my_page_layout = {
+  'top' => %w[quick_time_entry issue_status_tiles issuequery],
+  'left' => %w[open_issues_by_project],
+  'right' => %w[my_week]
+}
+admin.pref.update_block_settings('issuequery', query_id: open_query.id.to_s, rows: '10')
+admin.pref.save!
+
+# Woche wie für einen deutschsprachigen Benutzer (der Runner läuft auf
+# Englisch, dort beginnt die Woche am Sonntag)
+week_start = ::I18n.with_locale(:de) { RedmineDashboardBlocks::Scope.week_start(admin.today) }
+activity = TimeEntryActivity.shared.active.first
+# Je Projekt ein Ticket, damit sich die Zeiten verteilen
+booked = %w[nordlicht-shop seeblick-betrieb website-relaunch waldkauz nordlicht].filter_map do |identifier|
+  Issue.where(project: Project.find_by(identifier: identifier)).order(:id).first
+end
+TimeEntry.where(user_id: admin.id).delete_all
+[[0, 3.0, 0], [0, 2.5, 1], [0, 2.0, 2], [1, 4.0, 3], [1, 2.0, 0], [2, 3.5, 1], [2, 1.5, 4], [3, 2.25, 0]].each do |offset, hours, index|
+  date = week_start + offset
+  next if date > admin.today
+
+  issue = booked[index % booked.size]
+  TimeEntry.create!(project: issue.project, issue: issue, user: admin, author: admin, hours: hours,
+                    spent_on: date, activity: activity)
+end
+
+# Ein überfälliges Ticket für die Kacheln
+Issue.where(project: Project.find_by!(identifier: 'nordlicht-shop'), assigned_to: admin).first&.update_columns(
+  start_date: admin.today - 10, due_date: admin.today - 2
+)
+
+puts "Fertig: #{Project.count} Projekte, #{Issue.count} Tickets, #{TimeEntry.where(user_id: admin.id).count} Zeiten"

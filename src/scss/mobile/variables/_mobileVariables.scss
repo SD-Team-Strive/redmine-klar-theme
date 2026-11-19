@@ -8,10 +8,19 @@ $mobileActionGap:         $spaceXs * 0.75 !default;
 $mobileListRowPaddingY:   $spaceSm !default;
 $mobileListRowPaddingX:   $spaceSm !default;
 $mobileListCheckboxSpace: $spaceXl + $spaceXs !default;   // links: Checkbox + Abstand zum Titel
-$mobileListButtonsSpace:  $spaceXl + $spaceSm !default;   // rechts: "⋯" mit Abstand zum Rand
-$mobileListButtonsInset:  $spaceXs !default;              // "⋯" vom rechten Rand
+$mobileListButtonsInset:  $spaceSm !default;              // "⋯" vom rechten Rand
+$mobileListButtonsSpace:  $mobileListButtonsInset + $mobileActionHeight !default; // rechts: Platz für "⋯" samt Randabstand
 $mobileListLineGap:       $spaceXxs !default;             // Abstand zwischen den Zeilen eines Tickets
 $mobileListMetaGap:       $spaceXxs $spaceSm !default;
+$mobileListPriorityDot:   7px !default;                   // Punkt vor dem Titel (erhöhte Priorität)
+$mobileListPrioritySpace: $mobileListPriorityDot + $spaceSm !default; // Punkt + Abstand zum Titel (ohne JavaScript, Ticketbaum)
+$mobileListEdgeInset:     $spaceXs !default;              // Punkt vom Rand der Karte
+// Beginn des Titels: bündig mit dem Namen der Gruppenüberschrift
+// (Innenabstand $spaceXxs + Aufklapp-Pfeil; geprüft in dev/check-issue-list-mobile.mjs)
+$mobileListTextStart:     25px !default;
+$mobileListUserSize:      20px !default;                  // Zuständiger als Kreis mit Initialen (Meta-Zeile)
+$mobileListUserFontSize:  9px !default;
+$mobileListIdSpace:       5rem !default;                  // Platz für "#12345" + Abstände neben dem Projekt
 
 // Reaktion am Ende der Ticket-Karte (Höhe wie auf dem Desktop)
 $mobileReactionRowHeight: 28px !default;

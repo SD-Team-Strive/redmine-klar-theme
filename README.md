@@ -67,15 +67,20 @@ enough, a small script fills the gap; without JavaScript Redmine keeps working a
 - Project list as a grid of cards, equal in height per row; subprojects as a quiet list
   at the foot of their project's card.
 - Calmer and more spacious tables.
-- Activity, roadmap, calendar, Gantt, wiki, forums, "My page", login and administration
-  in the same style; many small alignment issues fixed.
+- "My page" with its blocks as cards; the left and right columns side by side even with
+  wide tables.
+- Activity, roadmap, calendar, Gantt, wiki, forums, login and administration in the same
+  style; many small alignment issues fixed.
 
 **Mobile**
 - Header with logo, project selector and menu button; the menu is an animated side
   panel with separated sections.
-- Lists as rows instead of wide tables, with a fixed order: subject; number and
-  project; status, priority and assignee; date and time. Empty values (0 %, 0:00,
-  normal priority) are left out. Compact pagination.
+- Issue lists in two lines per issue: subject with a dot for raised priority and the
+  assignee as initials; below project, number, status, date and time. Whatever the query
+  fixes for every row – the grouping, or a filter on exactly one value such as
+  "Assignee: me" – is not repeated in each row. The whole row opens the issue;
+  checkboxes and "⋯" appear via *Select*, a long press opens the context menu. Empty
+  values (0 %, 0:00) are left out. Compact pagination.
 - Forms with the label above the field and 16 px text (no zooming on iOS).
 
 ## Installation
@@ -144,6 +149,11 @@ lists, the header, the project selector, calendar and Gantt. On desktop the proj
 takes the place of the logo on project pages; on mobile the logo stays (the way back to
 the start page) and the project icon appears in the project selector.
 
+**Dashboard blocks:** with the plugin
+[redmine-dashboard-blocks](https://github.com/stbt-de/redmine-dashboard-blocks) "My page"
+gets blocks to log time quickly, tiles for your issues by status, your issues by project
+and your week.
+
 ## Development
 
 Requirements: Docker, Node.js.
@@ -159,6 +169,7 @@ npm run screenshots -- issue --mobile   # only pages with "issue" in their name,
 npm run screenshots:readme              # the screenshots of this README to docs/screenshots
 npm run check:alignment                 # icons/rows vertically aligned? (desktop)
 npm run check:alignment -- --mobile     # the same on mobile
+npm run check:issue-list                # mobile issue list: hidden columns, Select, tap, long press
 ```
 
 `check:alignment` measures on every page whether icons are centred with their text and

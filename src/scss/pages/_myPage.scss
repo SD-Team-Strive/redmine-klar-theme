@@ -5,6 +5,28 @@
 @use "../variables" as *;
 @use "../mixins" as *;
 @use "variables/myPageVariables" as *;
+@use "../mobile/variables/mobileVariables" as *;
+@use "../layout/variables/layoutVariables" as *;
+
+// Spalten: oben volle Breite, links und rechts je zur Hälfte. Redmine setzt
+// nur flex: 2 / 1 / 1 – ohne min-width: 0 bekommt jede Spalte mit breitem
+// Inhalt (Tabellen, Kachel-Raster) eine eigene Zeile.
+@include desktop {
+  #my-page.splitcontent {
+    // Abstand nach unten hat schon jede Karte (.mypage-box)
+    row-gap: 0;
+
+    > .splitcontenttop {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+
+    > :is(.splitcontentleft, .splitcontentright) {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+}
 
 .mypage-box {
   @include card($spaceLg, $radiusLg);
@@ -58,6 +80,92 @@
   border-radius: $radiusLg;
 }
 
-#my-page #block-select {
-  min-width: 220px;
+// "Hinzufügen" wie die übrigen Aktionen (Redmine: Beschriftung, ":" als
+// loser Text, Auswahl mit leerem Eintrag). Die Auswahl bleibt die echte
+// Auswahl. Davor Redmines Icon "add" wie bei "Neues Ticket"
+// (js/myPageAddBlock.js setzt es ein und beschriftet den leeren Eintrag);
+// Beschriftung nur für Screenreader, der Doppelpunkt fällt weg
+// (Schriftgröße 0). Desktop: wie ein Aktions-Link, mobil: wie die Knöpfe.
+#content > .contextual > #block-form {
+  // Abstand des Icons vom linken Rand der Auswahl (mobil: Innenabstand)
+  --my-page-add-inset: 0px;
+
+  position: relative;
+  gap: 0; // sonst Abstand vor der Auswahl durch den unsichtbaren Doppelpunkt
+  font-size: 0;
+
+  > label {
+    @include visually-hidden;
+  }
+
+  > .my-page-add-icon {
+    position: absolute;
+    top: 50%;
+    left: var(--my-page-add-inset);
+    z-index: 1;
+    pointer-events: none;
+    transform: translateY(-50%);
+  }
+
+  &:hover > .my-page-add-icon {
+    stroke: $colorTextPrimary;
+  }
+
+  > #block-select {
+    width: auto;
+    min-width: 0;
+    height: $titleRowHeight;
+    font-size: $fontSizeSm;
+    font-weight: $fontWeightRegular;
+    color: $colorTextPrimary;
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  &:has(> .my-page-add-icon) > #block-select {
+    padding-left: calc(var(--my-page-add-inset) + #{$myPageAddIconSize + $myPageAddIconGap});
+  }
+
+  &:hover > #block-select {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
+// Mobil: Knopf rechts neben "Meine Seite" statt in einer eigenen Zeile, im
+// Stil der übrigen Aktions-Knöpfe (mobile/_contextual.scss)
+@include mobile {
+  #content > .contextual > #block-form {
+    --my-page-add-inset: #{$spaceSm};
+
+    > #block-select {
+      height: $mobileActionHeight;
+      padding-right: $spaceXl;
+      font-weight: $fontWeightMedium;
+      color: $colorTextSecondary;
+      background-color: $colorBgCard;
+      border-color: $colorBorder;
+      border-radius: $radiusBase;
+    }
+
+    &:hover > #block-select {
+      text-decoration: none;
+    }
+  }
+
+  #content:has(> .contextual > #block-form) {
+    // oben am Titel ausrichten (gleiche Höhe): mittig zentriert Flex sonst
+    // samt der unterschiedlichen Abstände nach unten
+    > .contextual {
+      flex: 0 0 auto;
+      align-self: flex-start;
+      width: auto;
+      margin: 0 0 0 auto;
+    }
+
+    > h2 {
+      flex: 1 1 auto;
+    }
+  }
 }

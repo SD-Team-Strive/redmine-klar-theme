@@ -1,24 +1,36 @@
 // =============================================================================
 // Mobil: Ticket- und Zeitlisten als Zeilen statt breiter Tabellen
 //
-//   [☐]  Betreff (volle Breite)                         [⋯]
-//        #23 · Website Relaunch · Fehler                    (wer/was)
-//        [Neu] ● Sofort · Anna Becker                       (Zustand)
-//        19.11.2026 · ▬▬▬ · 6:00                            (weitere Spalten)
+// Ticketliste (feste Zeilen je Ticket):
+//   ●  Betreff (bis zwei Zeilen)
+//      (AB) Projekt · #23                 wer/wo
+//      Status · 19.11.2026 · ▬▬ · 6:00    Zustand/Zeit
+//
+//   ● Punkt nur bei erhöhter Priorität, (AB) Zuständiger als Initialen.
+//   Die ganze Zeile führt zum Ticket, "⋯" rechts öffnet das Kontextmenü
+//   (ebenso langer Druck). Checkboxen erscheinen erst über "Auswählen"
+//   (js/issueListMobile.js).
+//   Spalten, die die Abfrage für alle Zeilen festlegt (Gruppierung, Filter
+//   auf genau einen Wert), entfallen in der Zeile.
 //
 // Die Tabelle bleibt im HTML eine Tabelle; nur die Darstellung ändert sich.
-// Die Zeilen entstehen über die Reihenfolge (order) der Zellen und zwei
-// unsichtbare Umbrüche (::before/::after der Zeile). Spalten, die hier nicht
-// genannt sind, landen in der letzten Zeile – die Abfrage bestimmt weiter,
-// welche Spalten es gibt. Spaltenköpfe entfallen (Sortierung bleibt über
-// "Optionen" erreichbar).
+// Die Zeilen entstehen über die Reihenfolge (order) der Zellen und einen
+// unsichtbaren Umbruch (::before der Zeile). Spalten, die hier nicht genannt
+// sind, landen in der Meta-Zeile – die Abfrage bestimmt weiter, welche
+// Spalten es gibt. Spaltenköpfe entfallen (Sortierung bleibt über
+// "Optionen" erreichbar). Ohne JavaScript bleiben Checkbox und "⋯" sichtbar.
 // =============================================================================
 
 @use "../variables" as *;
 @use "../mixins" as *;
 @use "variables/mobileVariables" as *;
+@use "../pages/variables/prioritiesVariables" as *;
 
 $listTables: "table.list.issues, table.list.time-entries";
+
+// Spalten, die js/issueListMobile.js als überflüssig markiert
+// (data-mobile-hide="status assigned_to …")
+$redundantColumns: status, assigned_to, project, tracker, author, category, fixed_version;
 
 @include mobile {
   #{$listTables} {
@@ -94,7 +106,8 @@ $listTables: "table.list.issues, table.list.time-entries";
     > tbody > tr > td.checkbox {
       position: absolute;
       top: calc(#{$mobileListRowPaddingY} + (#{$fontSizeBase} * #{$lineHeightBase} - #{$mobileCheckSize}) / 2);
-      left: $mobileListRowPaddingX;
+      left: var(--list-check-left, #{$mobileListRowPaddingX});
+      z-index: 2;
       width: auto;
       padding: 0;
       line-height: 0;
@@ -104,6 +117,7 @@ $listTables: "table.list.issues, table.list.time-entries";
       position: absolute;
       top: calc(#{$mobileListRowPaddingY} + (#{$fontSizeBase} * #{$lineHeightBase} - #{$mobileActionHeight}) / 2);
       right: $mobileListButtonsInset;
+      z-index: 2;
     }
 
     // Beschreibung/letzter Kommentar als eigene Zeile
@@ -132,52 +146,139 @@ $listTables: "table.list.issues, table.list.time-entries";
   }
 
   // ---------------------------------------------------------------------------
-  // Ticketliste: feste Zeilen statt einer langen Metazeile
+  // Ticketliste: Titelzeile und Meta-Zeile
   // ---------------------------------------------------------------------------
 
   table.list.issues > tbody > tr.issue {
+    // Punkt (Priorität) und Beginn des Titels; Standard ohne JavaScript:
+    // Checkbox, dahinter Punkt und Titel. Varianten weiter unten (Auswahl
+    // aus/an, Ticketbaum, Meine Seite).
+    --list-dot-left: #{$mobileListCheckboxSpace};
+    --list-text-start: #{$mobileListCheckboxSpace + $mobileListPrioritySpace};
+    --list-row-end: #{$mobileListButtonsSpace};
+
     row-gap: $mobileListLineGap;
+    padding-right: var(--list-row-end);
+    padding-left: var(--list-text-start);
     // Mittig statt Grundlinie: Projekt-Icons (Plugin redmine_project_icons)
     // haben keine Grundlinie und würden die Zeile verschieben
     align-items: center;
+    // Langer Druck öffnet das Kontextmenü, nicht das Link-Menü von iOS
+    -webkit-touch-callout: none;
 
-    // Unsichtbare Umbrüche zwischen den Zeilen
-    &::before,
-    &::after {
+    // Unsichtbarer Umbruch zwischen Titel- und Meta-Zeile
+    &::before {
       content: "";
+      order: 1;
       flex: 0 0 100%;
       height: 0;
     }
 
-    &::before {
+    // Feste Zeilen statt Umbruch nach Platz:
+    //   Zeile 2 (wer/wo):        Zuständiger (Kreis) · Projekt · Nummer
+    //   Zeile 3 (Zustand/Zeit):  Status und alle übrigen Spalten
+    &::after {
+      content: "";
+      order: 5;
+      flex: 0 0 100%;
+      height: 0;
+    }
+
+    > td {
+      order: 6;
+    }
+
+    > td.assigned_to {
       order: 2;
     }
 
-    &::after {
-      order: 4;
+    // Projekt: eine Zeile, lange Namen mit "…" (die Nummer bleibt daneben).
+    // Der Link ist Block statt inline-flex (Plugin redmine_project_icons):
+    // inline-flex säße auf der Grundlinie, der Text 2px über den anderen.
+    // (max-width: in einer umbrechenden Zeile bricht die Nummer sonst um,
+    // bevor das Projekt schrumpft)
+    > td.project {
+      order: 3;
+      flex: 0 1 auto;
+      max-width: calc(100% - #{$mobileListUserSize} - #{$mobileListIdSpace});
+      overflow: hidden;
+
+      > a {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
 
-    // Standard: alles, was nicht genannt ist, in die letzte Zeile
-    > td {
-      order: 5;
+    > td.id {
+      order: 4;
     }
 
     > td.subject {
       order: 0;
+      flex: 1 1 0;
 
       a {
+        display: -webkit-box;
+        overflow: hidden;
         font-weight: $fontWeightMedium;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+
+      // Die ganze Zeile führt zum Ticket
+      a::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
       }
     }
 
-    // Zeile 2: wer/was
-    > td:is(.id, .project, .tracker, .parent) {
-      order: 1;
+    // Andere Links bleiben über der Zeilenfläche erreichbar
+    > td:not(.subject) a {
+      position: relative;
+      z-index: 1;
     }
 
-    // Zeile 3: Zustand
-    > td:is(.status, .priority, .assigned_to, .author, .fixed_version, .category) {
-      order: 3;
+    // Tracker ("Feature", "Fehler") ist mobil die schwächste Angabe
+    > td.tracker {
+      display: none;
+    }
+
+    // Priorität als Punkt vor dem Titel; Standard und niedriger ohne Punkt.
+    // Der Text bleibt für Screenreader in der Zelle.
+    > td.priority {
+      position: absolute;
+      top: calc(#{$mobileListRowPaddingY} + (#{$fontSizeBase} * #{$lineHeightBase} - #{$mobileListPriorityDot}) / 2);
+      left: var(--list-dot-left);
+      display: block;
+      width: $mobileListPriorityDot;
+      height: $mobileListPriorityDot;
+      overflow: hidden;
+      font-size: 0;
+      border-radius: 50%;
+
+      &::before {
+        content: none;
+      }
+    }
+
+    &[class*="priority-high"] > td.priority {
+      background-color: $priorityHighColor;
+    }
+
+    &.priority-high2 > td.priority {
+      background-color: $priorityUrgentDot;
+    }
+
+    &.priority-highest > td.priority {
+      background-color: $priorityImmediateDot;
+    }
+
+    &.closed > td.priority {
+      background-color: transparent;
     }
 
     > td.status {
@@ -187,13 +288,43 @@ $listTables: "table.list.issues, table.list.time-entries";
       border-radius: $radiusSm;
     }
 
+    // Zuständiger: Kreis mit Initialen am Anfang der Meta-Zeile
+    // (js/issueListMobile.js; ohne JavaScript der Name)
     > td.assigned_to {
-      color: $colorTextSecondary;
+      flex: 0 0 auto;
     }
 
-    // Leere Werte weglassen: Priorität "Normal" (Standard), 0 %, keine
-    // aufgewendete Zeit (Redmine verlinkt die Zeit nur, wenn es welche gibt)
-    &.priority-default > td.priority,
+    > td.assigned_to .list-user-name {
+      @include visually-hidden;
+    }
+
+    > td.assigned_to .list-user-initials {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: $mobileListUserSize;
+      height: $mobileListUserSize;
+      font-size: $mobileListUserFontSize;
+      font-weight: $fontWeightSemibold;
+      line-height: 1;
+      color: $colorTextSecondary;
+      background-color: $colorBgMuted;
+      border-radius: 50%;
+    }
+
+    // Nicht zugewiesen: leerer, gestrichelter Kreis (nur wenn die Spalte da
+    // und nicht überflüssig ist – leere Zellen entfallen sonst)
+    > td.assigned_to:empty {
+      display: block;
+      box-sizing: border-box;
+      width: $mobileListUserSize;
+      height: $mobileListUserSize;
+      border: $borderWidth * 1.5 dashed $colorBorderStrong;
+      border-radius: 50%;
+    }
+
+    // Leere Werte weglassen: 0 %, keine aufgewendete Zeit (Redmine verlinkt
+    // die Zeit nur, wenn es welche gibt)
     > td.done_ratio:has(table.progress-0),
     > td:is(.spent_hours, .total_spent_hours):not(:has(a)) {
       display: none;
@@ -206,6 +337,38 @@ $listTables: "table.list.issues, table.list.time-entries";
     }
 
     > td.done_ratio p.percent {
+      display: none;
+    }
+  }
+
+  // Auswahl aus (js/issueListMobile.js): ohne Checkbox; Punkt am Rand der
+  // Karte, Titel bündig mit dem Namen der Gruppenüberschrift.
+  // "⋯" bleibt immer sichtbar – der lange Druck ist nur eine Abkürzung.
+  table.list.issues[data-selection="off"] > tbody > tr.issue {
+    --list-dot-left: #{$mobileListEdgeInset};
+    --list-text-start: #{$mobileListTextStart};
+
+    > td.checkbox {
+      display: none;
+    }
+  }
+
+  // Auswahl an: Punkt bleibt am Rand, Checkbox dahinter, Titel rückt nach
+  table.list.issues[data-selection="on"] > tbody > tr.issue {
+    --list-dot-left: #{$mobileListEdgeInset};
+    --list-check-left: #{$mobileListEdgeInset + $mobileListPriorityDot + $spaceXxs};
+    --list-text-start: #{$mobileListEdgeInset + $mobileListPriorityDot + $spaceXxs + $mobileCheckSize + $spaceXs};
+
+    // Tippen wählt die Zeile (Redmine), statt das Ticket zu öffnen
+    > td.subject a::after {
+      content: none;
+    }
+  }
+
+  // Überflüssige Spalten: gleich für alle Zeilen (Gruppierung, Filter auf
+  // genau einen Wert)
+  @each $column in $redundantColumns {
+    table.list.issues[data-mobile-hide~="#{$column}"] > tbody > tr.issue > td.#{$column} {
       display: none;
     }
   }
@@ -269,8 +432,9 @@ $listTables: "table.list.issues, table.list.time-entries";
   :is(#issue_tree, #relations) table.list.issues {
     // rechts zwei Icons: Verknüpfung lösen und "⋯"
     > tbody > tr.issue {
-      padding-left: 0;
-      padding-right: $mobileListButtonsSpace * 2;
+      --list-dot-left: 0px;
+      --list-text-start: #{$mobileListPrioritySpace};
+      --list-row-end: #{$mobileListButtonsSpace * 2};
     }
 
     // pages/_issue.scss setzt Innenabstand und Trennlinie je Zelle
@@ -288,14 +452,40 @@ $listTables: "table.list.issues, table.list.time-entries";
   }
 
   // Meine Seite: Checkbox ist dort ausgeblendet, Liste liegt schon in einer
-  // Karte – kein Einzug links, kein zweiter Rahmen
+  // Karte – kein zweiter Rahmen. Titel bündig mit dem Block-Titel, der Punkt
+  // sitzt davor im Innenabstand der Karte (deshalb overflow: visible).
   #my-page table.list.issues {
+    overflow: visible;
     border: 0;
     border-radius: 0;
 
     > tbody > tr.issue {
-      padding-left: 0;
-      padding-right: $mobileListButtonsSpace - $mobileListRowPaddingX;
+      --list-dot-left: #{-($mobileListPriorityDot + $spaceXs)};
+      --list-text-start: 0px;
+      --list-row-end: #{$mobileListButtonsSpace - $mobileListRowPaddingX};
+    }
+
+    // Ungruppiert: Liste bis an den Rand der Karte (Innenabstand der Karte
+    // mobil: $spaceMd, mobile/_content.scss), der Text rückt um denselben
+    // Wert ein – Titel bleibt bündig mit dem Block-Titel, Hover-Fläche und
+    // Trennlinien reichen wie in der Ticketliste von Rand zu Rand
+    &:not(:has(> tbody > tr.group)) {
+      width: calc(100% + #{2 * $spaceMd});
+      margin-inline: -$spaceMd;
+
+      > tbody > tr.issue {
+        --list-dot-left: #{$spaceMd - $mobileListPriorityDot - $spaceXs};
+        --list-text-start: #{$spaceMd};
+        --list-row-end: #{$mobileListButtonsSpace};
+      }
+    }
+
+    // Gruppiert (Block "Tickets" mit gruppierter Abfrage): jede Gruppe ist
+    // eine eigene Karte mit Rahmen – Einteilung wie in der Ticketliste
+    &:has(> tbody > tr.group) > tbody > tr.issue {
+      --list-dot-left: #{$mobileListEdgeInset};
+      --list-text-start: #{$mobileListTextStart};
+      --list-row-end: #{$mobileListButtonsSpace};
     }
   }
 
@@ -315,5 +505,18 @@ $listTables: "table.list.issues, table.list.time-entries";
   .query-totals {
     margin-top: 0;
     text-align: left;
+  }
+}
+
+// "Auswählen" (js/issueListMobile.js) gibt es nur mobil; auf dem Desktop
+// sind Checkboxen immer da. Initialen nur mobil.
+.issue-list-select-toggle,
+.list-user-initials {
+  display: none;
+}
+
+@include mobile {
+  .issue-list-select-toggle {
+    display: inline-flex;
   }
 }

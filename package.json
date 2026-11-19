@@ -1,6 +1,6 @@
 {
   "name": "redmine-klar-theme",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "Nüchternes, klar strukturiertes Redmine-Theme mit Inter",
   "scripts": {
@@ -12,7 +12,8 @@
     "screenshots": "node dev/screenshots.mjs",
     "screenshots:readme": "node dev/readme-screenshots.mjs",
     "check:alignment": "node dev/check-alignment.mjs",
-    "screenshots:plugins": "dev/plugin-screenshots/run.sh"
+    "screenshots:plugins": "dev/plugin-screenshots/run.sh",
+    "check:issue-list": "node dev/check-issue-list-mobile.mjs"
   },
   "devDependencies": {
     "esbuild": "0.28.2",

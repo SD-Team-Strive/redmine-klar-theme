@@ -326,6 +326,30 @@ for (const check of flowChecks) {
   }
 }
 
+// -----------------------------------------------------------------------------
+// Meine Seite: Spalten "links" und "rechts" nebeneinander (Desktop).
+// Anlass (19.11.2026): Redmine setzt nur flex: 1 ohne min-width: 0 – mit
+// breitem Inhalt (Tabelle, Kachel-Raster) rutschte jede Spalte in eine
+// eigene Zeile.
+// -----------------------------------------------------------------------------
+
+if (!mobile && (!filter || 'my-page'.includes(filter))) {
+  await page.goto(`${baseUrl}/my/page`);
+  await page.waitForTimeout(300);
+  const columns = await page.evaluate(() => {
+    const left = document.getElementById('list-left');
+    const right = document.getElementById('list-right');
+    if (!left?.querySelector('.mypage-box') || !right?.querySelector('.mypage-box')) return null;
+    const a = left.getBoundingClientRect();
+    const b = right.getBoundingClientRect();
+    return { sideBySide: Math.abs(a.top - b.top) < 1 && b.left >= a.right, left: Math.round(a.width), right: Math.round(b.width) };
+  });
+  if (columns && !columns.sideBySide) {
+    console.log(`\n## Meine Seite: Spalten links/rechts untereinander (Breiten ${columns.left}/${columns.right}px)`);
+    total += 1;
+  }
+}
+
 await browser.close();
 console.log(`\n${total} Befunde (Toleranz ${tolerance}px, ${mobile ? 'mobil' : 'Desktop'})`);
 process.exit(total ? 1 : 0);

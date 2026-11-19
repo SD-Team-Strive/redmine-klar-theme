@@ -20,6 +20,7 @@ services:
       - ../../../redmine-branding:/usr/src/redmine/plugins/redmine_branding:ro
       - ../../../redmine-avatars:/usr/src/redmine/plugins/redmine_avatars:ro
       - ../../../redmine-project-icons:/usr/src/redmine/plugins/redmine_project_icons:ro
+      - ../../../redmine-dashboard-blocks:/usr/src/redmine/plugins/redmine_dashboard_blocks:ro
 
 volumes:
   files:
