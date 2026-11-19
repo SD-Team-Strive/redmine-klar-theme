@@ -1,0 +1,197 @@
+// =============================================================================
+// Aktivität und Suchergebnisse
+//
+// Aktivität als ruhige Zeitleiste, je Eintrag:
+//   09:23  [Icon] [Avatar]  Projekt · Titel
+//                 Beschreibung (max. 2 Zeilen, gedämpft)
+//                 Autor
+// Ältere Einträge zum selben Objekt (.grouped) eine Stufe eingerückt,
+// ohne erneut das Projekt zu nennen.
+// =============================================================================
+
+@use "../variables" as *;
+@use "variables/activityVariables" as *;
+
+div#activity,
+#search-results {
+  margin-left: 0;
+}
+
+div#activity {
+  max-width: $activityMaxWidth;
+
+  // Tages-Überschrift
+  h3 {
+    margin: $spaceLg 0 0;
+    padding: $spaceXs $spaceSm;
+    font-size: $fontSizeSm;
+    font-weight: $fontWeightSemibold;
+    background-color: $activityDayBackground;
+    border-radius: $radiusBase;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  dl {
+    margin: 0;
+  }
+
+  // Kopfzeile eines Eintrags
+  dt {
+    display: flex;
+    align-items: center;
+    gap: $activityColumnGap;
+    padding: $activityEntryPaddingY $spaceSm 0;
+    font-weight: $fontWeightRegular;
+    border-top: $borderWidth solid $colorBorder;
+
+    > svg.icon-svg {
+      order: 1;
+      flex-shrink: 0;
+      width: $activityIconSize;
+      height: $activityIconSize;
+      margin: 0;
+    }
+
+    .avatar {
+      order: 2;
+      margin: 0;
+    }
+
+    .time {
+      order: 0;
+      flex: 0 0 $activityTimeWidth;
+      margin: 0;
+      font-size: $fontSizeSm;
+      font-variant-numeric: tabular-nums;
+      color: $colorTextTertiary;
+    }
+
+    &.me .time {
+      border-bottom: 0;
+    }
+
+    .project {
+      order: 3;
+      flex-shrink: 0;
+      color: $colorTextTertiary;
+    }
+
+    > a {
+      order: 4;
+      min-width: 0;
+      font-weight: $fontWeightMedium;
+      color: $colorTextPrimary;
+    }
+  }
+
+  // Trenner zwischen Projekt und Titel ruhiger als " - "
+  span.project::after {
+    content: " ·";
+    white-space: pre;
+  }
+
+  dl dt:first-child {
+    border-top: 0;
+  }
+
+  // Beschreibung und Autor unter dem Titel
+  dd {
+    margin: $spaceXxs 0 0;
+    padding: 0 $spaceSm $activityEntryPaddingY ($spaceSm + $activityTextIndent);
+    font-size: $fontSizeSm;
+  }
+
+  dd .description,
+  dd span.description {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    font-style: normal;
+    line-height: $lineHeightBase;
+    color: $colorTextMuted;
+    -webkit-line-clamp: $activityDescriptionLines;
+    -webkit-box-orient: vertical;
+  }
+
+  dd .author {
+    display: block;
+    margin-top: $spaceXxs;
+    font-size: $fontSizeXs;
+    color: $colorTextTertiary;
+
+    a {
+      color: $colorTextSecondary;
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  // Ältere Einträge zum selben Objekt: eine Stufe eingerückt, ohne Trennlinie
+  dt.grouped {
+    padding-left: $spaceSm + $activityGroupIndent;
+    padding-top: $spaceXxs;
+    border-top: 0;
+
+    .project {
+      display: none;
+    }
+
+    > a {
+      font-weight: $fontWeightRegular;
+      color: $colorTextSecondary;
+    }
+  }
+
+  dd.grouped {
+    margin-left: 0;
+    padding-left: $spaceSm + $activityGroupIndent + $activityTextIndent;
+  }
+}
+
+// Aktivität eines Benutzers / Filter in der Seitenleiste
+#activity_scope_form select#user_id {
+  max-width: 100%;
+}
+
+// -----------------------------------------------------------------------------
+// Suchergebnisse
+// -----------------------------------------------------------------------------
+
+#search-results {
+  max-width: $activityMaxWidth;
+
+  dt {
+    margin-top: $spaceSm;
+    font-weight: $fontWeightMedium;
+  }
+
+  dd {
+    margin-left: 0;
+    padding-left: $spaceLg;
+    font-size: $fontSizeSm;
+  }
+
+  dd .description,
+  dd span.description {
+    font-style: normal;
+    color: $colorTextMuted;
+  }
+
+  dd span.author {
+    color: $colorTextTertiary;
+  }
+
+  span.project::after {
+    content: " ·";
+    white-space: pre;
+  }
+}
+
+div#search-results-counts {
+  font-size: $fontSizeSm;
+}

@@ -1,0 +1,21 @@
+{
+  "name": "redmine-klar-theme",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nüchternes, klar strukturiertes Redmine-Theme mit Inter",
+  "scripts": {
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "sass --no-source-map --style=expanded src/scss:stylesheets",
+    "build:js": "esbuild src/js/theme.js --bundle --format=iife --target=es2020 --outfile=javascripts/theme.js --banner:js=\"// Erzeugt aus src/js/ (npm run build:js) – nicht von Hand bearbeiten.\"",
+    "watch": "npm run build:js && sass --no-source-map --style=expanded --watch src/scss:stylesheets",
+    "reload": "npm run build && docker compose restart redmine && node dev/wait-for-redmine.mjs",
+    "screenshots": "node dev/screenshots.mjs",
+    "screenshots:readme": "node dev/readme-screenshots.mjs",
+    "check:alignment": "node dev/check-alignment.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "playwright": "1.65.1",
+    "sass": "1.108.2"
+  }
+}

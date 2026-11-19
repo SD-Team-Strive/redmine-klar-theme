@@ -1,0 +1,175 @@
+// =============================================================================
+// Mobil: Formulare
+// Label über dem Feld (wie Redmine), Felder über die volle Breite und mit
+// 16px Schrift, damit iOS beim Antippen nicht hineinzoomt.
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/mobileVariables" as *;
+
+@include mobile {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+  select,
+  textarea {
+    font-size: $mobileControlFontSize;
+  }
+
+  // Tabellarische Formulare: Label über dem Feld
+  .tabular p,
+  .tabular.settings p {
+    padding-left: 0;
+  }
+
+  .tabular label,
+  .tabular.settings label {
+    float: none;
+    display: block;
+    width: auto;
+    margin-left: 0;
+    padding-top: 0;
+    margin-bottom: $spaceXxs;
+    text-align: left;
+    line-height: $lineHeightBase;
+  }
+
+  // Felder volle Breite (Redmine setzt z. B. Auswahlfelder im Ticket auf 60%)
+  #content .tabular :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="submit"]),
+    select,
+    textarea
+  ) {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  // responsive.css setzt Checkboxen in Formularen auf width: auto – mit
+  // eigenem Aussehen (appearance: none) würde das Kästchen schrumpfen
+  #content .tabular input:is([type="checkbox"], [type="radio"]) {
+    width: $mobileCheckSize;
+    max-width: none;   // responsive.css: 95% – in der 16px-Hülle sonst 15,2px
+    height: $mobileCheckSize;
+  }
+
+  // Kurze Werte (Stunden, Datum) dürfen schmal bleiben
+  #content .tabular :is(input.date, input[type="date"], #issue_estimated_hours, #time_entry_hours) {
+    width: auto;
+    min-width: 160px;
+  }
+
+  // Ticketformular: Spalten untereinander, ohne Abstand dazwischen
+  #issue-form .splitcontent,
+  #all_attributes .splitcontent {
+    gap: 0;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Formularzeilen als kleine Flex-Zeile:
+  //   Label (volle Breite)
+  //   [Feld ………………………………] [Mir zuweisen | + | Stunden]
+  // Checkbox-Zeilen: [☐] Label
+  // ---------------------------------------------------------------------------
+
+  #content .tabular p {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $spaceXxs $spaceXs;
+    margin: 0 0 $mobileFormRowGap;
+    padding: 0;
+    min-height: 0;
+
+    > label {
+      flex: 0 0 100%;
+      margin: 0;
+    }
+
+    // Felder füllen den Rest der Zeile, Zusätze daneben.
+    // :where hält die Spezifität niedrig (die ID in der Liste würde sonst
+    // die Checkbox-Regel unten schlagen)
+    > :where(select, input, textarea, #issue_description_and_toolbar, .check_box_group) {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    > :where(input.date, input[type="date"], #issue_estimated_hours, #time_entry_hours) {
+      flex: 0 0 auto;
+    }
+
+    > :where(a.assign-to-me-link, a.icon-only, span.icon-only) {
+      flex: 0 0 auto;
+      padding: 0;
+    }
+
+    > em.info {
+      flex: 0 0 100%;
+      margin: 0;
+    }
+  }
+
+  // Checkbox vor dem Label in einer Zeile (auch Ja/Nein-Felder: span.bool_cf)
+  // Kästchen zur ersten Label-Zeile, auch wenn das Label umbricht
+  // Kästchen zur ersten Label-Zeile, auch wenn das Label umbricht;
+  // Hilfetext (em.info) als eigene Zeile darunter, bündig mit dem Label
+  #content .tabular p:has(> input[type="checkbox"]),
+  #content .tabular p:has(> .bool_cf) {
+    align-items: flex-start;
+
+    > label {
+      flex: 1 1 0;
+      order: 1;
+    }
+
+    > input[type="checkbox"],
+    > .bool_cf {
+      flex: 0 0 auto;
+      margin: calc((#{$fontSizeBase} * #{$lineHeightBase} - #{$mobileCheckSize}) / 2) 0 0;
+    }
+
+    // Hülle der Ja/Nein-Felder nur so groß wie ihr Kästchen
+    > .bool_cf {
+      height: auto;
+      min-width: $mobileCheckSize;
+    }
+
+    > .bool_cf input[type="checkbox"] {
+      margin: 0;
+    }
+
+    > em.info {
+      order: 2;
+      margin-left: $mobileCheckSize + $spaceXs;
+    }
+  }
+
+  // "Privat" schwebte rechts neben "Projekt": eigene Zeile, Kästchen vorn
+  #issue_is_private_wrap {
+    float: none;
+    display: flex;
+    align-items: center;
+    gap: $spaceXs;
+    margin: 0 0 $mobileFormRowGap;
+
+    label {
+      display: inline;
+      margin: 0;
+    }
+  }
+
+  // Redmine setzt den Tracker auf 90%
+  #content #all_attributes #issue_tracker_id {
+    width: auto;
+  }
+
+  // "Bearbeiten": weniger Innenabstand
+  #update {
+    padding: $spaceMd;
+    border-radius: $radiusMd;
+  }
+
+  // Formular-Fuß: Buttons in voller Breite nebeneinander
+  #content > form > input[type="submit"],
+  #content form > p.buttons input[type="submit"] {
+    min-height: $controlHeight + 8px;
+  }
+}

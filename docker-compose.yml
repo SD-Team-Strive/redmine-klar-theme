@@ -1,0 +1,33 @@
+# Lokale Testumgebung für das Theme.
+# Start:   docker compose up -d
+# Daten:   docker compose exec redmine bin/rails runner dev/seed.rb  (siehe README)
+# Aufruf:  http://localhost:3080  (admin / admin)
+#
+# Standard ist Redmine 7.0;
+# andere Version: REDMINE_VERSION=6.1 docker compose up -d
+# (je Version eigene Datenbank, damit kein Downgrade nötig ist)
+services:
+  redmine:
+    image: redmine:${REDMINE_VERSION:-7.0}
+    container_name: redmine-klar-theme
+    ports:
+      - "3080:3000"
+    environment:
+      REDMINE_SECRET_KEY_BASE: local-theme-development-only
+      SECRET_KEY_BASE: local-theme-development-only
+    volumes:
+      - redmine-files:/usr/src/redmine/files
+      - redmine-sqlite-${REDMINE_VERSION:-7.0}:/usr/src/redmine/sqlite
+      # Nur die Theme-Ordner einhängen, nicht das ganze Repository.
+      # Ordnername = Theme-Name in Redmines Auswahl ("Klar")
+      - ./stylesheets:/usr/src/redmine/themes/klar/stylesheets:ro
+      - ./fonts:/usr/src/redmine/themes/klar/fonts:ro
+      - ./images:/usr/src/redmine/themes/klar/images:ro
+      - ./javascripts:/usr/src/redmine/themes/klar/javascripts:ro
+      - ./favicon:/usr/src/redmine/themes/klar/favicon:ro
+      - ./dev:/usr/src/redmine/dev:ro
+
+volumes:
+  redmine-files:
+  redmine-sqlite-7.0:
+  redmine-sqlite-6.1:

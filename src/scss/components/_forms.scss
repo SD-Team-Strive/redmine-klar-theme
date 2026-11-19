@@ -1,0 +1,360 @@
+// =============================================================================
+// Formulare: Eingabefelder, Auswahllisten, Checkboxen, Fieldsets,
+// tabellarische Formulare (.tabular) und Dateianhänge
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/formsVariables" as *;
+
+// -----------------------------------------------------------------------------
+// Eingabefelder
+// -----------------------------------------------------------------------------
+
+// :where() hält die Spezifität niedrig, damit gezielte Regeln
+// (z. B. Dateinamen in Anhängen) weiterhin greifen
+$textInputs: 'input:where(:not([type="submit"], [type="button"], [type="reset"], [type="checkbox"], [type="radio"], [type="file"], [type="hidden"], [type="image"]))';
+
+#{$textInputs},
+select,
+textarea {
+  @include control;
+  height: $formControlHeight;
+  padding: 0 $formControlPaddingX;
+  border-color: $formControlBorder;
+  border-radius: $formControlRadius;
+
+  &:hover {
+    border-color: $formControlHoverBorder;
+  }
+
+  &::placeholder {
+    color: $formPlaceholderColor;
+  }
+
+  &:disabled {
+    color: $colorTextTertiary;
+    background-color: $formControlDisabledBg;
+    border-color: $formControlBorder;
+  }
+}
+
+// Fokus: gleiche Spezifität wie Redmines input[type="text"]:focus, steht später
+:is(input[type="text"], input[type="password"], input[type="date"], input[type="number"],
+  input[type="email"], input[type="url"], input[type="search"], input[type="tel"],
+  input[type="time"], input:not([type]), select, textarea):is(:focus, :active) {
+  border-color: $formControlFocusBorder;
+  @include focusRing;
+}
+
+textarea {
+  height: auto;
+  padding: $spaceXs $formControlPaddingX;
+  line-height: $lineHeightBase;
+}
+
+select {
+  padding-right: $spaceXl;
+  background-image: url("#{$redmineAssetPath}chevron-down.svg");
+  background-repeat: no-repeat;
+  background-position: right $spaceXs center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+// Leere Auswahlfelder (z. B. "Übergeordnete Seite") nicht auf Pfeilbreite
+.tabular select {
+  min-width: 200px;
+}
+
+select[multiple],
+select[multiple="multiple"],
+select[size]:not([size="1"]) {
+  height: auto;
+  padding: $spaceXxs;
+  background-image: none;
+}
+
+// Checkbox und Radio im Stil der Eingabefelder: Rahmen, Radius, Schatten,
+// gewählt dunkle Fläche mit weißem Haken bzw. Punkt, Fokus-Ring wie Felder
+input[type="checkbox"],
+input[type="radio"] {
+  flex-shrink: 0;
+  width: $formCheckSize;
+  height: $formCheckSize;
+  margin: 0 $spaceXxs 0 0;
+  padding: 0;
+  vertical-align: middle;
+  background-color: $colorBgCard;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: $borderWidth solid $formCheckBorder;
+  box-shadow: $shadowSm;
+  cursor: pointer;
+  appearance: none;
+  transition: background-color $transitionFast, border-color $transitionFast;
+
+  &:hover {
+    border-color: $formCheckHoverBorder;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: $focusRing;
+  }
+
+  &:checked {
+    background-color: $formCheckAccent;
+    border-color: $formCheckAccent;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+input[type="checkbox"] {
+  border-radius: $formCheckRadius;
+
+  &:checked {
+    background-image: iconUrl("check", 3, "white");
+    background-size: 12px;
+  }
+
+  // Teilauswahl (z. B. "alle auswählen" in Listen)
+  &:indeterminate {
+    background-color: $formCheckAccent;
+    background-image: iconUrl("minus", 3, "white");
+    background-size: 12px;
+    border-color: $formCheckAccent;
+  }
+}
+
+// Redmine setzt an einzelnen Stellen eigene Höhen (Seitenleiste 20px,
+// Tabellen "initial") – Kästchen bleibt quadratisch
+#sidebar li input:is([type="checkbox"], [type="radio"]),
+table.list .checkbox input[type="checkbox"],
+#login-form input[type="checkbox"] {
+  width: $formCheckSize;
+  height: $formCheckSize;
+}
+
+input[type="radio"] {
+  border-radius: 50%;
+
+  &:checked {
+    background-image: radial-gradient(circle, $colorBgCard 0 3px, transparent 3.5px);
+  }
+}
+
+input[type="file"] {
+  font-size: $fontSizeSm;
+}
+
+input.autocomplete {
+  padding-left: $spaceXl !important;
+  background: $colorBgCard url("#{$redmineAssetPath}search.svg") no-repeat $spaceXs 50%;
+  background-size: 16px;
+}
+
+// Kleine Felder in Kopfzeilen und Werkzeugleisten
+.contextual input,
+.contextual select,
+input.small,
+select.small {
+  height: $controlHeightSm;
+  font-size: $fontSizeSm;
+}
+
+// -----------------------------------------------------------------------------
+// Fieldsets
+// -----------------------------------------------------------------------------
+
+fieldset {
+  margin: 0 0 $spaceMd;
+  padding: $fieldsetPadding * 0.5 $fieldsetPadding $fieldsetPadding;
+  border: $borderWidth solid $fieldsetBorder;
+  border-radius: $fieldsetRadius;
+}
+
+legend {
+  padding: 0 $spaceXxs;
+  font-weight: $fontWeightSemibold;
+  color: $colorTextPrimary;
+}
+
+// Einklappbare Fieldsets (Filter, Optionen): nur eine Trennlinie
+fieldset.collapsible {
+  padding: $spaceXs 0 $spaceXs;
+  border-width: $borderWidth 0 0;
+  border-radius: 0;
+
+  > legend {
+    display: inline-flex;
+    align-items: center;
+    gap: $spaceXxs;
+    padding: 0 $spaceXs 0 0;
+    font-weight: $fontWeightMedium;
+    color: $colorTextSecondary;
+
+    &:hover {
+      color: $colorTextPrimary;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Tabellarische Formulare: Label links, Feld rechts
+// -----------------------------------------------------------------------------
+
+.tabular p {
+  padding: $formTabularRowPaddingY 0 $formTabularRowPaddingY $formTabularLabelWidth;
+  min-height: $formControlHeight;
+}
+
+.tabular label {
+  margin-left: -$formTabularLabelWidth;
+  width: $formTabularLabelWidth - $spaceMd;
+  // Erste Zeile mittig zum Feld, längere Labels brechen eng um
+  padding-top: calc((#{$formControlHeight} - 1.4em) / 2);
+  padding-right: 0;
+  font-weight: $formLabelFontWeight;
+  line-height: 1.4;
+  color: $formLabelColor;
+}
+
+// Checkbox/Radio als Feld einer Zeile: Labels sind auf die Mitte eines
+// Eingabefelds ausgerichtet, das Kästchen ist niedriger – halben Unterschied
+// nach unten, damit beide auf einer Mitte liegen
+.tabular p > input:is([type="checkbox"], [type="radio"]) {
+  margin-top: ($formControlHeight - $formCheckSize) * 0.5;
+  margin-bottom: ($formControlHeight - $formCheckSize) * 0.5;
+  vertical-align: top;
+}
+
+// Checkbox mit Label dahinter ("☐ Privat"): beide in einer Zeile zentriert
+.tabular p:has(> input[type="checkbox"] + label) {
+  display: flex;
+  align-items: center;
+  gap: $spaceXs;
+
+  > input[type="checkbox"] {
+    margin: 0;
+  }
+
+  > input[type="checkbox"] + label {
+    float: none;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    line-height: $lineHeightBase;
+  }
+}
+
+// Benutzerdefinierte Ja/Nein-Felder: Checkbox steckt in einer Hülle
+// (span.bool_cf, je nach Feldart auch .check_box_group) – die Hülle bekommt
+// die Feldhöhe und zentriert das Kästchen
+.tabular p > .bool_cf {
+  display: flex;
+  align-items: center;
+  width: auto;
+  height: $formControlHeight;
+  margin: 0;
+  padding: 0;
+
+  input:is([type="checkbox"], [type="radio"]) {
+    margin: 0;
+  }
+}
+
+.tabular label.floating,
+.tabular label.block,
+.tabular label.inline,
+label.no-css {
+  padding-top: 0;
+  font-weight: $fontWeightRegular;
+  line-height: $lineHeightBase;
+  color: $colorTextPrimary;
+}
+
+.tabular label.block {
+  display: flex;
+  align-items: center;
+  gap: $spaceXxs;
+  margin: $spaceXxs 0;
+}
+
+.tabular.settings p {
+  padding-left: $formTabularSettingsLabelWidth;
+  font-size: inherit;
+}
+
+.tabular.settings label {
+  margin-left: -$formTabularSettingsLabelWidth;
+  width: $formTabularSettingsLabelWidth - $spaceMd;
+}
+
+.tabular label.error {
+  color: $formErrorColor;
+}
+
+.tabular label.error + *:not(#issue_description_and_toolbar),
+.tabular label.error + span#issue_description_and_toolbar div.jstBlock {
+  border-color: $formErrorColor;
+}
+
+span.required {
+  color: $formRequiredColor;
+}
+
+em.info {
+  margin-top: $spaceXxs;
+  font-size: $fontSizeXs;
+  color: $formHelpColor;
+}
+
+// Checkbox-Gruppen (z. B. Mehrfachauswahl benutzerdefinierter Felder)
+.check_box_group {
+  padding: $spaceXs;
+  border-color: $formControlBorder;
+  border-radius: $formControlRadius;
+}
+
+.check_box_group.bool_cf {
+  padding: 0;
+}
+
+// Objektauswahl (Rollen, Projekte, Tracker) in Spalten
+.objects-selection > div,
+#user_group_ids {
+  column-rule: $borderWidth solid $colorBorder;
+}
+
+// -----------------------------------------------------------------------------
+// Dateianhänge
+// -----------------------------------------------------------------------------
+
+span.add_attachment {
+  font-size: $fontSizeSm;
+}
+
+.attachments_fields > span,
+#existing-attachments > span {
+  display: flex;
+  align-items: center;
+  gap: $spaceXs;
+  margin-bottom: $spaceXxs;
+}
+
+.attachments_fields input.filename,
+#existing-attachments .filename {
+  color: $colorTextPrimary;
+  border: 0;
+  box-shadow: none;
+}
+
+div.fileover,
+p.custom-field-filedroplistner.fileover {
+  background-color: $colorAccentBg;
+}

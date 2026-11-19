@@ -1,0 +1,87 @@
+// =============================================================================
+// Kontextmenü der Ticketliste (Rechtsklick) und ausgewählte Zeilen
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/contextMenuVariables" as *;
+
+#context-menu {
+  font-size: $contextMenuFontSize;
+
+  ul {
+    @include popover;
+    width: $contextMenuWidth;
+    padding: $spaceXxs;
+  }
+
+  li {
+    padding: 0;
+    border: 0;
+    border-radius: $radiusSm;
+  }
+
+  li:hover {
+    background-color: $colorHoverBg;
+    border: 0;
+    border-radius: $radiusSm;
+  }
+
+  a {
+    padding: $spaceXs * 0.75 $spaceXs;
+    border-radius: $radiusSm;
+    color: $colorTextPrimary;
+  }
+
+  a:hover {
+    color: $colorTextPrimary;
+  }
+
+  a.disabled,
+  a.disabled:hover {
+    color: $colorTextPlaceholder;
+  }
+
+  // Untermenüs direkt neben dem Eintrag
+  li.folder ul,
+  li.folder > ul {
+    left: calc(100% + #{$spaceXxs});
+  }
+
+  &.reverse-x li.folder ul,
+  &.reverse-x li.folder > ul {
+    left: auto;
+    right: calc(100% + #{$spaceXxs});
+  }
+
+  // Einträge ohne Icon auf die Textkante der Einträge mit Icon
+  li a.submenu {
+    padding-left: $spaceXs + 16px + $spaceXs * 0.75;
+    background-position: right $spaceXs center;
+  }
+}
+
+// Ausgewählte Zeilen: Akzentfläche statt Blau
+.context-menu-selection,
+.context-menu-selection:hover {
+  color: $colorTextPrimary !important;
+  background-color: $contextMenuSelectedBg !important;
+}
+
+.context-menu-selection a,
+.context-menu-selection a:hover {
+  color: $colorTextPrimary !important;
+}
+
+.context-menu-selection svg.icon-svg {
+  stroke: $colorTextMuted !important;
+}
+
+div#gantt_area .context-menu-selection,
+div#gantt_area .context-menu-selection:hover {
+  background-color: rgba($yellow300, 0.4) !important;
+}
+
+div#gantt_area .context-menu-selection a {
+  color: $colorTextPrimary !important;
+}

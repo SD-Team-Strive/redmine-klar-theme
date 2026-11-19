@@ -1,0 +1,279 @@
+// =============================================================================
+// Mobiles Menü (Flyout, bis 899px)
+// Aufbau bleibt wie in Redmine: Suche, Avatar, Projekt-, Allgemein-,
+// Seitenleisten- und Profilbereich. Redmines JS verschiebt dafür den Inhalt
+// der Seitenleiste (#sidebar-wrapper) in .js-sidebar.
+// Gestaltung: hell wie der Rest des Themes, Menüzeilen statt Trennlinien,
+// Abschnittsüberschriften leise und ohne Versalien.
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/flyoutMenuVariables" as *;
+
+@include mobile {
+  .flyout-menu {
+    color: $flyoutColor;
+    background-color: $flyoutBackground;
+    border-left: $borderWidth solid $colorBorder;
+    font-size: $fontSizeBase;
+  }
+
+  // Einrückungen aus responsive.css auf ein Maß bringen
+  .flyout-menu h3,
+  .flyout-menu h4,
+  .flyout-menu > p,
+  .flyout-menu > a,
+  .flyout-menu ul li a,
+  .flyout-menu__search,
+  .flyout-menu__sidebar > div,
+  .flyout-menu__sidebar > p,
+  .flyout-menu__sidebar > a,
+  .flyout-menu__sidebar > form,
+  .flyout-menu > div,
+  .flyout-menu > form {
+    padding-left: $flyoutPaddingX;
+    padding-right: $flyoutPaddingX;
+  }
+
+  // Abschnittsüberschriften: jede beginnt einen Abschnitt mit Trennlinie
+  // (Projekt, Allgemein, Abfragen, Beobachter, Profil …)
+  .flyout-menu h3,
+  .flyout-menu #sidebar-wrapper h3 {
+    height: auto;
+    margin: $flyoutSectionGap 0 0;
+    padding-top: $flyoutSectionGap;
+    padding-bottom: $spaceXxs;
+    font-size: $fontSizeXs;
+    font-weight: $fontWeightSemibold;
+    line-height: $lineHeightBase;
+    letter-spacing: 0;
+    text-transform: none;
+    color: $flyoutHeadingColor;
+    background: none;
+    border: 0;
+    border-top: $borderWidth solid $flyoutSectionBorder;
+  }
+
+  // Direkt unter dem Benutzer (der hat schon eine Linie)
+  .flyout-menu__avatar + h3 {
+    margin-top: 0;
+    border-top: 0;
+  }
+
+  .flyout-menu h4 {
+    color: $flyoutColor;
+  }
+
+  // Menüzeilen
+  .flyout-menu ul {
+    padding: 0 $flyoutItemInset;
+  }
+
+  .flyout-menu ul li a,
+  .flyout-menu ul li:first-child a {
+    height: auto;
+    padding: $flyoutItemPaddingY $flyoutItemPaddingX;
+    line-height: $lineHeightBase;
+    color: $flyoutColor;
+    border: 0;
+    border-radius: $radiusSm;
+  }
+
+  .flyout-menu ul li a:hover {
+    background-color: $flyoutItemHoverBackground;
+  }
+
+  // Einträge mit Icon (Admin-Menü): Icon mittig zum Text
+  .flyout-menu ul li a.icon {
+    display: flex;
+    align-items: center;
+    gap: $spaceXs;
+
+    .icon-label {
+      margin-left: 0;
+    }
+  }
+
+  .flyout-menu a {
+    color: $flyoutColor;
+  }
+
+  .flyout-menu a.selected {
+    font-weight: $fontWeightMedium;
+    background-color: $flyoutItemSelectedBackground;
+    box-shadow: none;
+  }
+
+  .flyout-menu .icon svg,
+  .flyout-menu .icon-only svg {
+    stroke: $colorTextMuted;
+  }
+
+  // Suche oben
+  .flyout-menu__search {
+    display: flex;
+    align-items: center;
+    height: $flyoutTopHeight;
+    padding-top: 0;
+    line-height: normal;
+    border-bottom: $borderWidth solid $colorBorder;
+  }
+
+  .flyout-menu__search form {
+    position: relative;
+    display: block;
+    width: 100%;
+  }
+
+  .flyout-menu__search input[type="text"] {
+    width: 100%;
+    height: $controlHeight + 8px;
+    padding-left: $controlHeight + 4px;
+    background-color: $colorBgCard;
+    border: $borderWidth solid $colorBorder;
+    border-radius: $radiusBase;
+  }
+
+  .search-magnifier--flyout {
+    top: 50%;
+    left: $spaceSm;
+    transform: translateY(-50%);
+    line-height: 0;
+
+    svg {
+      stroke: $colorTextTertiary;
+    }
+  }
+
+  // Angemeldeter Benutzer (responsive.css: .flyout-menu .flyout-menu__avatar)
+  .flyout-menu .flyout-menu__avatar {
+    align-items: center;
+    gap: $spaceSm;
+    margin: 0;
+    padding: $spaceSm $flyoutPaddingX;
+    border: 0;
+    border-bottom: $borderWidth solid $colorBorder;
+
+    a {
+      display: flex;
+      align-items: center;
+      width: auto;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      line-height: $lineHeightBase;
+      color: $flyoutColor;
+    }
+
+    a.user {
+      font-weight: $fontWeightMedium;
+    }
+
+    .avatar {
+      width: $flyoutAvatarSize;
+      height: $flyoutAvatarSize;
+      font-size: $flyoutAvatarSize * 0.4;
+    }
+  }
+
+  // Eingeschobene Seitenleiste: Karte der Desktop-Ansicht zurücksetzen
+  .flyout-menu #sidebar-wrapper {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+
+    // Aktionen wie "Hinzufügen" (Beobachter): eingerückte Menüzeile
+    .contextual {
+      display: block;
+      float: none;
+      margin: 0;
+      padding: 0 $flyoutItemInset;
+      line-height: $lineHeightBase;
+    }
+
+    .contextual a {
+      display: flex;
+      align-items: center;
+      gap: $spaceXs;
+      padding: $flyoutItemPaddingY $flyoutItemPaddingX;
+      color: $colorTextSecondary;
+      border-radius: $radiusSm;
+
+      &:hover {
+        color: $flyoutColor;
+        background-color: $flyoutItemHoverBackground;
+        text-decoration: none;
+      }
+    }
+  }
+
+  // Beobachter: Avatar, Name, Entfernen in einer Menüzeile
+  .flyout-menu #watchers ul li {
+    gap: $spaceXs;
+    padding: 0 $flyoutItemPaddingX;
+
+    a {
+      padding: 0;
+    }
+
+    a.user {
+      flex: 1;
+      padding: $flyoutItemPaddingY 0;
+    }
+  }
+
+  .flyout-menu #watchers ul li,
+  .flyout-menu ul.queries li {
+    border: 0;
+  }
+
+  // Schließen/Öffnen ohne Fokus-Rahmen bei Maus und Touch
+  .mobile-toggle-button:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .mobile-toggle-button:focus-visible {
+    box-shadow: inset 0 0 0 2px $colorFocusRing;
+  }
+
+  // Öffnen/Schließen: Redmine verschiebt Rahmen und Kopf per
+  // inset-inline-end um die Menübreite; diese Verschiebung wird animiert.
+  // (Kein transform: Der fixierte Kopf liegt in #wrapper und verlöre sonst
+  // seine Fixierung.)
+  // Ausgangswert 0 statt auto – von auto aus animiert der Browser nicht
+  #wrapper,
+  #header {
+    inset-inline-end: 0;
+    transition: inset-inline-end $flyoutTransition;
+  }
+
+  // Menüeinträge blenden leicht nach, statt hart zu erscheinen
+  .flyout-menu > * {
+    transition: opacity $flyoutTransition;
+    opacity: 0;
+  }
+
+  .flyout-is-active .flyout-menu > * {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #wrapper,
+    #header,
+    .flyout-menu > * {
+      transition: none;
+    }
+  }
+
+  // Fixierte Leisten des Inhalts (Ticket-Kopfzeile beim Scrollen) liegen
+  // mit z-index 1000 über allem und damit auch über dem geöffneten Menü –
+  // solange das Menü offen ist, ausblenden (siehe $zLayers)
+  .flyout-is-active div#sticky-issue-header {
+    display: none;
+  }
+}

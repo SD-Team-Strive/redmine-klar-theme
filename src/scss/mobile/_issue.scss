@@ -1,0 +1,107 @@
+// =============================================================================
+// Mobil: Ticket-Detailansicht
+// Attribute als zweispaltige Liste (Label | Wert) statt untereinander,
+// Karte mit weniger Innenabstand, Historie ohne gedrängte Kopfzeilen.
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/mobileVariables" as *;
+
+@include mobile {
+  div.issue.details {
+    padding: $spaceMd;
+    border-radius: $radiusMd;
+
+    div.subject h3 {
+      font-size: $fontSizeLg;
+    }
+
+    // Attribute: Label links, Wert rechts, beide Spalten der Desktop-Ansicht
+    // untereinander
+    .attributes .attribute {
+      display: grid;
+      grid-template-columns: $mobileAttributeLabelWidth minmax(0, 1fr);
+      gap: 0 $spaceSm;
+      min-height: 0;
+      padding: $spaceXxs 0;
+    }
+
+    // Eine Spalte (leere Felder blendet pages/_issue.scss bereits aus)
+    .attributes {
+      margin-top: $spaceMd;
+      padding-top: $spaceSm;
+      column-count: 1;
+    }
+
+    .attributes .attribute .label {
+      float: none;
+      width: auto;
+      margin: 0;
+    }
+
+    .attributes .splitcontentright {
+      margin-top: 0;
+    }
+
+  }
+
+  // Vor/Zurück oben rechts: an den kleineren Innenabstand anpassen
+  div.issue.details[data-subject-promoted] > .next-prev-links {
+    top: $spaceMd - $spaceXxs * 0.5;
+    right: $spaceMd - $spaceXs;
+  }
+
+  // Reaktion am Kartenende: an den kleineren Innenabstand anpassen
+  div.issue.details:has(> .reaction) {
+    padding-bottom: $spaceMd + $mobileReactionRowHeight + $spaceMd;
+
+    &::after {
+      right: $spaceMd;
+      bottom: $spaceMd + $mobileReactionRowHeight + $spaceMd * 0.5;
+      left: $spaceMd;
+    }
+
+    > .reaction {
+      bottom: $spaceMd;
+      left: $spaceMd;
+    }
+  }
+
+  // Historie: Kopfzeile darf umbrechen, Aktionen bleiben rechts
+  .journals h4.journal-header {
+    flex-wrap: wrap;
+    gap: $spaceXxs $spaceXs;
+  }
+
+  .journals .journal-content {
+    padding: 0 $spaceXs;
+  }
+
+  // Changesets unter statt neben der Historie
+  div#issue-changesets {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@include phone {
+  // Vor/Zurück (‹ 12 / 17 ›, siehe pages/_issue.scss): Redmine stellt es
+  // auf dem Telefon als eigene Zeile über den Betreff. Wie auf dem Desktop
+  // oben rechts in der Karte lassen, der Betreff weicht aus – keine
+  // zusätzliche Zeile.
+  div.issue .next-prev-links {
+    float: right;
+    clear: none;
+    display: block;
+    margin: (-$spaceXxs) (-$spaceXs) 0 $spaceXs;
+    text-align: right;
+
+    // mobile/_navigation.scss zentriert Seitenblätter-Leisten
+    span.pagination {
+      justify-content: flex-end;
+      margin: 0;
+    }
+  }
+}
+

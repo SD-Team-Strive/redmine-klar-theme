@@ -1,0 +1,14 @@
+@use "../../variables" as *;
+
+$wikiFontSize:        0.9375rem !default; // 15px, angenehmer für Fließtext
+$wikiLineHeight:      $lineHeightText !default;
+$wikiColor:           $colorTextPrimary !default;
+$wikiHeadingSpaceTop: $spaceXl !default;
+$wikiParagraphSpace:  $spaceSm !default;
+$wikiCodeBackground:  $colorBgMuted !default;
+$wikiPreBackground:   $colorBgSubtle !default;
+$wikiPreBorder:       $colorBorder !default;
+$wikiTableBorder:     $colorBorder !default;
+$wikiTableHeadBg:     $colorBgSubtle !default;
+$wikiTocBackground:   $colorBgSubtle !default;
+$wikiTocMaxWidth:     320px !default;

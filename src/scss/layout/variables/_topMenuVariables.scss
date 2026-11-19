@@ -1,0 +1,12 @@
+@use "../../variables" as *;
+
+$topMenuHeight:          40px !default;
+$topMenuGap:             $spaceMd !default;
+$topMenuItemGap:         $spaceXxs !default;
+$topMenuFontSize:        $fontSizeSm !default;
+$topMenuBackground:      $colorBgCard !default;
+$topMenuBorderColor:     $colorBorder !default;
+$topMenuColor:           $colorTextSecondary !default;
+$topMenuMutedColor:      $colorTextTertiary !default;
+$topMenuLinkColor:       $colorTextSecondary !default;
+$topMenuLinkHoverColor:  $colorTextPrimary !default;

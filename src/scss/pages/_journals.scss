@@ -1,0 +1,134 @@
+// =============================================================================
+// Historie: Kommentare und Änderungen an Tickets (auch Foren-Antworten)
+// Ruhiger Kopf je Eintrag, Inhalt eingerückt, Änderungen gedämpft.
+// =============================================================================
+
+@use "../variables" as *;
+
+#history {
+  > h3 {
+    margin-top: $spaceXl;
+  }
+}
+
+.journals {
+  .journal {
+    margin-bottom: $spaceMd;
+  }
+
+  h4.journal-header {
+    margin: 0;
+    padding: $spaceXs $spaceSm;
+    font-size: $fontSizeSm;
+    font-weight: $fontWeightMedium;
+    color: $colorTextSecondary;
+    background-color: $colorBgSubtle;
+    border: 0;
+    border-radius: $radiusBase;
+
+    .avatar {
+      margin-right: $spaceXs;
+    }
+
+    a {
+      font-weight: $fontWeightSemibold;
+      color: $colorTextPrimary;
+    }
+
+    .update-info {
+      color: $colorTextSecondary;
+      font-size: inherit;
+    }
+
+    .journal-link {
+      font-weight: $fontWeightRegular;
+      color: $colorTextTertiary;
+    }
+  }
+
+  div:target h4.journal-header {
+    background-color: $colorAccentBg;
+  }
+
+  .journal-content {
+    padding: 0 $spaceSm;
+    margin-bottom: 0;
+  }
+
+  .journal .journal-content .wiki {
+    margin-left: 0;
+  }
+
+  .journal-meta,
+  .journal-actions {
+    align-items: center;
+    gap: $spaceXxs;
+  }
+
+  // Bereiche des Kopfs (Info | Aktionen) auf einer Mitte, auch im Forum
+  // (h4.reply-header mit span.journal-info / span.journal-meta)
+  h4.journal-header > span {
+    display: inline-flex;
+    align-items: center;
+    gap: $spaceXxs;
+    line-height: $lineHeightBase;
+  }
+
+  .journal-actions a.icon-only {
+    padding: $spaceXxs;
+  }
+
+  // Private Notizen über Fläche statt roten Rand
+  .private-notes {
+    border-left: 0;
+
+    h4.journal-header {
+      background-color: $statusErrorBg;
+    }
+  }
+
+  .journal-details {
+    margin: $spaceXs 0 $spaceSm;
+    padding-left: $spaceLg;
+    font-size: $fontSizeSm;
+    color: $colorTextMuted;
+
+    strong {
+      font-weight: $fontWeightMedium;
+      color: $colorTextSecondary;
+    }
+
+    i {
+      font-style: normal;
+    }
+
+    a {
+      color: $colorTextSecondary;
+    }
+
+    a:hover {
+      color: $colorTextPrimary;
+    }
+  }
+}
+
+ul.revision-info {
+  color: $colorTextMuted;
+
+  a {
+    color: $colorTextSecondary;
+  }
+}
+
+// Reaktionen (Daumen)
+.reaction-button .icon-label {
+  font-weight: $fontWeightMedium;
+}
+
+.reaction-button.readonly .icon-svg {
+  stroke: $colorTextPlaceholder;
+}
+
+.reaction-button.readonly .icon-label {
+  color: $colorTextPlaceholder;
+}

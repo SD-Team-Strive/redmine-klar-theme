@@ -1,0 +1,10 @@
+// =============================================================================
+// Ersetzt Redmines gantt.css (ab Redmine 7, nur im Gantt-Diagramm und nach
+// application.css geladen). Erst das Original, dann die Anpassungen.
+// Redmine 6 hat die Gantt-Regeln noch in application.css; dort greift
+// pages/gantt über application.scss.
+// =============================================================================
+
+@use "pages/gantt";
+
+@import url("../../gantt.css");

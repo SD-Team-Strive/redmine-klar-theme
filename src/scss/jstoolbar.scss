@@ -1,0 +1,8 @@
+// =============================================================================
+// Ersetzt Redmines jstoolbar.css (wird nur mit dem Text-Editor geladen,
+// nach application.css). Erst das Original, dann die Anpassungen.
+// =============================================================================
+
+@use "components/jstoolbar";
+
+@import url("../../jstoolbar.css");

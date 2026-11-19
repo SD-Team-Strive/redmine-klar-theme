@@ -1,0 +1,193 @@
+// =============================================================================
+// Mobil: Ticket- und Zeitlisten als Zeilen statt breiter Tabellen
+//
+//   [☐]  Betreff (volle Breite)                         [⋯]
+//        #23 · Fehler · Neu · Sofort · Anna Becker · 19.11.
+//
+// Die Tabelle bleibt im HTML eine Tabelle; nur die Darstellung ändert sich.
+// Der Betreff steht vorne, alle übrigen Spalten folgen als kleine Metazeile
+// in der Reihenfolge, die die Abfrage vorgibt. Spaltenköpfe entfallen
+// (Sortierung bleibt über "Optionen" erreichbar).
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/mobileVariables" as *;
+
+$listTables: "table.list.issues, table.list.time-entries";
+
+@include mobile {
+  #{$listTables} {
+    display: block;
+    width: 100%;
+
+    > thead {
+      display: none;
+    }
+
+    > tbody {
+      display: block;
+    }
+
+    // Eine Zeile je Ticket
+    > tbody > tr.issue,
+    > tbody > tr.time-entry {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: $mobileListMetaGap;
+      padding: $mobileListRowPaddingY $mobileListButtonsSpace $mobileListRowPaddingY $mobileListCheckboxSpace;
+      border-top: $borderWidth solid $colorBorder;
+      white-space: normal;
+    }
+
+    > tbody > tr:first-child {
+      border-top: 0;
+    }
+
+    > tbody > tr > td {
+      display: block;
+      width: auto;
+      min-width: 0;
+      padding: 0;
+      font-size: $fontSizeXs;
+      line-height: $lineHeightBase;
+      color: $colorTextMuted;
+      text-align: left;
+      white-space: normal;
+      border: 0;
+    }
+
+    // Leere Spalten nicht als Lücke stehen lassen
+    > tbody > tr > td:empty {
+      display: none;
+    }
+
+    // Hauptzeile: Betreff bzw. Ticket (Zeitliste) über die volle Breite
+    > tbody > tr > td:is(.subject, .issue) {
+      order: -1;
+      flex: 0 0 100%;
+      font-size: $fontSizeBase;
+      color: $colorTextPrimary;
+    }
+
+    > tbody > tr.time-entry > td.comments {
+      flex: 0 0 100%;
+      color: $colorTextSecondary;
+    }
+
+    > tbody > tr > td.id::before {
+      content: "#";
+    }
+
+    > tbody > tr > td.hours {
+      font-weight: $fontWeightSemibold;
+      color: $colorTextPrimary;
+    }
+
+    // Checkbox links oben, "⋯" rechts oben
+    > tbody > tr > td.checkbox {
+      position: absolute;
+      top: $mobileListRowPaddingY + 2px;
+      left: $mobileListRowPaddingX;
+      width: auto;
+      padding: 0;
+    }
+
+    > tbody > tr > td.buttons {
+      position: absolute;
+      top: $mobileListRowPaddingY - $spaceXxs;
+      right: $spaceXxs;
+    }
+
+    // Beschreibung/letzter Kommentar als eigene Zeile
+    > tbody > tr > td.block_column {
+      flex: 0 0 100%;
+      padding: 0;
+    }
+
+    // Gruppierung bleibt eine Überschriftenzeile
+    > tbody > tr.group {
+      display: block;
+      padding: $spaceSm $mobileListRowPaddingX $spaceXs;
+
+      > td {
+        display: block;
+        padding: 0;
+        border: 0;
+      }
+    }
+
+    // Beschreibungs-Zeilen (Optionen → Beschreibung anzeigen)
+    > tbody > tr:not(.issue):not(.group):not(.time-entry) {
+      display: block;
+      padding: 0 $mobileListButtonsSpace $mobileListRowPaddingY $mobileListCheckboxSpace;
+    }
+  }
+
+  // Zeitliste: Bearbeiten/Löschen/⋯ ans Ende der Metazeile statt in die Ecke
+  table.list.time-entries > tbody > tr.time-entry {
+    padding-right: $mobileListRowPaddingX;
+
+    > td.buttons {
+      position: static;
+      display: flex;
+      align-items: center;
+      gap: $spaceXxs;
+      margin-left: auto;
+    }
+  }
+
+  // Unteraufgaben und Beziehungen im Ticket: keine Checkbox, nicht kürzen
+  :is(#issue_tree, #relations) table.list.issues {
+    // rechts zwei Icons: Verknüpfung lösen und "⋯"
+    > tbody > tr.issue {
+      padding-left: 0;
+      padding-right: $mobileListButtonsSpace * 2;
+    }
+
+    // pages/_issue.scss setzt Innenabstand und Trennlinie je Zelle
+    > tbody > tr.issue > td {
+      width: auto;
+      padding: 0;
+      overflow: visible;
+      text-overflow: clip;
+      border: 0;
+    }
+
+    > tbody > tr.issue > td.subject {
+      padding-right: 0;
+    }
+  }
+
+  // Meine Seite: Checkbox ist dort ausgeblendet, Liste liegt schon in einer
+  // Karte – kein Einzug links, kein zweiter Rahmen
+  #my-page table.list.issues {
+    border: 0;
+    border-radius: 0;
+
+    > tbody > tr.issue {
+      padding-left: 0;
+      padding-right: $mobileListButtonsSpace - $mobileListRowPaddingX;
+    }
+  }
+
+  // Ohne Kopfzeile oben auch die runden Ecken des Rahmens
+  table.list.issues,
+  table.list.time-entries {
+    overflow: hidden;
+  }
+
+  // Keine seitliche Scrollfläche mehr nötig
+  .autoscroll:has(> table.list.issues),
+  .autoscroll:has(> table.list.time-entries) {
+    overflow-x: visible;
+  }
+
+  // Summen über der Liste linksbündig
+  .query-totals {
+    margin-top: 0;
+    text-align: left;
+  }
+}

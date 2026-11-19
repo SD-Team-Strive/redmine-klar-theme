@@ -1,0 +1,11 @@
+@use "../../variables" as *;
+
+$priorityDotSize:        8px !default;
+$priorityDotGap:         $spaceXs * 0.75 !default;
+
+$priorityLowColor:       $colorTextTertiary !default;
+$priorityHighColor:      $statusWarningText !default;
+$priorityUrgentColor:    $statusWarningText !default;
+$priorityUrgentDot:      $statusWarning !default;
+$priorityImmediateColor: $statusErrorText !default;
+$priorityImmediateDot:   $statusError !default;

@@ -1,0 +1,25 @@
+@use "../../variables" as *;
+
+$issueCardPadding:        $spaceLg * 1.2 !default;
+$issueCardRadius:         $radiusLg !default;
+$issueSubjectFontSize:    $fontSizeXl !default;      // Betreff = Überschrift
+$issueKeyFontSize:        $fontSizeMd !default;      // "Fehler #23"
+$issueTitleFontSize:      $fontSizeXl !default;      // Betreff als Seitentitel
+$issueAuthorAvatarSize:   24px !default;
+$issueKeyColor:           $colorTextMuted !default;
+$issueMetaColor:          $colorTextTertiary !default;
+$issueAttributeLabelWidth: 170px !default;
+$issueAttributeLabelColor: $colorTextMuted !default;
+$issueAttributeRowGap:    $spaceXxs !default;
+$issueAttributeRowHeight: 28px !default;   // gleiche Höhe für alle Zeilen
+$issueAttributeColumns:   2 !default;
+$issueAttributeColumnGap: $spaceXl !default;
+$issueProgressWidth:      120px !default;
+$issueNavButtonSize:      28px !default;
+$issueNavWidth:           110px !default;   // ‹ 12 / 17 › – Platz in der Autorzeile
+$issueSectionGap:         $spaceLg !default;
+$issueSectionBorder:      $colorBorder !default;
+$issueStickyHeaderHeight: 48px !default;
+$issueEditBackground:     $colorBgSubtle !default;   // wie die Sidebar im Monitor
+$issueEditPadding:        $spaceLg !default;
+$issueReactionHeight:     28px !default;

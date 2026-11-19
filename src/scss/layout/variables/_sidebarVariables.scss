@@ -1,0 +1,26 @@
+@use "../../variables" as *;
+@use "layoutVariables" as *;
+
+$sidebarPaddingTop:          $contentPaddingTop !default;
+$sidebarPaddingRight:        $layoutGutter !default;
+$sidebarFontSize:            $fontSizeSm !default;
+$sidebarColor:               $colorTextSecondary !default;
+$sidebarHeadingFontSize:     $fontSizeSm !default;
+$sidebarHeadingColor:        $colorTextPrimary !default;
+
+// Karte und Abschnitte
+$sidebarCardPadding:         $spaceMd !default;
+$sidebarSectionGap:          $spaceMd !default;
+$sidebarSectionBorder:       $colorBorder !default;
+
+// Einklapp-Button auf Höhe des Seitentitels
+$sidebarSwitchRowHeight:     $titleRowHeight !default;
+$sidebarSwitchRowGap:        $spaceMd !default;
+
+// Menüzeilen (Abfragen, Administration)
+$sidebarItemPaddingY:        $spaceXxs !default;
+$sidebarItemPaddingX:        $spaceXs !default;
+$sidebarItemColor:           $colorTextSecondary !default;
+$sidebarItemHoverBackground: $colorHoverBg !default;
+$sidebarSelectedColor:       $colorTextPrimary !default;
+$sidebarSelectedBackground:  $colorActiveBg !default;

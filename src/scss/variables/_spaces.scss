@@ -1,0 +1,14 @@
+// =============================================================================
+// Abstände
+// Ein Basiswert, alle Abstände sind Vielfache davon (Monitor: 20px).
+// =============================================================================
+
+$space: 20px !default;
+
+$spaceXxs: $space * 0.2 !default;  // 4px
+$spaceXs:  $space * 0.4 !default;  // 8px
+$spaceSm:  $space * 0.6 !default;  // 12px
+$spaceMd:  $space * 0.8 !default;  // 16px
+$spaceLg:  $space !default;        // 20px
+$spaceXl:  $space * 1.5 !default;  // 30px
+$space2xl: $space * 2 !default;    // 40px

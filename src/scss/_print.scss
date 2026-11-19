@@ -1,0 +1,28 @@
+// =============================================================================
+// Druck: Karten ohne Schatten, Tabellen mit klaren Linien
+// =============================================================================
+
+@use "variables" as *;
+
+@media print {
+  body {
+    font-size: 11pt;
+  }
+
+  div.issue.details,
+  .box,
+  .mypage-box,
+  div#roadmap .version-article {
+    box-shadow: none;
+    border-color: $colorBorderStrong;
+  }
+
+  table.list th,
+  table.list td {
+    border-color: $colorBorderStrong;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}

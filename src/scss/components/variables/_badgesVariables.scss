@@ -1,0 +1,7 @@
+@use "../../variables" as *;
+
+$badgeFontSize:   $fontSizeXs !default;
+$badgeFontWeight: $fontWeightMedium !default;
+$badgePaddingY:   1px !default;
+$badgePaddingX:   $spaceXs !default;
+$badgeRadius:     $radiusPill !default;

@@ -1,0 +1,18 @@
+@use "../../variables" as *;
+
+$queryPanelBackground:     $colorBgCard !default;
+$queryPanelBorder:         $colorBorder !default;
+$queryPanelRadius:         $radiusLg !default;
+$queryPanelPaddingX:       $spaceMd !default;
+$queryPanelPaddingY:       $spaceSm !default;
+$queryPanelFooterBg:       $colorBgSubtle !default;
+$queryPanelBottomSpace:    $spaceLg !default;
+$queryFooterControlHeight: $controlHeightSm + 2px !default;   // 30px
+
+// Filterzeile: Feld | Operator | Werte
+$queryFilterFieldWidth:    200px !default;
+$queryFilterOperatorWidth: 170px !default;
+$queryFilterRowGap:        $spaceXs !default;
+$queryFilterColumnGap:     $spaceSm !default;
+$queryFilterLabelColor:    $colorTextPrimary !default;
+$queryFilterMutedColor:    $colorTextTertiary !default;

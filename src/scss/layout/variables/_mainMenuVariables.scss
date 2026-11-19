@@ -1,0 +1,18 @@
+@use "../../variables" as *;
+
+$mainMenuBottomSpace:          $spaceMd !default;
+$mainMenuTrackPadding:         $spaceXxs !default;
+$mainMenuTrackBackground:      $colorBgMuted !default;
+$mainMenuTrackRadius:          $radiusMd + 2px !default;
+$mainMenuItemGap:              2px !default;
+$mainMenuItemPaddingY:         $spaceXs * 0.85 !default;
+$mainMenuItemPaddingX:         $spaceSm !default;
+$mainMenuItemRadius:           $radiusBase !default;
+$mainMenuFontSize:             $fontSizeBase !default;
+$mainMenuItemColor:            $colorTextSecondary !default;
+$mainMenuItemHoverColor:       $colorTextPrimary !default;
+$mainMenuItemHoverBackground:  $colorActiveBg !default;
+$mainMenuSelectedColor:        $colorTextInverse !default;
+$mainMenuSelectedBackground:   $colorBgInverse !default;
+$mainMenuChildrenWidth:        200px !default;
+$mainMenuChildrenOffset:       $spaceXs !default;   // Abstand "+" → Untermenü

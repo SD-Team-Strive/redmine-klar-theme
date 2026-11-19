@@ -1,0 +1,266 @@
+// =============================================================================
+// Formatierter Text (.wiki): Wiki-Seiten, Ticketbeschreibungen, Kommentare,
+// News. Etwas größer und luftiger als die Oberfläche.
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/wikiVariables" as *;
+
+div.wiki {
+  font-size: $wikiFontSize;
+  line-height: $wikiLineHeight;
+  color: $wikiColor;
+  overflow-wrap: break-word;
+
+  p {
+    line-height: $wikiLineHeight;
+    margin: $wikiParagraphSpace 0;
+  }
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: $wikiHeadingSpaceTop 0 $spaceSm;
+    color: $colorTextPrimary;
+  }
+
+  h1 { font-size: $fontSize2xl; }
+  h2 { font-size: $fontSizeXl; }
+  h3 { font-size: $fontSizeLg; }
+  h4 { font-size: $fontSizeMd; }
+  h5 { font-size: $fontSizeBase; }
+
+  h6 {
+    font-size: $fontSizeBase;
+    color: $colorTextMuted;
+  }
+
+  ul, ol {
+    margin: $wikiParagraphSpace 0;
+    padding-left: $spaceLg * 1.2;
+  }
+
+  li {
+    line-height: $wikiLineHeight;
+    margin-bottom: $spaceXxs;
+  }
+
+  li > ul,
+  li > ol {
+    margin: $spaceXxs 0 0;
+  }
+
+  // Inline-Code
+  *:not(pre) > code,
+  > code {
+    padding: 0.1em 0.35em;
+    font-size: 0.86em;
+    background: $wikiCodeBackground;
+    border-radius: $radiusSm - 2px;
+  }
+
+  // Code-Blöcke
+  pre {
+    margin: $spaceMd 0;
+    padding: $spaceSm $spaceMd;
+    font-size: $fontSizeSm;
+    line-height: $lineHeightBase;
+    background-color: $wikiPreBackground;
+    border: $borderWidth solid $wikiPreBorder;
+    border-radius: $radiusBase;
+  }
+
+  // Zitate: Absatzabstände innen nicht doppeln
+  blockquote > :first-child {
+    margin-top: 0;
+  }
+
+  blockquote > :last-child {
+    margin-bottom: 0;
+  }
+
+  // Tabellen (Redmine setzt tabular-nums; bei Inter sperrt das Bindestriche)
+  table {
+    font-variant-numeric: normal;
+    margin: $spaceMd 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: $borderWidth solid $wikiTableBorder;
+    border-radius: $radiusBase;
+    overflow: hidden;
+    font-size: $fontSizeBase;
+  }
+
+  table td,
+  table th {
+    padding: $spaceXs $spaceSm;
+    border: 0;
+    border-top: $borderWidth solid $wikiTableBorder;
+    border-left: $borderWidth solid $wikiTableBorder;
+  }
+
+  table tr:first-child > * {
+    border-top: 0;
+  }
+
+  table tr > :first-child {
+    border-left: 0;
+  }
+
+  table th,
+  table thead td {
+    font-weight: $fontWeightSemibold;
+    text-align: left;
+    background-color: $wikiTableHeadBg;
+  }
+
+  .wiki-class-noborder,
+  .wiki-class-noborder td,
+  .wiki-class-noborder th {
+    border: 0;
+  }
+
+  // Externe Links ohne altes PNG-Symbol
+  .external {
+    padding-left: 0;
+    background-image: none;
+
+    &::after {
+      @include maskIcon("arrow-up-right", 0.8em);
+      margin-left: 0.15em;
+      vertical-align: -0.05em;
+      color: $colorTextTertiary;
+    }
+  }
+
+  a.new {
+    color: $colorLinkNew;
+  }
+
+  img {
+    border-radius: $radiusSm;
+  }
+
+  // Sprungmarken an Überschriften
+  a:target + h1,
+  a:target + h2,
+  a:target + h3,
+  a:target + h4,
+  a:target + h5,
+  a:target + h6 {
+    background-color: $colorAccentBg;
+    border-radius: $radiusSm;
+  }
+
+  // Inhaltsverzeichnis {{toc}}
+  ul.toc {
+    display: block;
+    max-width: $wikiTocMaxWidth;
+    margin: 0 0 $spaceMd;
+    padding: $spaceSm $spaceMd;
+    font-size: $fontSizeSm;
+    line-height: $lineHeightBase;
+    background-color: $wikiTocBackground;
+    border: $borderWidth solid $colorBorder;
+    border-radius: $radiusMd;
+
+    &.right {
+      margin-left: $spaceLg;
+    }
+
+    &.left {
+      margin-right: $spaceLg;
+    }
+
+    > li:first-child {
+      margin-bottom: $spaceXxs;
+      font-weight: $fontWeightSemibold;
+      color: $colorTextPrimary;
+    }
+
+    li {
+      margin: 2px 0;
+      line-height: $lineHeightBase;
+    }
+
+    li li {
+      margin-left: $spaceSm;
+    }
+
+    a {
+      font-size: inherit;
+      color: $colorTextSecondary;
+      text-decoration: none;
+
+      &:hover {
+        color: $colorTextPrimary;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+a.wiki-anchor:hover {
+  color: $colorTextTertiary !important;
+}
+
+h1:hover a.wiki-anchor,
+h2:hover a.wiki-anchor,
+h3:hover a.wiki-anchor,
+h4:hover a.wiki-anchor,
+h5:hover a.wiki-anchor,
+h6:hover a.wiki-anchor {
+  color: $colorTextPlaceholder;
+}
+
+// Kopieren-Button an Code-Blöcken
+div.pre-wrapper a.copy-pre-content-link {
+  top: $spaceXs;
+  inset-inline-end: $spaceXs;
+  padding: $spaceXxs;
+  background: $colorBgCard;
+  border: $borderWidth solid $colorBorder;
+  border-radius: $radiusSm;
+}
+
+// Wiki-Seite: Aktionen, Stand, Diff
+div.wiki-page .contextual a {
+  opacity: 0.6;
+}
+
+.wiki-update-info {
+  font-size: $fontSizeSm;
+  color: $colorTextTertiary;
+}
+
+.text-diff {
+  padding: $spaceMd;
+  font-size: $fontSizeSm;
+  background-color: $colorBgSubtle;
+  border: $borderWidth solid $colorBorder;
+  border-radius: $radiusBase;
+}
+
+.diff_in {
+  background: $statusSuccessBg;
+
+  span {
+    background: rgba($statusSuccess, 0.25);
+  }
+}
+
+.diff_out {
+  background: $statusErrorBg;
+
+  span {
+    background: rgba($statusError, 0.2);
+  }
+}
+
+// Seitenhierarchie (Index nach Titel)
+ul.pages-hierarchy {
+  padding-left: $spaceLg;
+}

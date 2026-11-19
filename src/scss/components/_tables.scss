@@ -1,0 +1,231 @@
+// =============================================================================
+// Listen-Tabellen (Tickets, Projekte, Benutzer, Zeiten …)
+// Gerahmt mit runden Ecken, ruhiger Kopf, keine Zebrastreifen.
+// =============================================================================
+
+@use "../variables" as *;
+@use "variables/tablesVariables" as *;
+
+table.list,
+.table-list {
+  font-size: $tableFontSize;
+  // Inter setzt bei tabular-nums auch Bindestriche auf feste Breite;
+  // Tabellenziffern deshalb nur in Zahlen- und Datumsspalten (siehe unten)
+  font-variant-numeric: normal;
+  border: $borderWidth solid $tableBorderColor;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: $tableRadius;
+  margin-bottom: $spaceMd;
+  background-color: $colorBgCard;
+}
+
+table.list th,
+.table-list-header {
+  padding: $tableCellPaddingY $tableCellPaddingX;
+  font-size: $tableHeadFontSize;
+  font-weight: $tableHeadFontWeight;
+  color: $tableHeadColor;
+  text-align: left;
+  background-color: $tableHeadBackground;
+  border-bottom: $borderWidth solid $tableBorderColor;
+
+  a {
+    color: $tableHeadColor;
+
+    &:hover {
+      color: $colorTextPrimary;
+    }
+  }
+}
+
+table.list thead tr:first-child th:first-child {
+  border-top-left-radius: $tableRadius - 1px;
+}
+
+table.list thead tr:first-child th:last-child {
+  border-top-right-radius: $tableRadius - 1px;
+}
+
+table.list td {
+  padding: $tableCellPaddingY $tableCellPaddingX;
+  text-align: left;
+  vertical-align: middle;
+  border-top: $borderWidth solid $tableBorderColor;
+}
+
+table.list tbody tr:first-child td {
+  border-top: 0;
+}
+
+// Zahlen und Daten rechtsbündig mit Tabellenziffern
+table.list :is(td, th):is(
+  .id, .done_ratio, .estimated_hours, .total_estimated_hours, .spent_hours,
+  .total_spent_hours, .remaining_hours, .hours, .start_date, .due_date,
+  .created_on, .updated_on, .closed_on, .last_login_on, .date, .spent_on
+) {
+  font-variant-numeric: tabular-nums;
+}
+
+table.list td.id {
+  width: 1%;
+  color: $tableMutedColor;
+  text-align: right;
+}
+
+table.list td.checkbox {
+  width: 1%;
+  padding: $tableCellPaddingY 0 $tableCellPaddingY $tableCellPaddingX;
+}
+
+table.list th.checkbox {
+  padding-right: 0;
+}
+
+table.list td.buttons {
+  text-align: right;
+}
+
+// Zebrastreifen entfernen, dezenter Hover
+table.list:not(.odd-even) tbody tr:nth-child(odd),
+table.list:not(.odd-even) tbody tr:nth-child(even),
+.odd, .even {
+  background-color: transparent;
+}
+
+table.list:not(.odd-even) tbody tr:nth-child(odd):hover,
+table.list:not(.odd-even) tbody tr:nth-child(even):hover,
+.odd:hover, .even:hover {
+  background-color: $tableRowHoverBackground;
+}
+
+table.list tbody tr.group:hover {
+  background-color: $tableGroupBackground;
+}
+
+// Gruppierte Ansicht
+tr.group td {
+  padding: $spaceSm $tableCellPaddingX $spaceXs;
+  background-color: $tableGroupBackground;
+  border-bottom: $borderWidth solid $tableBorderColor;
+
+  span.name {
+    font-weight: $fontWeightSemibold;
+  }
+
+  span.totals {
+    color: $tableMutedColor;
+
+    .value {
+      color: $colorTextSecondary;
+    }
+  }
+
+  a.toggle-all {
+    color: $tableMutedColor;
+  }
+}
+
+// Ticketliste: Text links, Werte nicht umbrechen
+tr.issue,
+tr.time-entry {
+  text-align: left;
+}
+
+tr.issue td.subject a {
+  font-weight: $fontWeightMedium;
+}
+
+tr.issue.created-by-me td.author,
+tr.issue.assigned-to-me td.assigned_to,
+tr.issue.assigned-to-my-group td.assigned_to {
+  font-weight: $fontWeightSemibold;
+}
+
+tr.issue.closed td {
+  color: $tableMutedColor;
+}
+
+table.list tr.overdue:not(.context-menu-selection) td.due_date {
+  color: $statusErrorText;
+  font-weight: $fontWeightMedium;
+}
+
+table.issues td.block_column {
+  padding: $spaceXxs $tableCellPaddingX $spaceSm $spaceXl * 2;
+  color: $colorTextMuted;
+  font-size: $fontSizeSm;
+  border-top: 0;
+}
+
+// Eingerückte Unteraufgaben
+tr.idnt :is(td.subject, td.name) {
+  background-size: 14px;
+}
+
+// Geschlossene Projekte, gesperrte Benutzer
+tr.project.closed,
+tr.project.archived,
+tr.project.closed a,
+tr.project.archived a,
+tr.user.locked,
+tr.user.registered,
+tr.user.locked a,
+tr.user.registered a,
+tr.version.closed,
+tr.version.closed a {
+  color: $tableMutedColor;
+}
+
+table.list caption {
+  padding: 0 0 $spaceXs;
+  font-weight: $fontWeightSemibold;
+  color: $colorTextPrimary;
+}
+
+// Summenzeilen und Zeitbericht
+table#time-report tbody tr.total,
+table.issue-report tr.total,
+table.issue-report-detailed tr.total {
+  font-weight: $fontWeightSemibold;
+  background-color: $tableHeadBackground;
+  border-top: 0;
+}
+
+table#time-report tbody tr.subtotal {
+  font-style: normal;
+  color: $colorTextMuted;
+}
+
+table#time-report tbody tr.subtotal td.hours {
+  color: $colorTextMuted;
+}
+
+table.time-entries td.hours {
+  font-weight: $fontWeightSemibold;
+}
+
+// Spaltensortierung
+a.sort {
+  padding-right: $spaceMd;
+}
+
+// Darüberliegende Summen der Abfrage
+.query-totals {
+  font-size: $fontSizeSm;
+  color: $colorTextMuted;
+
+  .value {
+    font-weight: $fontWeightSemibold;
+    color: $colorTextPrimary;
+  }
+}
+
+// Allgemeine Tabellen (z. B. Ticket-Zusammenfassung) ohne Rahmen
+table td {
+  padding: $spaceXxs;
+}
+
+.autoscroll {
+  margin-bottom: $spaceMd;
+}

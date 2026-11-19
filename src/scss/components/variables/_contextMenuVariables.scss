@@ -1,0 +1,5 @@
+@use "../../variables" as *;
+
+$contextMenuWidth:      230px !default;
+$contextMenuFontSize:   $fontSizeSm !default;
+$contextMenuSelectedBg: $colorSelectedBg !default;

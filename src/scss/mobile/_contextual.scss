@@ -1,0 +1,144 @@
+// =============================================================================
+// Mobil: Aktionen der Titelzeile (.contextual) und Seitenkopf
+//
+// Redmine macht mobil aus jeder Aktion einen großen, fetten Button mit
+// Rahmen; zusammen mit dem "⋯"-Menü ergibt das zwei Reihen über dem Titel.
+// Hier: kompakte Buttons in einer umbrechenden Zeile, und – wo die Aktionen
+// im HTML vor dem Titel stehen – der Titel optisch zuerst.
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/mobileVariables" as *;
+
+@include mobile {
+  #content > .contextual {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $mobileActionGap;
+    width: 100%;
+    margin: 0 0 $spaceMd;
+    padding: 0;
+  }
+
+  #content > .contextual > a,
+  #content > .contextual .drdn,
+  p.buttons a {
+    display: inline-flex;
+    align-items: center;
+    gap: $spaceXxs;
+    height: $mobileActionHeight;
+    margin: 0;
+    padding: 0 $spaceSm;
+    font-size: $fontSizeSm;
+    font-weight: $fontWeightMedium;
+    color: $colorTextSecondary;
+    background-color: $colorBgCard;
+    border: $borderWidth solid $colorBorder;
+    border-radius: $radiusBase;
+
+    &:hover {
+      color: $colorTextPrimary;
+      text-decoration: none;
+    }
+
+    .icon-label {
+      margin-left: 0;
+    }
+  }
+
+  // "⋯"-Menü: quadratisch, Auslöser ohne eigenen Rahmen
+  #content > .contextual .drdn {
+    justify-content: center;
+    width: $mobileActionHeight;
+    padding: 0;
+
+    .drdn-trigger {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  }
+
+  #content > .contextual .drdn-content {
+    top: $mobileActionHeight + $spaceXxs;
+  }
+
+  // Titel vor die Aktionen, wenn diese im HTML davor stehen
+  // (Ticket, Ticketliste, Roadmap, Projektübersicht …)
+  // "~" statt "+": im Forum steht ein verstecktes Formular dazwischen
+  // Als umbrechende Zeile, damit Titel und Status-Badge nebeneinander
+  // stehen; alle übrigen Elemente nehmen die volle Breite
+  // align-content: Ist der Inhalt kürzer als der Bildschirm, verteilt Flex
+  // den Rest sonst zwischen die Zeilen (große Lücken)
+  #content:has(> .contextual ~ h2) {
+    display: flex;
+    flex-flow: row wrap;
+    align-content: flex-start;
+    align-items: center;
+
+    > * {
+      flex: 0 0 100%;
+      min-width: 0;
+    }
+
+    > .flash,
+    > #errorExplanation {
+      order: -2;
+    }
+
+    > h2 {
+      flex: 0 1 auto;
+      order: -1;
+    }
+
+    // Status-Badge des Tickets steht im HTML neben dem Titel: daneben
+    > h2 + .badge {
+      flex: 0 0 auto;
+      order: -1;
+      margin: 0 0 $spaceSm $spaceXs;
+    }
+
+    // Ticket mit Betreff als Titel (theme.js): Titel volle Breite,
+    // Kennung + Status als Zeile darunter, beides vor den Aktionen
+    > h2[data-issue-title] {
+      flex-basis: 100%;
+    }
+
+    > .issue-key {
+      order: -1;
+      margin-bottom: $spaceSm;
+    }
+  }
+
+  #content > h2 {
+    margin-bottom: $spaceSm;
+  }
+
+  // Aktionen innerhalb von Inhalten (Forenbeitrag, Wiki-Abschnitt …)
+  // ohne Einzug, damit sie an der Textkante beginnen
+  .contextual {
+    padding-left: 0;
+  }
+}
+
+@include phone {
+  // Auf schmalen Telefonen passt eine Reihe nur mit Icons: die erste Aktion
+  // behält ihre Beschriftung, die übrigen werden quadratische Icon-Buttons.
+  // Die Beschriftung bleibt für Screenreader lesbar.
+  #content > .contextual > a.icon:not(:first-child) {
+    justify-content: center;
+    width: $mobileActionHeight;
+    padding: 0;
+
+    .icon-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+  }
+}

@@ -1,0 +1,93 @@
+// =============================================================================
+// Administration: Menü, Rechte-/Workflow-Tabellen, Einstellungen
+// =============================================================================
+
+@use "../variables" as *;
+
+// Admin-Menü in der Seitenleiste: siehe layout/_main.scss
+
+#admin-menu li {
+  padding: 0;
+}
+
+// Admin-Startseite: Menü im Inhalt als Kachelraster
+body.controller-admin.action-index #content #admin-menu ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: $spaceXs;
+  margin: 0;
+  padding: 0;
+
+  // Icon zur ersten Textzeile, auch wenn das Label umbricht
+  a {
+    display: flex;
+    align-items: flex-start;
+    gap: $spaceXs;
+    padding: $spaceSm;
+    line-height: $lineHeightBase;
+    border: $borderWidth solid $colorBorder;
+    border-radius: $radiusMd;
+
+    > svg {
+      margin-top: calc((1lh - 18px) / 2);
+    }
+
+    &:hover {
+      background-color: $colorBgSubtle;
+      text-decoration: none;
+    }
+  }
+}
+
+// Matrix-Tabellen: Häkchen zentriert
+table.permissions td,
+table.transitions td,
+table.fields_permissions td,
+table.list td.tick,
+table.list td.center {
+  text-align: center;
+}
+
+table.permissions td.name,
+table.transitions td.name,
+table.fields_permissions td.name {
+  text-align: left;
+}
+
+table.permissions td.role {
+  font-size: $fontSizeXs;
+  color: $colorTextMuted;
+}
+
+table.permissions tr.group > td:nth-of-type(1),
+table.tracker-summary tr.group > td:nth-of-type(1) {
+  font-weight: $fontWeightSemibold;
+}
+
+table.transitions td.enabled {
+  background: $statusSuccessBg;
+}
+
+table.fields_permissions td.readonly {
+  background: $colorBgMuted;
+}
+
+table.fields_permissions td.required {
+  background: $statusErrorBg;
+}
+
+// Plugins-Liste
+table.plugins span.name {
+  font-weight: $fontWeightSemibold;
+}
+
+table.plugins span.description,
+table.plugins span.url {
+  font-size: $fontSizeSm;
+  color: $colorTextMuted;
+}
+
+// Info-Seite
+body.controller-admin.action-info table.list td {
+  text-align: left;
+}

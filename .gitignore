@@ -1,0 +1,8 @@
+node_modules/
+.playwright-mcp/
+dev/screenshots/
+.DS_Store
+.idea/
+
+# Eigenes Logo der jeweiligen Installation (siehe README), nicht Teil des Themes
+images/logo.*

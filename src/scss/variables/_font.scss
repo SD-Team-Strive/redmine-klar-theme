@@ -1,0 +1,29 @@
+// =============================================================================
+// Schrift
+// =============================================================================
+
+$fontFamilyBase: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif !default;
+$fontFamilyMono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace !default;
+
+// Inter: offene Ziffer 4, eindeutiges l, gerade Kommata
+$fontFeatureSettings: "cv01", "cv05", "cv08" !default;
+
+$fontWeightRegular:  400 !default;
+$fontWeightMedium:   500 !default;
+$fontWeightSemibold: 600 !default;
+$fontWeightBold:     700 !default;
+
+// Größen-Skala (Basis 14px, Redmine ist eine dichte Oberfläche)
+$fontSizeXs:   0.75rem !default;   // 12px
+$fontSizeSm:   0.8125rem !default; // 13px
+$fontSizeBase: 0.875rem !default;  // 14px
+$fontSizeMd:   1rem !default;      // 16px
+$fontSizeLg:   1.125rem !default;  // 18px
+$fontSizeXl:   1.5rem !default;    // 24px
+$fontSize2xl:  1.875rem !default;  // 30px
+
+$lineHeightTight: 1.3 !default;
+$lineHeightBase:  1.5 !default;
+$lineHeightText:  1.65 !default;
+
+$letterSpacingHeading: -0.015em !default;

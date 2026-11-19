@@ -1,0 +1,38 @@
+// =============================================================================
+// Avatare und Initialen
+// Initialen-Avatare in gedämpften Tönen statt bunter Signalfarben.
+// =============================================================================
+
+@use "sass:list";
+@use "../variables" as *;
+
+.avatar {
+  border-radius: 50%;
+}
+
+span[role="img"].avatar {
+  font-family: $fontFamilyBase;
+  font-weight: $fontWeightSemibold;
+  letter-spacing: 0;
+}
+
+// Hintergrund/Text je Farbindex (Redmine vergibt 0–7)
+$avatarColors: (
+  ($neutral200, $neutral800),
+  ($yellow200, $neutral900),
+  ($statusInfoBg, $statusInfoText),
+  ($statusSuccessBg, $statusSuccessText),
+  ($statusErrorBg, $statusErrorText),
+  ($statusWarningBg, $statusWarningText),
+  ($neutral800, $neutral0),
+  ($chartTealBg, $chartTealText)
+);
+
+@for $index from 0 through 7 {
+  $pair: list.nth($avatarColors, $index + 1);
+
+  .avatar-color-#{$index} {
+    background-color: list.nth($pair, 1);
+    color: list.nth($pair, 2);
+  }
+}

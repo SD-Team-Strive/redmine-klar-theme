@@ -1,0 +1,103 @@
+// =============================================================================
+// Kalender
+// =============================================================================
+
+@use "../variables" as *;
+@use "variables/calendarVariables" as *;
+
+ul.cal {
+  border: $borderWidth solid $colorBorder;
+  border-radius: $radiusMd;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.cal .calhead,
+.cal .week-number {
+  padding: $spaceXs;
+  font-size: $fontSizeXs;
+  font-weight: $fontWeightMedium;
+  color: $colorTextMuted;
+  background-color: $colorBgSubtle;
+}
+
+.cal .calbody {
+  padding: $spaceXxs $spaceXs $spaceXs;
+  border-color: $colorBorder;
+  box-shadow: none;
+  font-size: $fontSizeXs;
+}
+
+.cal .calbody p.day-num {
+  margin: 0 0 $spaceXxs;
+  font-size: $fontSizeSm;
+  font-variant-numeric: tabular-nums;
+  color: $colorTextMuted;
+}
+
+.cal .calbody.other-month {
+  background-color: $colorBgSubtle;
+
+  p.day-num {
+    color: $colorTextPlaceholder;
+  }
+}
+
+.cal .calbody.nwday:not(.other-month) {
+  background-color: $colorBgSubtle;
+}
+
+.cal .calbody.today {
+  background: $colorAccentBg;
+
+  p.day-num {
+    color: $colorTextPrimary;
+    font-weight: $fontWeightSemibold;
+  }
+}
+
+// Redmine 7 setzt die Tageszahl in einen Kreis (heute: gefüllt).
+// Kreis größer als die Ziffern, damit zweistellige Tage Luft haben.
+.cal .calbody .day-value {
+  width: $calendarDayCircleSize;
+  height: $calendarDayCircleSize;
+  font-size: $fontSizeXs;
+}
+
+.cal .calbody.today p.day-num {
+  margin-right: -$spaceXxs;
+}
+
+// Einträge (Tickets, Versionen): kompakte Zeilen statt Karten
+.cal .calbody div.issue,
+.cal .calbody .version {
+  margin: 0 0 2px;
+  padding: $spaceXxs $spaceXxs + 2px;
+  line-height: $lineHeightTight;
+  background-color: $colorBgCard;
+  border: $borderWidth solid $colorBorder;
+  border-radius: $radiusSm;
+
+  &:hover {
+    border-color: $colorBorderStrong;
+  }
+}
+
+.cal .calbody .icon {
+  padding: 0;
+}
+
+// Tooltips an Kalendereinträgen
+div.tooltip:hover span.tip {
+  padding: $spaceXs $spaceSm;
+  font-size: $fontSizeXs;
+  color: $colorTextSecondary;
+  background-color: $colorBgCard;
+  border: $borderWidth solid $colorBorder;
+  border-radius: $radiusBase;
+  box-shadow: $shadowLg;
+}
+
+.tooltip span.tip a {
+  color: $colorTextPrimary !important;
+}

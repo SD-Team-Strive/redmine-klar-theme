@@ -1,0 +1,14 @@
+@use "../../variables" as *;
+
+$tableFontSize:          $fontSizeSm !default;
+$tableBorderColor:       $colorBorder !default;
+$tableRadius:            $radiusMd !default;
+$tableCellPaddingY:      $spaceXs !default;
+$tableCellPaddingX:      $spaceSm !default;
+$tableHeadBackground:    $colorBgSubtle !default;
+$tableHeadColor:         $colorTextMuted !default;
+$tableHeadFontSize:      $fontSizeXs !default;
+$tableHeadFontWeight:    $fontWeightMedium !default;
+$tableRowHoverBackground: $colorBgSubtle !default;
+$tableGroupBackground:   $colorBgCard !default;
+$tableMutedColor:        $colorTextTertiary !default;

@@ -1,0 +1,14 @@
+@use "../../variables" as *;
+
+$editorBorder:            $colorBorder !default;
+$editorFocusBorder:       $neutral500 !default;
+$editorFocusGlow:         rgba($neutral400, 0.25) !default;
+$editorRadius:            $radiusMd !default;
+$editorToolbarBackground: $colorBgSubtle !default;
+$editorToolbarPadding:    $spaceXxs $spaceXs !default;
+$editorButtonSize:        28px !default;
+$editorTextPadding:       $spaceSm $spaceMd !default;
+$editorMinHeight:         120px !default;
+$editorPreviewBackground: $colorBgSubtle !default;
+$editorSplitMinWidth:     880px !default;   // ab dieser Editorbreite nebeneinander
+$editorStackedPreviewMaxHeight: 60vh !default;  // Vorschau unter dem Text: danach scrollt sie

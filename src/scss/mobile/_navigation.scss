@@ -1,0 +1,52 @@
+// =============================================================================
+// Mobil: Seitenblättern und Navigation in der Filter-Fußzeile
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+
+@include mobile {
+  // Gantt/Kalender: Monatsnavigation nicht mehr rechts schwebend,
+  // sondern als eigene Zeile über den Aktionen der Fußzeile
+  #query_form_with_buttons > p.contextual,
+  #query_form_with_buttons > span.contextual {
+    float: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spaceXxs $spaceSm;
+    width: auto;
+    margin: 0;
+    padding: $spaceSm $spaceMd 0;
+    background-color: $colorBgSubtle;
+  }
+
+  #query_form_with_buttons > .contextual + p.buttons {
+    padding-top: $spaceXs;
+  }
+
+  #query_form_with_buttons > p.buttons {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+@include phone {
+  // Redmine zeigt nur Zurück/aktuell/Weiter und gibt jedem 32% Breite mit
+  // abgeschnittenem Text; stattdessen Breite nach Inhalt, mittig
+  span.pagination {
+    justify-content: center;
+  }
+
+  .pagination ul.pages {
+    display: flex;
+    justify-content: center;
+    gap: $spaceXxs;
+  }
+
+  .pagination ul.pages li.current,
+  .pagination ul.pages li.previous,
+  .pagination ul.pages li.next {
+    width: auto;
+    overflow: visible;
+  }
+}

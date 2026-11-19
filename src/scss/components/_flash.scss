@@ -1,0 +1,134 @@
+// =============================================================================
+// Meldungen: Flash (Erfolg/Fehler/Warnung), Formularfehler, Konflikte,
+// "Keine Daten", Markdown-Alerts
+// Zustände nur über getönte Fläche und Textfarbe, keine farbigen Randakzente.
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/flashVariables" as *;
+
+#errorExplanation,
+div.flash,
+.nodata,
+.warning,
+.conflict {
+  display: block;
+  margin: 0 0 $spaceMd;
+  padding: $flashPaddingY $flashPaddingX;
+  font-size: $flashFontSize;
+  line-height: $lineHeightBase;
+  border-radius: $flashRadius;
+  background-image: none;
+}
+
+// Icon sitzt im Fluss statt per negativem Margin
+div.flash,
+.conflict {
+  display: flex;
+  align-items: flex-start;
+  gap: $flashIconGap;
+
+  svg.icon-svg {
+    flex-shrink: 0;
+    margin: 2px 0 0;
+  }
+}
+
+#errorExplanation:has(svg) {
+  padding-left: $flashPaddingX + 16px + $flashIconGap;
+
+  > svg.icon-svg {
+    top: $flashPaddingY + 2px;
+    bottom: auto;
+    left: $flashPaddingX;
+    margin: 0;
+  }
+}
+
+div.flash.notice {
+  @include tint($statusSuccessBg, $statusSuccessText);
+
+  svg.icon-svg {
+    stroke: $statusSuccess;
+  }
+}
+
+div.flash.error,
+#errorExplanation {
+  @include tint($statusErrorBg, $statusErrorText);
+
+  svg.icon-svg {
+    stroke: $statusError;
+  }
+}
+
+div.flash.warning,
+.conflict {
+  @include tint($statusWarningBg, $statusWarningText);
+
+  svg.icon-svg {
+    stroke: $statusWarningText;
+  }
+}
+
+#errorExplanation ul {
+  margin: 0;
+  padding-left: $spaceMd;
+  font-size: inherit;
+}
+
+// Leerzustände und Hinweise: neutral statt gelb
+.nodata {
+  padding: $spaceXl $spaceLg;
+  text-align: center;
+  color: $colorTextTertiary;
+  background-color: $colorBgSubtle;
+  border: $borderWidth dashed $colorBorder;
+}
+
+.warning {
+  @include tint($statusWarningBg, $statusWarningText);
+}
+
+// -----------------------------------------------------------------------------
+// Markdown-Alerts (> [!NOTE] …) im Wiki
+// -----------------------------------------------------------------------------
+
+.markdown-alert {
+  margin: $spaceMd 0;
+  padding: $spaceSm $spaceMd;
+  border: 0;
+  border-radius: $flashRadius;
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.markdown-alert-title {
+  display: flex;
+  align-items: center;
+  gap: $spaceXxs;
+  font-weight: $fontWeightSemibold;
+}
+
+@each $type, $bg, $text in (
+  "note" $statusInfoBg $statusInfoText,
+  "tip" $statusSuccessBg $statusSuccessText,
+  "important" $colorAccentBg $neutral800,
+  "warning" $statusWarningBg $statusWarningText,
+  "caution" $statusErrorBg $statusErrorText
+) {
+  .markdown-alert-#{$type} {
+    background-color: $bg;
+
+    .markdown-alert-title {
+      color: $text;
+    }
+
+    .markdown-alert-title svg {
+      stroke: $text;
+    }
+  }
+}

@@ -1,0 +1,34 @@
+// =============================================================================
+// Mobil: Kalender (Redmine zeigt ihn als Liste der Tage, je Woche ein Kopf)
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+
+@include mobile {
+  .cal .week-number {
+    padding: $spaceXs $spaceSm;
+    font-size: $fontSizeXs;
+    font-weight: $fontWeightSemibold;
+    color: $colorTextSecondary;
+    background-color: $colorBgSubtle;
+    border: 0;
+    border-top: $borderWidth solid $colorBorder;
+  }
+
+  .cal .calbody {
+    padding: $spaceXs $spaceSm;
+    border-width: $borderWidth 0 0;
+  }
+
+  .cal .calbody p.day-num {
+    display: flex;
+    align-items: center;
+    gap: $spaceXs;
+    margin-bottom: $spaceXxs;
+  }
+
+  .cal .calbody .abbr-day {
+    color: $colorTextTertiary;
+  }
+}

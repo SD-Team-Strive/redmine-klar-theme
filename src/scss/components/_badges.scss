@@ -1,0 +1,54 @@
+// =============================================================================
+// Badges: getönte Pillen wie im Monitor ("deutlich schwächer")
+// Redmine setzt Badges in Versalien, das wird zurückgenommen.
+// =============================================================================
+
+@use "../variables" as *;
+@use "variables/badgesVariables" as *;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  bottom: auto;
+  margin: 0 $spaceXxs;
+  padding: $badgePaddingY $badgePaddingX;
+  font-size: $badgeFontSize;
+  font-weight: $badgeFontWeight;
+  line-height: $lineHeightBase;
+  letter-spacing: 0;
+  text-transform: none;
+  vertical-align: middle;
+  border: 0;
+  border-radius: $badgeRadius;
+}
+
+.badge-private {
+  color: $statusErrorText;
+  background: $statusErrorBg;
+}
+
+.badge-count,
+.badge-issues-count {
+  color: $colorTextSecondary;
+  background: $colorBgMuted;
+}
+
+.badge-status-open {
+  color: $statusInfoText;
+  background: $statusInfoBg;
+}
+
+.badge-status-closed {
+  color: $statusSuccessText;
+  background: $statusSuccessBg;
+}
+
+.badge-status-locked {
+  color: $colorTextMuted;
+  background: $colorBgMuted;
+}
+
+div.issue span.private,
+div.journal span.private {
+  font-size: $badgeFontSize;
+}

@@ -1,0 +1,14 @@
+@use "../../variables" as *;
+
+$tabsBottomSpace:         $spaceLg !default;
+$tabsTrackPadding:        $spaceXxs !default;
+$tabsTrackBackground:     $colorBgMuted !default;
+$tabsTrackRadius:         $radiusMd !default;
+$tabsItemPaddingY:        $spaceXs * 0.75 !default;
+$tabsItemPaddingX:        $spaceSm !default;
+$tabsItemRadius:          $radiusSm + 1px !default;
+$tabsItemFontSize:        $fontSizeSm !default;
+$tabsItemColor:           $colorTextMuted !default;
+$tabsItemHoverColor:      $colorTextPrimary !default;
+$tabsSelectedColor:       $colorTextPrimary !default;
+$tabsSelectedBackground:  $colorBgCard !default;

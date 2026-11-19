@@ -1,0 +1,21 @@
+@use "../../variables" as *;
+
+// Fläche wie die Sidebar im Monitor: leicht grau, hebt sich vom Inhalt ab
+$flyoutBackground:    $colorBgSubtle !default;
+$flyoutColor:         $colorTextPrimary !default;
+$flyoutHeadingColor:  $colorTextTertiary !default;
+$flyoutPaddingX:      $spaceMd !default;
+$flyoutAvatarSize:    32px !default;
+$flyoutTopHeight:     64px !default;   // Höhe des mobilen Kopfs in responsive.css
+$flyoutTransition:    240ms cubic-bezier(0.2, 0, 0, 1) !default;   // weich auslaufend
+
+// Abschnitte: Abstand und Trennlinie über jeder Überschrift
+$flyoutSectionGap:    $spaceSm !default;
+$flyoutSectionBorder: $colorBorder !default;
+
+// Menüzeilen: Hover-Fläche mit Abstand zum Rand
+$flyoutItemInset:     $spaceXs !default;
+$flyoutItemPaddingY:  $spaceXs + 2px !default;
+$flyoutItemPaddingX:  $spaceXs !default;
+$flyoutItemHoverBackground:    $colorHoverBg !default;
+$flyoutItemSelectedBackground: $colorActiveBg !default;

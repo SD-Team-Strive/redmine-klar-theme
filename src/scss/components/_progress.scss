@@ -1,0 +1,59 @@
+// =============================================================================
+// Fortschrittsbalken (Tickets, Versionen, Roadmap)
+// Redmine baut sie als Tabelle; die Zellen werden zu einer runden Spur.
+// =============================================================================
+
+@use "../variables" as *;
+
+table.progress {
+  height: 8px;
+  margin: 0 $spaceXs 0 0;
+  border-radius: $radiusPill;
+  overflow: hidden;
+  border-collapse: separate;
+  background-color: $colorBgMuted;
+
+  td {
+    height: 8px;
+    padding: 0;
+    border: 0 !important;
+  }
+
+  td.closed {
+    background: $statusSuccess;
+  }
+
+  td.done {
+    background: rgba($statusSuccess, 0.45);
+  }
+
+  td.todo {
+    background: $colorBgMuted;
+  }
+}
+
+table.list td table.progress {
+  float: none;
+  display: inline-table;
+  vertical-align: middle;
+}
+
+p.percent {
+  font-size: $fontSizeXs;
+  font-variant-numeric: tabular-nums;
+  color: $colorTextMuted;
+}
+
+p.progress-info {
+  margin-top: $spaceXxs;
+  font-size: $fontSizeXs;
+  color: $colorTextTertiary;
+}
+
+.version-overview table.progress {
+  height: 10px;
+
+  td {
+    height: 10px;
+  }
+}

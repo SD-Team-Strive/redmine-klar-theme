@@ -1,0 +1,140 @@
+// =============================================================================
+// Hauptnavigation des Projekts als Segment-Leiste (Monitor: Dashboard-Tabs)
+// Redmine blendet bei Platzmangel Tabs aus und zeigt Pfeil-Buttons; dafür
+// darf die Leiste nicht umbrechen.
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/mainMenuVariables" as *;
+
+#main-menu {
+  @include desktop {
+    position: relative;
+    inset: auto;
+    width: auto;
+    margin: 0 0 $mainMenuBottomSpace;
+    padding: 0;
+    // Redmine 7: eigene Fläche hinter der Leiste
+    background: transparent;
+  }
+
+  > ul {
+    display: inline-flex;
+    align-items: center;
+    gap: $mainMenuItemGap;
+    width: auto;
+    min-height: 0;
+    max-width: 100%;
+    padding: $mainMenuTrackPadding;
+    background-color: $mainMenuTrackBackground;
+    border-radius: $mainMenuTrackRadius;
+    box-sizing: border-box;
+  }
+
+  li {
+    margin: 0;
+  }
+
+  li a {
+    padding: $mainMenuItemPaddingY $mainMenuItemPaddingX;
+    font-size: $mainMenuFontSize;
+    font-weight: $fontWeightMedium;
+    line-height: $lineHeightTight;
+    color: $mainMenuItemColor;
+    border-radius: $mainMenuItemRadius;
+    transition: background-color $transitionFast, color $transitionFast;
+
+    &:hover {
+      color: $mainMenuItemHoverColor;
+      background-color: $mainMenuItemHoverBackground;
+      text-decoration: none;
+    }
+  }
+
+  li a.selected,
+  li a.selected:hover {
+    color: $mainMenuSelectedColor;
+    background-color: $mainMenuSelectedBackground;
+    font-weight: $fontWeightMedium;
+    box-shadow: $shadowSm;
+  }
+
+  // "+" zum Anlegen neuer Objekte
+  li a.new-object {
+    margin: 0;
+    padding: $mainMenuItemPaddingY $mainMenuItemPaddingX;
+    color: $mainMenuItemColor;
+    background-color: transparent;
+    border: 0;
+    border-radius: $mainMenuItemRadius;
+    font-weight: $fontWeightSemibold;
+  }
+
+  li:has(a#new-object) {
+    padding: 0;
+  }
+
+  li a.new-object:hover {
+    background-color: $mainMenuItemHoverBackground;
+  }
+
+  // Untermenü von "+": senkrechte Liste (Redmine 7 setzt #main-menu ul auf
+  // Flex). Es öffnet beim Hover; die unsichtbare Brücke über den Abstand
+  // hält den Hover, während die Maus vom "+" ins Menü wandert.
+  .menu-children {
+    @include popover;
+    flex-direction: column;
+    align-items: stretch;
+    min-width: $mainMenuChildrenWidth;
+    width: auto;
+    min-height: 0;
+    margin-top: $mainMenuChildrenOffset;
+    padding: $spaceXxs;
+    white-space: nowrap;
+    border: $borderWidth solid $colorBorder;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -($mainMenuChildrenOffset + $borderWidth);
+      right: 0;
+      left: 0;
+      height: $mainMenuChildrenOffset + $borderWidth;
+    }
+
+    li {
+      display: block;
+      float: none;
+      width: auto;
+    }
+
+    li a {
+      @include menuItem;
+      font-weight: $fontWeightRegular;
+      background-color: transparent;
+    }
+  }
+
+  // Pfeil-Buttons bei Überlauf
+  .tabs-buttons {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+    width: auto;
+    height: auto;
+    display: flex;
+    gap: $spaceXxs;
+    background: $colorBgCard;
+    border: 0;
+
+    button {
+      position: static;
+      width: $controlHeightSm;
+      height: $controlHeightSm;
+      border: $borderWidth solid $colorBorder;
+      border-radius: $radiusSm;
+      background-color: $colorBgCard;
+    }
+  }
+}

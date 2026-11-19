@@ -1,0 +1,123 @@
+// =============================================================================
+// Obere Leiste: globale Navigation links, Konto rechts
+// Redmine 6: #top-menu > ul + #loggedas + #account (Liste)
+// Redmine 7: nav.top-menu > .general-menu | .profile-menu > #account (Dropdown)
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/layoutVariables" as *;
+@use "variables/topMenuVariables" as *;
+
+#top-menu {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 $topMenuGap;
+  min-height: $topMenuHeight;
+  padding: 0 $layoutGutter;
+  font-size: $topMenuFontSize;
+  color: $topMenuColor;
+  background: $topMenuBackground;
+  border-bottom: $borderWidth solid $topMenuBorderColor;
+
+  li {
+    float: none;
+  }
+
+  // Waagerechte Linklisten (nicht das Konto-Dropdown)
+  > ul,
+  #account:not(.dropdown) > ul,
+  .top-menu__links > ul {
+    display: flex;
+    align-items: center;
+    gap: $topMenuItemGap;
+  }
+
+  // Text bündig mit Logo/Titel darunter: die Hover-Fläche ragt in den Rand
+  > ul:first-child,
+  .general-menu .top-menu__links > ul {
+    margin-left: -$spaceXs;
+  }
+
+  #account:not(.dropdown) > ul {
+    margin-right: -$spaceXs;
+  }
+
+  > ul > li > a,
+  #account:not(.dropdown) > ul > li > a,
+  .top-menu__links > ul > li > a {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: $spaceXxs $spaceXs;
+    font-weight: $fontWeightMedium;
+    color: $topMenuLinkColor;
+    border-radius: $radiusSm;
+
+    &:hover {
+      color: $topMenuLinkHoverColor;
+      background-color: $colorHoverBg;
+      text-decoration: none;
+    }
+  }
+
+  // Reihenfolge (Redmine 6): globale Navigation, Abstand, "Angemeldet als", Konto
+  > ul {
+    order: 1;
+    margin-right: auto;
+  }
+
+  #loggedas {
+    order: 2;
+    float: none;
+    margin: 0;
+    color: $topMenuMutedColor;
+
+    a {
+      color: $topMenuLinkColor;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  #account {
+    order: 3;
+    float: none;
+  }
+
+  // Redmine 7: zwei Bereiche (Navigation | Profil)
+  .general-menu,
+  .profile-menu {
+    display: flex;
+    align-items: center;
+  }
+
+  // Konto-Menü (Redmine 7): Avatar mit Pfeil
+  #account .dropdown-trigger {
+    gap: $spaceXxs;
+    margin-right: -$spaceXxs;
+    padding: $spaceXxs;
+    border-radius: $radiusPill;
+
+    &:hover,
+    &:focus {
+      background-color: $colorHoverBg;
+    }
+
+    // Redmine fokussiert den Auslöser beim Öffnen; Fläche statt Ring
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 2px $colorFocusRing;
+    }
+
+    .icon-svg {
+      stroke: $topMenuMutedColor;
+    }
+  }
+}

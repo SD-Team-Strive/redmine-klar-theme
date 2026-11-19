@@ -1,0 +1,84 @@
+// =============================================================================
+// Gantt-Diagramm: Linien und Balken in der Monitor-Farbwelt
+// Redmine zeichnet Balken als absolut positionierte Divs mit PNG-Mustern;
+// die Muster werden durch flache Farben ersetzt.
+// =============================================================================
+
+@use "../variables" as *;
+
+.gantt_hdr {
+  border-color: $colorBorder;
+  color: $colorTextMuted;
+}
+
+#gantt_area .gantt_hdr,
+.gantt_subjects_container:not(.draw_selected_columns) .gantt_hdr,
+.last_gantt_selected_column .gantt_hdr {
+  border-color: $colorBorder;
+}
+
+.gantt_hdr.nwday {
+  color: $colorTextPlaceholder;
+  background-color: $colorBgSubtle;
+}
+
+.gantt_subjects div.issue-subject:hover {
+  background-color: $colorBgSubtle;
+}
+
+// Balken
+.task_todo {
+  background: $neutral300;
+  border-color: $neutral300;
+}
+
+.task_late {
+  background: $statusError;
+  border-color: $statusError;
+}
+
+.task_done {
+  background: $statusSuccess;
+  border-color: $statusSuccess;
+}
+
+.task_todo,
+.task_late,
+.task_done {
+  border-radius: 2px;
+}
+
+.task_todo.parent {
+  background: $neutral600;
+  border-color: $neutral600;
+}
+
+.task.label {
+  color: $colorTextTertiary;
+}
+
+// Meilensteine (Versionen, Projekte): dünne Linie statt PNG
+.version.task_todo,
+.project.task_todo {
+  background: $neutral300;
+  border-color: $neutral300;
+}
+
+.version.task_late,
+.project.task_late {
+  background: $statusError;
+  border-color: $statusError;
+}
+
+.version.task_done,
+.project.task_done {
+  background: $statusSuccess;
+  border-color: $statusSuccess;
+}
+
+// Heute-Linie (Inline-Stil von Redmine: 1px dashed red) wie im Monitor:
+// dunkel und durchgezogen
+#today_line {
+  border-inline-start-color: $neutral900 !important;
+  border-inline-start-style: solid !important;
+}

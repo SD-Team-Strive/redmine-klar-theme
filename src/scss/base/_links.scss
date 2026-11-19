@@ -1,0 +1,54 @@
+// =============================================================================
+// Links: dunkel wie Text, Unterstreichung erst beim Hover
+// Geschlossene/gesperrte Objekte werden zurückgenommen.
+// =============================================================================
+
+@use "../variables" as *;
+
+a, a:link, a:visited {
+  color: $colorLink;
+  text-decoration: none;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover, a:active {
+  color: $colorLinkHover;
+  text-decoration: underline;
+}
+
+// Fließtext-Links sichtbar unterstreichen
+.wiki :not(.toc) > li > a:where(:not(.icon, .wiki-anchor, .issue, .user)),
+.wiki :is(p, td, th, blockquote) > a:where(:not(.icon, .wiki-anchor, .issue, .user)),
+.journal-details a,
+p.other-formats a {
+  text-decoration: underline;
+  text-decoration-color: $colorBorderStrong;
+
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+a.issue.closed, a.issue.closed:link, a.issue.closed:visited,
+a.project.closed, a.project.closed:link, a.project.closed:visited,
+a.user.locked, a.user.locked:link, a.user.locked:visited {
+  color: $colorTextTertiary;
+}
+
+a.user.user-mention {
+  background-color: $colorAccentBg;
+  padding: 0 $spaceXxs;
+  border-radius: $radiusSm;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid $colorFocusRing;
+  outline-offset: 2px;
+  border-radius: $radiusSm;
+}
+
+.decoration-red, a.decoration-red {
+  color: $statusErrorText !important;
+}

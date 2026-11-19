@@ -1,0 +1,391 @@
+// =============================================================================
+// Text-Editor (Wiki, Ticketbeschreibung, Kommentare, News …)
+//
+// Redmine baut ihn als .jstBlock aus
+//   .jstTabs     Reiter "Bearbeiten/Vorschau" + Werkzeugleiste (.jstElements)
+//   .jstEditor   Textfeld + Vorschau (.wiki-preview)
+// Hier wird daraus ein gerahmtes Bedienelement: graue Kopfleiste mit
+// Reitern und Werkzeugen, darunter Textfeld bzw. Vorschau ohne eigenen
+// Rahmen. Der Fokus-Ring liegt am ganzen Editor.
+// Ausgeliefert über jstoolbar.scss nach Redmines jstoolbar.css.
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/jstoolbarVariables" as *;
+
+.jstBlock {
+  // Container-Query: ab $editorSplitMinWidth Editor und Vorschau nebeneinander
+  container: editor / inline-size;
+  width: 100%;
+  margin-bottom: $spaceXxs;
+  background-color: $colorBgCard;
+  border: $borderWidth solid $editorBorder;
+  border-radius: $editorRadius;
+  box-shadow: $shadowSm;
+  box-sizing: border-box;
+  transition: border-color $transitionFast, box-shadow $transitionFast;
+
+  &:hover {
+    border-color: $colorBorderStrong;
+  }
+
+  // Fokus: dunklerer Rand mit weichem Schein (der Ring der Eingabefelder
+  // wirkt um die große Fläche wie eine doppelte Linie)
+  &:focus-within {
+    border-color: $editorFocusBorder;
+    box-shadow: 0 0 0 3px $editorFocusGlow;
+  }
+}
+
+// Fehler im Formular (Redmine markiert den Block selbst)
+.tabular label.error + span#issue_description_and_toolbar div.jstBlock {
+  border-color: $statusErrorText;
+}
+
+// -----------------------------------------------------------------------------
+// Kopfleiste: Reiter + Werkzeuge
+// -----------------------------------------------------------------------------
+
+// Redmine setzt die Breiten auf 99% bzw. 95% (in .tabular)
+#content .jstBlock .jstTabs.tabs,
+.tabular .jstBlock .jstTabs,
+.jstBlock .wiki-preview,
+.tabular .jstBlock .wiki-preview {
+  width: auto;
+}
+
+#content .jstTabs.tabs {
+  height: auto;
+  margin: 0;
+  padding: $editorToolbarPadding;
+  overflow: visible;
+  background-color: $editorToolbarBackground;
+  border-bottom: $borderWidth solid $editorBorder;
+  border-radius: ($editorRadius - 1px) ($editorRadius - 1px) 0 0;
+
+  ul {
+    position: static;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    min-width: 0;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    height: auto;
+    margin: 0;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  // Reiter als kleine Segment-Buttons
+  li a.tab-edit,
+  li a.tab-preview {
+    display: flex;
+    align-items: center;
+    height: $editorButtonSize;
+    padding: 0 $spaceSm * 0.8;
+    font-size: $fontSizeSm;
+    font-weight: $fontWeightMedium;
+    line-height: 1;
+    color: $colorTextMuted;
+    background: transparent;
+    border: 0;
+    border-radius: $radiusSm;
+
+    &:hover {
+      color: $colorTextPrimary;
+      background-color: $colorActiveBg;
+    }
+
+    &.selected {
+      color: $colorTextPrimary;
+      background-color: $colorBgCard;
+      box-shadow: 0 1px 2px rgba($neutral950, 0.08), 0 0 0 1px rgba($neutral950, 0.06);
+    }
+  }
+
+  // Trenner zwischen Reitern und Werkzeugen
+  li.tab-elements {
+    margin-left: $spaceXs;
+    padding-left: $spaceXs;
+    border-left: $borderWidth solid $editorBorder;
+  }
+}
+
+.jstElements {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1px;
+  height: auto;
+  padding: 0;
+}
+
+.jstElements button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $editorButtonSize;
+  height: $editorButtonSize;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  border-radius: $radiusSm;
+  opacity: 0.7;
+
+  &:hover {
+    background-color: $colorActiveBg;
+    border: 0;
+    opacity: 1;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// Gruppentrenner zwischen Werkzeuggruppen (B I U … | H1 H2 H3 | Listen …)
+.jstSpacer {
+  display: inline-block;
+  width: $borderWidth;
+  height: $editorButtonSize * 0.6;
+  margin: 0 $spaceXxs;
+  font-size: 0;
+  background-color: $editorBorder;
+}
+
+// -----------------------------------------------------------------------------
+// Textfeld und Vorschau ohne eigenen Rahmen
+// -----------------------------------------------------------------------------
+
+.jstEditor {
+  padding: 0;
+}
+
+.jstBlock textarea.wiki-edit,
+.jstBlock .jstEditor textarea {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: $editorMinHeight;
+  margin: 0;
+  padding: $editorTextPadding;
+  line-height: $lineHeightText;
+  background: transparent;
+  border: 0;
+  border-radius: 0 0 ($editorRadius - 1px) ($editorRadius - 1px);
+  box-shadow: none;
+
+  &:hover,
+  &:focus,
+  &:focus:active {
+    border: 0;
+    box-shadow: none;
+    outline: none;
+  }
+}
+
+// Vorschau mit eigener, leicht grauer Fläche: man sieht sofort, dass man
+// nicht im Textfeld ist
+// Erste Überschrift ohne oberen Abstand (Redmine setzt teils einen
+// Sprunganker davor)
+.jstBlock .wiki-preview > :first-child,
+.jstBlock .wiki-preview > a:first-child + :is(h1, h2, h3, h4, h5, h6) {
+  margin-top: 0;
+}
+
+.jstBlock .wiki-preview {
+  min-height: $editorMinHeight;
+  padding: $editorTextPadding;
+  background-color: $editorPreviewBackground;
+  border: 0;
+  border-radius: 0 0 ($editorRadius - 1px) ($editorRadius - 1px);
+}
+
+// -----------------------------------------------------------------------------
+// Vorschau: ein Umschalter statt Redmines Reiter "Bearbeiten · Vorschau"
+//
+// Der Button in der Werkzeugleiste (li.tab-split, src/js/editorLivePreview.js)
+// blendet die Vorschau ein und aus (data-editor-preview an <html>).
+// Eingeblendet ist sie immer live und steht
+//   – im breiten Editor rechts neben dem Text (vertikal getrennt),
+//   – im schmalen Editor unter dem Text (horizontal getrennt).
+// Das Textfeld bleibt immer sichtbar; Redmines Reiter entfallen.
+// -----------------------------------------------------------------------------
+
+// Redmines Reiter ausblenden; Textfeld und Werkzeuge immer sichtbar
+// (Redmine schaltet sie sonst per .hidden um, z. B. per Tastenkürzel)
+#content .jstTabs.tabs li:has(> a.tab-edit),
+#content .jstTabs.tabs li:has(> a.tab-preview) {
+  display: none;
+}
+
+#content .jstTabs.tabs li.tab-elements {
+  margin-left: 0;
+  padding-left: 0;
+  border-left: 0;
+}
+
+.jstBlock .jstElements.hidden {
+  display: flex;
+}
+
+.jstBlock .jstEditor > textarea.wiki-edit.hidden {
+  display: block;
+}
+
+// Umschalter rechts in der Werkzeugleiste
+#content .jstTabs.tabs li.tab-split {
+  display: flex;
+  margin-left: auto;
+}
+
+.tab-split-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $editorButtonSize;
+  height: $editorButtonSize;
+  padding: 0;
+  color: $colorTextMuted;
+  background: transparent;
+  border: 0;
+  border-radius: $radiusSm;
+  box-shadow: none;
+  cursor: pointer;
+
+  // Icon zeigt die Teilung: schmal zwei Zeilen, breit zwei Spalten
+  &::before {
+    @include maskIcon("rows", 16px, 1.75);
+  }
+
+  &:hover {
+    color: $colorTextPrimary;
+    background-color: $colorActiveBg;
+  }
+
+  &[aria-pressed="true"] {
+    color: $colorTextPrimary;
+    background-color: $colorBgCard;
+    box-shadow: 0 1px 2px rgba($neutral950, 0.08), 0 0 0 1px rgba($neutral950, 0.06);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: $focusRing;
+  }
+}
+
+// Vorschau ausgeblendet
+:root[data-editor-preview="off"] .jstBlock .jstEditor > .wiki-preview {
+  display: none;
+}
+
+// Vorschau eingeblendet (Standard): schmal unter dem Text
+:root:not([data-editor-preview="off"]) {
+  .jstBlock .jstEditor > .wiki-preview,
+  .jstBlock .jstEditor > .wiki-preview.hidden {
+    display: block;
+    box-sizing: border-box;
+    // Redmine setzt per Inline-Stil die Höhe des Textfelds als Mindesthöhe
+    min-height: $editorMinHeight !important;
+    max-height: $editorStackedPreviewMaxHeight;
+    overflow: auto;
+    border-top: $borderWidth solid $editorBorder;
+  }
+
+  .jstBlock .jstEditor > textarea.wiki-edit {
+    border-radius: 0;
+  }
+}
+
+// Breiter Editor: Text links, Vorschau rechts, gleich hoch
+@container editor (min-width: #{$editorSplitMinWidth}) {
+  .tab-split-toggle::before {
+    @include maskIconSwap("columns", 1.75);
+  }
+
+  :root:not([data-editor-preview="off"]) {
+    .jstEditor {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .jstEditor > textarea.wiki-edit {
+      border-radius: 0 0 0 ($editorRadius - 1px);
+    }
+
+    // Höhe kommt vom Textfeld, längerer Inhalt scrollt
+    .jstBlock .jstEditor > .wiki-preview,
+    .jstBlock .jstEditor > .wiki-preview.hidden {
+      height: 0;
+      min-height: 100% !important;
+      max-height: none;
+      border-top: 0;
+      border-left: $borderWidth solid $editorBorder;
+      border-radius: 0 0 ($editorRadius - 1px) 0;
+    }
+  }
+}
+
+.jstHandle {
+  height: $spaceXs;
+}
+
+// -----------------------------------------------------------------------------
+// Mobil: Werkzeuge als eine wischbare Zeile, Umschalter fest rechts daneben
+// -----------------------------------------------------------------------------
+
+@include mobile {
+  #content .jstTabs.tabs {
+    ul {
+      flex-wrap: nowrap;
+    }
+
+    li.tab-elements {
+      flex: 1 1 0;
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    li.tab-split {
+      flex: 0 0 auto;
+      margin-left: $spaceXxs;
+      padding-left: $spaceXxs;
+      border-left: $borderWidth solid $editorBorder;
+    }
+  }
+
+  .jstElements {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    button {
+      flex-shrink: 0;
+    }
+  }
+
+  .jstSpacer {
+    flex-shrink: 0;
+  }
+}

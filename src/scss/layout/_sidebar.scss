@@ -1,0 +1,256 @@
+// =============================================================================
+// Seitenleiste rechts (kontextbezogen: Abfragen, Beobachter, Wiki, Roadmap …)
+//
+// Verhalten bleibt wie in Redmine (inkl. Ein-/Ausklappen), nur die
+// Darstellung ändert sich: statt grauer Spalte eine weiße Karte, die
+// Abschnitte darin durch Linien getrennt. Oben der Einklapp-Button auf
+// Höhe des Seitentitels, die Karte beginnt auf Höhe des ersten Inhalts.
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/sidebarVariables" as *;
+
+#sidebar {
+  padding: $sidebarPaddingTop $sidebarPaddingRight $spaceXl 0;
+  font-size: $sidebarFontSize;
+  line-height: $lineHeightBase;
+  color: $sidebarColor;
+  background: transparent;
+  border: 0;
+
+  h3 {
+    margin: 0 0 $spaceXs;
+    padding: 0;
+    font-size: $sidebarHeadingFontSize;
+    font-weight: $fontWeightSemibold;
+    letter-spacing: 0;
+    line-height: $controlHeightSm;
+    color: $sidebarHeadingColor;
+  }
+
+  ul li {
+    margin: 0;
+  }
+
+  // Redmine 7 markiert die Auswahl mit farbigem Randakzent – nur Gewicht
+  a.selected {
+    margin-left: 0;
+    padding: 0;
+    line-height: inherit;
+    font-weight: $fontWeightMedium;
+    color: $sidebarSelectedColor;
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+
+    svg.icon-svg {
+      stroke: $sidebarSelectedColor !important;
+    }
+  }
+
+  hr {
+    margin: $spaceMd 0;
+    background: $colorBorder;
+  }
+
+  // Aktionen ("Hinzufügen", "Bearbeiten") auf Höhe der Überschrift
+  .contextual {
+    margin: 0;
+    padding-left: $spaceXs;
+    line-height: $controlHeightSm;
+  }
+
+  a.icon-only svg {
+    opacity: 0.5;
+  }
+
+  p {
+    margin: $spaceXs 0;
+  }
+
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: $spaceXxs;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Karte mit Abschnitten
+// -----------------------------------------------------------------------------
+
+#sidebar-wrapper {
+  @include card($sidebarCardPadding, $radiusLg);
+
+  // Leer (z. B. nur Plugin-Hooks ohne Ausgabe): keine leere Karte zeigen
+  &:empty {
+    display: none;
+  }
+
+  // Jede Überschrift beginnt einen Abschnitt mit Trennlinie. Linie als
+  // Hintergrund im Innenabstand statt Rand + Außenabstand: Redmine verpackt
+  // manche Abschnitte (Beobachter) in ein div, aus dem ein Außenabstand
+  // herauswandern würde und die Aktion daneben verrutscht.
+  h3 {
+    margin-top: 0;
+    padding-top: $sidebarSectionGap * 2 + $borderWidth;
+    background-image: linear-gradient($sidebarSectionBorder, $sidebarSectionBorder);
+    background-repeat: no-repeat;
+    background-position: 0 $sidebarSectionGap;
+    background-size: 100% $borderWidth;
+  }
+
+  // Aktionen ("Hinzufügen") stehen im HTML vor der Überschrift und floaten
+  // rechts; gleicher Abstand, damit sie neben ihr sitzen
+  .contextual {
+    margin-top: $sidebarSectionGap * 2 + $borderWidth;
+  }
+
+  // Ganz oben in der Karte ohne Linie
+  > h3:first-child,
+  > .contextual:first-child + h3,
+  > :first-child > h3:first-of-type {
+    padding-top: 0;
+    background: none;
+  }
+
+  > .contextual:first-child,
+  > :first-child > .contextual:first-child {
+    margin-top: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Navigationslisten (Abfragen, Administration) als Menüzeilen
+// -----------------------------------------------------------------------------
+
+#sidebar ul.queries,
+#sidebar #admin-menu ul {
+  display: grid;
+  gap: 1px;
+  margin: 0 (-$sidebarItemPaddingX);
+}
+
+#sidebar ul.queries li a,
+#sidebar #admin-menu a {
+  display: flex;
+  align-items: center;
+  gap: $spaceXs;
+  margin: 0;
+  padding: $sidebarItemPaddingY $sidebarItemPaddingX;
+  line-height: $lineHeightBase;
+  color: $sidebarItemColor;
+  border-radius: $radiusSm;
+
+  &:hover {
+    color: $sidebarSelectedColor;
+    background-color: $sidebarItemHoverBackground;
+    text-decoration: none;
+  }
+
+  &.selected {
+    color: $sidebarSelectedColor;
+    background-color: $sidebarSelectedBackground;
+  }
+}
+
+// Entfernen-Icon neben gespeicherten Abfragen erst beim Hover zeigen
+#sidebar ul.queries li {
+  display: flex;
+  align-items: center;
+
+  > a:first-child {
+    flex: 1;
+    min-width: 0;
+  }
+
+  a.icon-clear-query {
+    flex: 0 0 auto;
+    padding: $sidebarItemPaddingY;
+    opacity: 0;
+  }
+
+  &:hover a.icon-clear-query {
+    opacity: 1;
+  }
+}
+
+// Beobachter: Avatar, Name, Entfernen in einer Zeile
+#sidebar #watchers ul.watchers li {
+  display: flex;
+  align-items: center;
+  gap: $spaceXs;
+  padding: 2px 0;
+}
+
+// -----------------------------------------------------------------------------
+// Ein-/Ausklappen (Redmine-Verhalten), kompakter Button statt Balken
+// -----------------------------------------------------------------------------
+
+#sidebar-switch-panel {
+  display: flex;
+  align-items: center;
+  width: auto;
+  height: $sidebarSwitchRowHeight;
+  margin: 0 0 $sidebarSwitchRowGap;
+  padding: 0;
+}
+
+#sidebar-switch-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $controlHeightSm;
+  height: $controlHeightSm;
+  padding: 0;
+  border-radius: $radiusSm;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    stroke: $colorTextTertiary;
+  }
+
+  &:hover {
+    background-color: $colorHoverBg;
+
+    svg {
+      stroke: $colorTextPrimary;
+    }
+  }
+
+  // Nach dem Klick kein Fokus-Rahmen, per Tastatur aber sichtbar
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px $colorFocusRing;
+  }
+}
+
+// Eingeklappt: Spalte verschwindet ganz, damit der Inhalt links und rechts
+// denselben Rand hat. Der Button wandert in die Titelzeile des Inhalts,
+// rechts neben die Aktionen ("Bearbeiten … ⋯ «").
+#main {
+  position: relative;
+}
+
+#main.collapsedsidebar #sidebar {
+  width: 0;
+  padding: 0;
+}
+
+#main.collapsedsidebar #sidebar-switch-panel {
+  position: absolute;
+  top: $sidebarPaddingTop;
+  right: $sidebarPaddingRight;
+  z-index: 2;
+  margin: 0;
+}
+
+// Aktionen der Titelzeile (vor der ersten Überschrift) machen Platz
+#main.collapsedsidebar #content > .contextual:not(h2 ~ .contextual) {
+  margin-right: $controlHeightSm + $spaceXs;
+}

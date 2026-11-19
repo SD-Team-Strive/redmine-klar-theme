@@ -1,0 +1,11 @@
+// Gemeinsame Layout-Maße für Kopf, Inhalt, Seitenleiste und Fuß
+@use "../../variables" as *;
+
+$layoutGutter:         $spaceXl !default;   // seitlicher Rand der Seite
+$layoutGutterMobile:   $spaceMd !default;
+$contentPaddingTop:    $spaceLg * 1.2 !default;
+$contentPaddingBottom: $space2xl !default;
+
+// Titelzeile: Seitentitel, Aktionen und Einklapp-Button der Seitenleiste
+// sind auf diese Höhe zentriert
+$titleRowHeight:       32px !default;

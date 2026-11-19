@@ -1,0 +1,20 @@
+// =============================================================================
+// Ersetzt Redmines responsive.css (wird nach application.css geladen).
+// Erst das Original, dann die Anpassungen des Themes.
+//
+//   layout/mobileHeader  Kopf: Logo, Projektwechsel, Menü-Button
+//   layout/flyoutMenu    ausklappendes Menü
+//   mobile/              Inhalte je Bereich
+// =============================================================================
+
+@use "layout/mobileHeader";
+@use "layout/flyoutMenu";
+@use "mobile/content";
+@use "mobile/contextual";
+@use "mobile/navigation";
+@use "mobile/lists";
+@use "mobile/issue";
+@use "mobile/forms";
+@use "mobile/calendar";
+
+@import url("../../responsive.css");

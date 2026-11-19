@@ -1,0 +1,8 @@
+// =============================================================================
+// Ersetzt Redmines dropdown.css (ab Redmine 7, nach application.css geladen).
+// Erst das Original, dann die Anpassungen. Redmine 6 lädt diese Datei nicht.
+// =============================================================================
+
+@use "components/dropdownMenu";
+
+@import url("../../dropdown.css");

@@ -1,0 +1,9 @@
+// =============================================================================
+// Ersetzt Redmines context_menu.css (wird nur auf Listen-Seiten geladen,
+// nach application.css). Erst das Original, dann die Anpassungen.
+// Der Dateiname ist von Redmine vorgegeben.
+// =============================================================================
+
+@use "components/contextMenu";
+
+@import url("../../context_menu.css");

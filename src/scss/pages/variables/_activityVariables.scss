@@ -1,0 +1,14 @@
+@use "../../variables" as *;
+
+$activityMaxWidth:        960px !default;
+$activityTimeWidth:       44px !default;   // "09:23" in Tabellenziffern
+$activityIconSize:        16px !default;
+$activityAvatarSize:      24px !default;
+$activityColumnGap:       $spaceXs !default;
+$activityEntryPaddingY:   $spaceSm !default;
+$activityDescriptionLines: 2 !default;
+$activityGroupIndent:     $spaceLg * 1.4 !default;
+$activityDayBackground:   $colorBgSubtle !default;
+
+// Einrückung von Beschreibung/Autor: bündig unter dem Typ-Icon
+$activityTextIndent:      $activityTimeWidth + $activityColumnGap !default;

@@ -1,0 +1,22 @@
+@use "../../variables" as *;
+
+$headerBackground:              $colorBgCard !default;
+$headerBorderColor:             $colorBorder !default;
+$headerColor:                   $colorTextPrimary !default;
+$headerTitleColor:              $colorTextPrimary !default;
+$headerMutedColor:              $colorTextTertiary !default;
+// Logo vor dem Seitentitel (Datei in images/, null = kein Logo)
+$headerLogo:                    "logo.png" !default;
+$headerLogoSize:                40px !default;
+$headerLogoGap:                 $spaceSm !default;
+$headerLogoRadius:              $radiusMd !default;
+// Fallback ohne Logo: Kachel wie die App-Icons im Monitor
+$headerLogoFallbackBackground:  $colorAccent !default;
+$headerLogoFallbackColor:       $neutral950 !default;
+
+$headerTitleFontSize:          $fontSizeXl !default;
+$headerPaddingTop:              $spaceLg !default;
+$headerRowGap:                  $spaceMd !default;
+$headerSearchWidth:             220px !default;
+$headerProjectJumpWidth:        220px !default;
+$headerProjectJumpDropdownWidth: 320px !default;

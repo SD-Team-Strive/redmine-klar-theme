@@ -1,0 +1,71 @@
+// =============================================================================
+// Seitenblättern
+// =============================================================================
+
+@use "../variables" as *;
+
+span.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $spaceXs $spaceMd;
+  margin: $spaceMd 0 0;
+  font-size: $fontSizeSm;
+  color: $colorTextTertiary;
+}
+
+.pagination ul.pages {
+  display: inline-flex;
+  gap: $spaceXxs;
+  margin: 0;
+}
+
+.pagination ul.pages li {
+  margin: 0;
+  line-height: 1;
+  border: 0;
+
+  a,
+  span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 $spaceXs;
+    box-sizing: border-box;
+    color: $colorTextSecondary;
+    border: $borderWidth solid $colorBorder;
+    border-radius: $radiusBase;
+  }
+
+  a:hover {
+    color: $colorTextPrimary;
+    background-color: $colorBgSubtle;
+    text-decoration: none;
+  }
+}
+
+.pagination ul.pages li:first-child,
+.pagination ul.pages li:last-child {
+  border-radius: 0;
+}
+
+.pagination ul.pages li.page:hover {
+  background-color: transparent;
+}
+
+.pagination ul.pages li.current span {
+  color: $colorTextInverse;
+  background-color: $colorBgInverse;
+  border-color: $colorBgInverse;
+}
+
+.pagination ul.pages li.spacer span {
+  border-color: transparent;
+}
+
+.pagination .per-page span.selected {
+  font-weight: $fontWeightSemibold;
+  color: $colorTextPrimary;
+}

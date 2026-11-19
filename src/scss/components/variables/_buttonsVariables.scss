@@ -1,0 +1,22 @@
+@use "../../variables" as *;
+
+$buttonHeight:          $controlHeight !default;
+$buttonPaddingX:        $spaceSm + 2px !default;
+$buttonRadius:          $radiusBase !default;
+$buttonFontSize:        $fontSizeBase !default;
+$buttonFontWeight:      $fontWeightMedium !default;
+
+// Primär: Absenden, Speichern, Anlegen
+$buttonPrimaryColor:           $colorTextInverse !default;
+$buttonPrimaryBackground:      $neutral900 !default;
+$buttonPrimaryHoverBackground: $neutral700 !default;
+
+// Sekundär: alle übrigen Buttons
+$buttonSecondaryColor:            $colorTextSecondary !default;
+$buttonSecondaryBackground:       $colorBgCard !default;
+$buttonSecondaryBorder:           $colorBorder !default;
+$buttonSecondaryHoverColor:       $colorTextPrimary !default;
+$buttonSecondaryHoverBackground:  $colorBgSubtle !default;
+$buttonSecondaryHoverBorder:      $colorBorderStrong !default;
+
+$buttonDisabledOpacity: 0.5 !default;

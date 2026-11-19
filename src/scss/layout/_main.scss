@@ -1,0 +1,116 @@
+// =============================================================================
+// Hauptbereich: Inhalt links, kontextbezogene Seitenleiste rechts
+// (Struktur von Redmine bleibt, nur Abstände und Flächen ändern sich)
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/layoutVariables" as *;
+@use "variables/sidebarVariables" as *;
+
+#wrapper {
+  background: $colorBgPage;
+}
+
+#content {
+  padding: $contentPaddingTop $layoutGutter $contentPaddingBottom;
+
+  @include mobile {
+    padding: $spaceMd $layoutGutterMobile $spaceXl;
+  }
+
+  // Seitentitel: Zeilenhöhe = Titelzeile, damit Aktionen und Einklapp-
+  // Button der Seitenleiste auf dieselbe Mitte kommen
+  > h2,
+  > .contextual + h2,
+  h2.inline-flex {
+    margin: 0 0 $spaceMd;
+    font-size: $fontSizeXl;
+    font-weight: $fontWeightSemibold;
+    line-height: $titleRowHeight;
+  }
+
+  h3 {
+    margin: $spaceLg 0 $spaceSm;
+  }
+}
+
+// Aktionen rechts neben dem Titel
+.contextual {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: $spaceXxs $spaceSm;
+  margin: $spaceXxs 0;
+  padding-left: $spaceSm;
+  font-size: $fontSizeSm;
+  line-height: $lineHeightBase;
+}
+
+// Aktionen der Titelzeile (vor dem ersten Titel): gleiche Höhe wie der Titel,
+// Inhalt mittig – ohne oberen Abstand, der sie sonst nach unten schiebt
+#content > .contextual:not(h2 ~ .contextual) {
+  min-height: $titleRowHeight;
+  margin-top: 0;
+
+  // Formulare in der Titelzeile (z. B. "Hinzufügen:" auf Meine Seite)
+  > form {
+    display: inline-flex;
+    align-items: center;
+    gap: $spaceXs;
+    height: $titleRowHeight;
+
+    > * {
+      margin: 0;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Fuß
+// -----------------------------------------------------------------------------
+
+#footer {
+  padding: $spaceMd $layoutGutter;
+  font-size: $fontSizeXs;
+  color: $colorTextTertiary;
+  background: $colorBgPage;
+  border-top: $borderWidth solid $colorBorder;
+
+  a {
+    color: $colorTextMuted;
+  }
+}
+
+// Theme-Hinweis hinter Redmines Vermerk (src/js/footerCredit.js),
+// mit einem Mittelpunkt abgesetzt
+#footer .theme-credit::before {
+  content: "·";
+  margin: 0 $spaceXs;
+}
+
+// Mobil: eigene Zeile statt Umbruch mitten im Satz, ohne Mittelpunkt
+@include mobile {
+  #footer .theme-credit {
+    display: block;
+    margin-top: $spaceXxs;
+
+    &::before {
+      content: none;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Ladeanzeige
+// -----------------------------------------------------------------------------
+
+#ajax-indicator {
+  @include popover;
+  width: auto;
+  min-width: 160px;
+  padding: $spaceSm $spaceLg;
+  font-weight: $fontWeightMedium;
+  color: $colorTextSecondary;
+  opacity: 1;
+}

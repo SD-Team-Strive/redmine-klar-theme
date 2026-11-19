@@ -1,0 +1,72 @@
+// =============================================================================
+// Kästen und Karten: .box (Formulare, Einstellungen), Teilbereiche,
+// Modal-Dialoge, Thumbnails
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.box {
+  @include card($spaceLg, $radiusLg);
+  margin-bottom: $spaceMd;
+  color: $colorTextPrimary;
+  line-height: $lineHeightBase;
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Überschrift oben im Kasten ohne Außenabstand
+// (#content h3 setzt sonst einen oberen Abstand)
+#content .box > h3:first-child,
+#content .box > .contextual:first-child + h3,
+#content .mypage-box h3 {
+  margin-top: 0;
+}
+
+// Kästen in Kästen nicht doppelt rahmen
+.box .box {
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+.splitcontent {
+  gap: $spaceLg;
+}
+
+.splitcontentleft,
+.splitcontentright {
+  margin: 0;
+}
+
+// Modal-Dialoge (jQuery UI)
+div.modal {
+  padding: $spaceXs;
+  border-radius: $radiusLg;
+}
+
+// Vorschaubilder
+div.thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spaceXs;
+  margin: $spaceSm 0;
+}
+
+div.thumbnail {
+  margin: 0;
+  border: $borderWidth solid $colorBorder;
+  border-radius: $radiusBase;
+  overflow: hidden;
+
+  img {
+    margin: 0;
+  }
+}
+
+// Dateiinhalte (Vorschau von Anhängen)
+.filecontent.wiki {
+  @include card($spaceLg, $radiusLg);
+}

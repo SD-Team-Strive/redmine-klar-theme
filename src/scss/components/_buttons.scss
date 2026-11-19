@@ -1,0 +1,136 @@
+// =============================================================================
+// Buttons
+// Primär (dunkel): Submit-Buttons. Sekundär (weiß mit Rand): alle anderen.
+// Redmine kennzeichnet Buttons nur über type, daher Attribut-Selektoren.
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/buttonsVariables" as *;
+
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+button:where(:not(.tab-left, .tab-right, [class^="jstb_"], [class*="ui-"])) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spaceXs;
+  height: $buttonHeight;
+  margin: 0;
+  padding: 0 $buttonPaddingX;
+  font-family: inherit;
+  font-size: $buttonFontSize;
+  font-weight: $buttonFontWeight;
+  line-height: 1;
+  color: $buttonSecondaryColor;
+  background: $buttonSecondaryBackground;
+  border: $borderWidth solid $buttonSecondaryBorder;
+  border-radius: $buttonRadius;
+  box-shadow: $shadowSm;
+  cursor: pointer;
+  transition: background-color $transitionFast, border-color $transitionFast, color $transitionFast;
+
+  &:hover {
+    color: $buttonSecondaryHoverColor;
+    background: $buttonSecondaryHoverBackground;
+    border-color: $buttonSecondaryHoverBorder;
+  }
+
+  &:focus-visible {
+    @include focusRing;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: $buttonDisabledOpacity;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+// Primäraktion
+input[type="submit"],
+button[type="submit"] {
+  height: $buttonHeight;
+  color: $buttonPrimaryColor;
+  background: $buttonPrimaryBackground;
+  border-color: $buttonPrimaryBackground;
+
+  &:hover {
+    color: $buttonPrimaryColor;
+    background: $buttonPrimaryHoverBackground;
+    border-color: $buttonPrimaryHoverBackground;
+  }
+}
+
+// Zweite Absende-Aktion ("Anlegen und weiter") zurücknehmen
+input[type="submit"][name="continue"] {
+  color: $buttonSecondaryColor;
+  background: $buttonSecondaryBackground;
+  border-color: $buttonSecondaryBorder;
+
+  &:hover {
+    color: $buttonSecondaryHoverColor;
+    background: $buttonSecondaryHoverBackground;
+    border-color: $buttonSecondaryHoverBorder;
+  }
+}
+
+// "Abbrechen" als Link direkt nach dem Absende-Button
+input[type="submit"] + a {
+  margin-left: $spaceSm;
+  color: $colorTextSecondary;
+}
+
+// Datei-Auswahl wie ein Sekundär-Button
+input[type="file"]::file-selector-button {
+  height: $controlHeightSm;
+  margin-right: $spaceSm;
+  padding: 0 $spaceSm;
+  font-family: inherit;
+  font-size: $fontSizeSm;
+  font-weight: $buttonFontWeight;
+  color: $buttonSecondaryColor;
+  background: $buttonSecondaryBackground;
+  border: $borderWidth solid $buttonSecondaryBorder;
+  border-radius: $radiusSm;
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button:hover {
+  color: $buttonSecondaryHoverColor;
+  background: $buttonSecondaryHoverBackground;
+}
+
+// Mehrere Buttons nebeneinander (Formular-Fuß)
+p.buttons,
+div.buttons:not(td) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $spaceXs $spaceSm;
+}
+
+// Icon-Buttons ohne Rahmen (z. B. in Tabellen, Journalen)
+button.icon-only,
+a.icon-only {
+  border-radius: $radiusSm;
+}
+
+button.icon-only {
+  width: $controlHeightSm;
+  height: $controlHeightSm;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+
+  &:hover {
+    background: $colorHoverBg;
+    border-color: transparent;
+  }
+}

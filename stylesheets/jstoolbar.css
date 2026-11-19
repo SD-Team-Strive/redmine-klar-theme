@@ -1,0 +1,309 @@
+@import url("../../jstoolbar.css");
+.jstBlock {
+  container: editor/inline-size;
+  width: 100%;
+  margin-bottom: 4px;
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(10, 10, 10, 0.05);
+  box-sizing: border-box;
+  transition: border-color 120ms ease-out, box-shadow 120ms ease-out;
+}
+.jstBlock:hover {
+  border-color: #d4d4d4;
+}
+.jstBlock:focus-within {
+  border-color: #737373;
+  box-shadow: 0 0 0 3px rgba(161, 161, 161, 0.25);
+}
+
+.tabular label.error + span#issue_description_and_toolbar div.jstBlock {
+  border-color: #b23600;
+}
+
+#content .jstBlock .jstTabs.tabs,
+.tabular .jstBlock .jstTabs,
+.jstBlock .wiki-preview,
+.tabular .jstBlock .wiki-preview {
+  width: auto;
+}
+
+#content .jstTabs.tabs {
+  height: auto;
+  margin: 0;
+  padding: 4px 8px;
+  overflow: visible;
+  background-color: #fafafa;
+  border-bottom: 1px solid #e5e5e5;
+  border-radius: 9px 9px 0 0;
+}
+#content .jstTabs.tabs ul {
+  position: static;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  min-width: 0;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+#content .jstTabs.tabs li {
+  display: flex;
+  align-items: center;
+  height: auto;
+  margin: 0;
+}
+#content .jstTabs.tabs li::before {
+  display: none;
+}
+#content .jstTabs.tabs li a.tab-edit,
+#content .jstTabs.tabs li a.tab-preview {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 9.6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1;
+  color: #585858;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+}
+#content .jstTabs.tabs li a.tab-edit:hover,
+#content .jstTabs.tabs li a.tab-preview:hover {
+  color: #0a0a0a;
+  background-color: #e5e5e5;
+}
+#content .jstTabs.tabs li a.tab-edit.selected,
+#content .jstTabs.tabs li a.tab-preview.selected {
+  color: #0a0a0a;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(10, 10, 10, 0.08), 0 0 0 1px rgba(10, 10, 10, 0.06);
+}
+#content .jstTabs.tabs li.tab-elements {
+  margin-left: 8px;
+  padding-left: 8px;
+  border-left: 1px solid #e5e5e5;
+}
+
+.jstElements {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1px;
+  height: auto;
+  padding: 0;
+}
+
+.jstElements button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  border-radius: 6px;
+  opacity: 0.7;
+}
+.jstElements button:hover {
+  background-color: #e5e5e5;
+  border: 0;
+  opacity: 1;
+}
+.jstElements button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.jstSpacer {
+  display: inline-block;
+  width: 1px;
+  height: 16.8px;
+  margin: 0 4px;
+  font-size: 0;
+  background-color: #e5e5e5;
+}
+
+.jstEditor {
+  padding: 0;
+}
+
+.jstBlock textarea.wiki-edit,
+.jstBlock .jstEditor textarea {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: 120px;
+  margin: 0;
+  padding: 12px 16px;
+  line-height: 1.65;
+  background: transparent;
+  border: 0;
+  border-radius: 0 0 9px 9px;
+  box-shadow: none;
+}
+.jstBlock textarea.wiki-edit:hover, .jstBlock textarea.wiki-edit:focus, .jstBlock textarea.wiki-edit:focus:active,
+.jstBlock .jstEditor textarea:hover,
+.jstBlock .jstEditor textarea:focus,
+.jstBlock .jstEditor textarea:focus:active {
+  border: 0;
+  box-shadow: none;
+  outline: none;
+}
+
+.jstBlock .wiki-preview > :first-child,
+.jstBlock .wiki-preview > a:first-child + :is(h1, h2, h3, h4, h5, h6) {
+  margin-top: 0;
+}
+
+.jstBlock .wiki-preview {
+  min-height: 120px;
+  padding: 12px 16px;
+  background-color: #fafafa;
+  border: 0;
+  border-radius: 0 0 9px 9px;
+}
+
+#content .jstTabs.tabs li:has(> a.tab-edit),
+#content .jstTabs.tabs li:has(> a.tab-preview) {
+  display: none;
+}
+
+#content .jstTabs.tabs li.tab-elements {
+  margin-left: 0;
+  padding-left: 0;
+  border-left: 0;
+}
+
+.jstBlock .jstElements.hidden {
+  display: flex;
+}
+
+.jstBlock .jstEditor > textarea.wiki-edit.hidden {
+  display: block;
+}
+
+#content .jstTabs.tabs li.tab-split {
+  display: flex;
+  margin-left: auto;
+}
+
+.tab-split-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: #585858;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  box-shadow: none;
+  cursor: pointer;
+}
+.tab-split-toggle::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='2'/%3E%3Cpath d='M3 12h18'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='2'/%3E%3Cpath d='M3 12h18'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.tab-split-toggle:hover {
+  color: #0a0a0a;
+  background-color: #e5e5e5;
+}
+.tab-split-toggle[aria-pressed=true] {
+  color: #0a0a0a;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(10, 10, 10, 0.08), 0 0 0 1px rgba(10, 10, 10, 0.06);
+}
+.tab-split-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #a1a1a1;
+}
+
+:root[data-editor-preview=off] .jstBlock .jstEditor > .wiki-preview {
+  display: none;
+}
+
+:root:not([data-editor-preview=off]) .jstBlock .jstEditor > .wiki-preview,
+:root:not([data-editor-preview=off]) .jstBlock .jstEditor > .wiki-preview.hidden {
+  display: block;
+  box-sizing: border-box;
+  min-height: 120px !important;
+  max-height: 60vh;
+  overflow: auto;
+  border-top: 1px solid #e5e5e5;
+}
+:root:not([data-editor-preview=off]) .jstBlock .jstEditor > textarea.wiki-edit {
+  border-radius: 0;
+}
+
+@container editor (min-width: 880px) {
+  .tab-split-toggle::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='2'/%3E%3Cpath d='M12 4v16'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='2'/%3E%3Cpath d='M12 4v16'/%3E%3C/svg%3E");
+  }
+  :root:not([data-editor-preview=off]) .jstEditor {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  :root:not([data-editor-preview=off]) .jstEditor > textarea.wiki-edit {
+    border-radius: 0 0 0 9px;
+  }
+  :root:not([data-editor-preview=off]) .jstBlock .jstEditor > .wiki-preview,
+  :root:not([data-editor-preview=off]) .jstBlock .jstEditor > .wiki-preview.hidden {
+    height: 0;
+    min-height: 100% !important;
+    max-height: none;
+    border-top: 0;
+    border-left: 1px solid #e5e5e5;
+    border-radius: 0 0 9px 0;
+  }
+}
+.jstHandle {
+  height: 8px;
+}
+
+@media screen and (max-width: 899px) {
+  #content .jstTabs.tabs ul {
+    flex-wrap: nowrap;
+  }
+  #content .jstTabs.tabs li.tab-elements {
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  #content .jstTabs.tabs li.tab-split {
+    flex: 0 0 auto;
+    margin-left: 4px;
+    padding-left: 4px;
+    border-left: 1px solid #e5e5e5;
+  }
+  .jstElements {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .jstElements::-webkit-scrollbar {
+    display: none;
+  }
+  .jstElements button {
+    flex-shrink: 0;
+  }
+  .jstSpacer {
+    flex-shrink: 0;
+  }
+}

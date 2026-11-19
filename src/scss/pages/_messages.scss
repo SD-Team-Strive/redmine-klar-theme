@@ -1,0 +1,91 @@
+// =============================================================================
+// Foren, News und Dokumente
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+
+// Foren-Beitrag und Antworten
+div.message {
+  > h3,
+  > .contextual + h3 {
+    margin-top: 0;
+  }
+
+  .message.reply,
+  &.reply {
+    margin-top: $spaceMd;
+    padding-top: $spaceMd;
+    border-top: $borderWidth solid $colorBorder;
+  }
+}
+
+#replies .message {
+  margin-bottom: $spaceMd;
+}
+
+p.breadcrumb {
+  margin: 0 0 $spaceXs;
+  font-size: $fontSizeSm;
+  color: $colorTextTertiary;
+}
+
+p.subtitle,
+p.author {
+  font-size: $fontSizeSm;
+  font-style: normal;
+  color: $colorTextTertiary;
+}
+
+p.subtitle {
+  margin: (-$spaceXs) 0 $spaceMd;
+}
+
+// News-Liste
+div#content article.news-article,
+div.news {
+  margin-bottom: $spaceLg;
+}
+
+.news-article header h3,
+div.news h3 {
+  display: flex;
+  align-items: center;
+  gap: $spaceXs;
+  margin: 0 0 $spaceXxs;
+}
+
+// Dokumente
+#document-list .document-group {
+  margin-bottom: $spaceLg;
+}
+
+#document-list h3 {
+  margin-bottom: $spaceXs;
+  font-size: $fontSizeMd;
+}
+
+// Anhänge-Liste
+div.attachments {
+  margin-top: $spaceMd;
+
+  p {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $spaceXxs $spaceXs;
+    margin: $spaceXxs 0;
+  }
+
+  span.author,
+  span.size {
+    font-size: $fontSizeXs;
+    color: $colorTextTertiary;
+  }
+}
+
+p.other-formats {
+  margin-top: $spaceMd;
+  font-size: $fontSizeSm;
+  color: $colorTextTertiary;
+}

@@ -1,0 +1,83 @@
+// =============================================================================
+// Prioritäten in Ticketlisten und der Ticket-Ansicht
+//
+// Redmine hängt an Zeile bzw. Ticket die Klasse priority-<position>:
+//   lowest, low2, low3 …   unter Standard
+//   default                Standard ("Normal")
+//   … high3, high2         über Standard
+//   highest                höchste Stufe
+// Die Gestaltung hängt an diesen Stufen, nicht an den Namen, und passt
+// sich damit an eigene Prioritäten an.
+//
+//   niedrig        grauer Text
+//   Standard       unverändert
+//   erhöht         Text in Warnfarbe            (high3, high4 …)
+//   zweithöchste   Punkt + Text in Warnfarbe     (high2)
+//   höchste        Punkt + Text in Fehlerfarbe, Betreff halbfett
+//
+// Nur die Zelle "Priorität" wird eingefärbt, nicht die ganze Zeile.
+// =============================================================================
+
+@use "../variables" as *;
+@use "variables/prioritiesVariables" as *;
+
+// Zelle in Listen bzw. Wert in der Ticket-Ansicht
+$priorityTarget: "td.priority";
+$priorityAttribute: ".attribute.priority .value";
+
+@mixin priorityDot($color) {
+  &::before {
+    content: "";
+    display: inline-block;
+    width: $priorityDotSize;
+    height: $priorityDotSize;
+    margin-right: $priorityDotGap;
+    vertical-align: 0.05em;
+    background-color: $color;
+    border-radius: 50%;
+  }
+}
+
+// Niedrig
+tr[class*="priority-low"] #{$priorityTarget},
+div.issue.details[class*="priority-low"] #{$priorityAttribute} {
+  color: $priorityLowColor;
+}
+
+// Erhöht (alle "high" außer den beiden obersten; [class*] träfe sonst
+// auch "highest")
+tr[class*="priority-high"]:not(.priority-high2, .priority-highest) #{$priorityTarget},
+div.issue.details[class*="priority-high"]:not(.priority-high2, .priority-highest) #{$priorityAttribute} {
+  font-weight: $fontWeightMedium;
+  color: $priorityHighColor;
+}
+
+// Zweithöchste
+tr.priority-high2 #{$priorityTarget},
+div.issue.details.priority-high2 #{$priorityAttribute} {
+  @include priorityDot($priorityUrgentDot);
+  font-weight: $fontWeightMedium;
+  color: $priorityUrgentColor;
+}
+
+// Höchste
+tr.priority-highest #{$priorityTarget},
+div.issue.details.priority-highest #{$priorityAttribute} {
+  @include priorityDot($priorityImmediateDot);
+  font-weight: $fontWeightSemibold;
+  color: $priorityImmediateColor;
+}
+
+tr.priority-highest td.subject a {
+  font-weight: $fontWeightSemibold;
+}
+
+// Geschlossene Tickets nicht mehr hervorheben
+tr.issue.closed #{$priorityTarget} {
+  font-weight: $fontWeightRegular;
+  color: inherit;
+
+  &::before {
+    opacity: 0.4;
+  }
+}

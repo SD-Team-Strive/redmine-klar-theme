@@ -1,0 +1,75 @@
+// =============================================================================
+// Redmine-Theme Klar – Haupt-Stylesheet (ersetzt Redmines application.css)
+//
+// Prinzip: Redmines eigenes CSS bleibt die Grundlage und wird gezielt
+// überschrieben. Die HTML-Struktur von Redmine wird nicht verändert.
+//
+// Einstiegsdateien (je eine CSS-Datei in stylesheets/):
+//   application.scss   dieses Stylesheet, auf jeder Seite
+//   responsive.scss    nach application.css, Mobil-Anpassungen
+//   context_menu.scss  nur auf Listen mit Kontextmenü
+//   jstoolbar.scss     nur mit Text-Editor
+// Jede importiert zuerst ihr Redmine-Original und legt die Anpassungen darüber.
+// Redmine lädt die drei letzten nach application.css; ihre Anpassungen
+// müssen deshalb dort stehen, sonst gewinnt das Original.
+//
+// Reihenfolge hier:
+//   base/        Schrift, Typografie, Links, Icons
+//   layout/      Rahmen: obere Leiste, Kopf, Navigation, Inhalt, Fuß
+//   components/  wiederkehrende Bausteine (Buttons, Formulare, Tabellen …)
+//   pages/       Bereiche mit eigener Darstellung (Tickets, Wiki, Gantt …)
+//   print        Druck
+//
+// Jede Teil-Datei bindet ihre Abhängigkeiten selbst per @use ein.
+// Werte stehen in variables/ bzw. in der Variables-Datei neben der Komponente.
+// =============================================================================
+
+// Basis
+@use "base/fonts";
+@use "base/typography";
+@use "base/links";
+@use "base/icons";
+
+// Layout
+@use "layout/topMenu";
+@use "layout/header";
+@use "layout/mainMenu";
+@use "layout/main";
+@use "layout/sidebar";
+
+// Komponenten
+@use "components/buttons";
+@use "components/forms";
+@use "components/tables";
+@use "components/tabs";
+@use "components/flash";
+@use "components/badges";
+@use "components/boxes";
+@use "components/dropdowns";
+@use "components/pagination";
+@use "components/progress";
+@use "components/avatars";
+
+// Seitenbereiche
+@use "pages/query";
+@use "pages/issue";
+@use "pages/priorities";
+@use "pages/journals";
+@use "pages/wiki";
+@use "pages/projects";
+@use "pages/activity";
+@use "pages/roadmap";
+@use "pages/calendar";
+@use "pages/gantt";
+@use "pages/myPage";
+@use "pages/messages";
+@use "pages/login";
+@use "pages/admin";
+
+// Druck
+@use "print";
+
+// Redmine-Basis (Pfad relativ zu themes/<id>/application.css).
+// Steht unten, weil Sass @use zuerst verlangt; Sass setzt CSS-Importe
+// in der Ausgabe automatisch an den Anfang.
+@import url("../../application.css");

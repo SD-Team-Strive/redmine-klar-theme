@@ -1,0 +1,63 @@
+// =============================================================================
+// Dropdown-Komponente von Redmine 7 (.dropdown / .dropdown-content),
+// z. B. das Konto-Menü oben rechts. Ausgeliefert über dropdown.scss nach
+// Redmines dropdown.css. Die älteren .drdn-Menüs: components/_dropdowns.scss
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.dropdown-content {
+  @include popover;
+  min-width: 220px;
+  margin-top: $spaceXs;
+  padding: $spaceXxs;
+  overflow: hidden;
+  font-size: $fontSizeBase;
+
+  // Einträge untereinander, volle Breite
+  ul {
+    display: grid;
+    gap: 1px;
+  }
+
+  li a,
+  .dropdown-items a {
+    @include menuItem;
+    font-weight: $fontWeightRegular;
+  }
+
+  li a:hover,
+  .dropdown-items a:hover {
+    color: $colorTextPrimary;
+    background-color: $colorHoverBg;
+  }
+}
+
+.dropdown-divider {
+  margin: $spaceXxs (-$spaceXxs);
+  border-top-color: $colorBorder;
+}
+
+// Name und Login im Konto-Menü
+#account .dropdown-content .user-info {
+  display: flex;
+  flex-direction: column;
+  padding: $spaceXs $spaceXs * 1.25;
+
+  .user-name {
+    font-weight: $fontWeightSemibold;
+    color: $colorTextPrimary;
+  }
+
+  .user-login {
+    font-size: $fontSizeXs;
+    color: $colorTextTertiary;
+  }
+}
+
+#account .dropdown-content .logout {
+  margin-top: $spaceXxs;
+  padding-top: $spaceXxs;
+  border-top-color: $colorBorder;
+}

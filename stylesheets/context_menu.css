@@ -1,0 +1,70 @@
+@import url("../../context_menu.css");
+#context-menu {
+  font-size: 0.8125rem;
+}
+#context-menu ul {
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(10, 10, 10, 0.12), 0 2px 6px rgba(10, 10, 10, 0.06);
+  width: 230px;
+  padding: 4px;
+}
+#context-menu li {
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+}
+#context-menu li:hover {
+  background-color: #f5f5f5;
+  border: 0;
+  border-radius: 6px;
+}
+#context-menu a {
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: #0a0a0a;
+}
+#context-menu a:hover {
+  color: #0a0a0a;
+}
+#context-menu a.disabled,
+#context-menu a.disabled:hover {
+  color: #a1a1a1;
+}
+#context-menu li.folder ul,
+#context-menu li.folder > ul {
+  left: calc(100% + 4px);
+}
+#context-menu.reverse-x li.folder ul, #context-menu.reverse-x li.folder > ul {
+  left: auto;
+  right: calc(100% + 4px);
+}
+#context-menu li a.submenu {
+  padding-left: 30px;
+  background-position: right 8px center;
+}
+
+.context-menu-selection,
+.context-menu-selection:hover {
+  color: #0a0a0a !important;
+  background-color: #fffce0 !important;
+}
+
+.context-menu-selection a,
+.context-menu-selection a:hover {
+  color: #0a0a0a !important;
+}
+
+.context-menu-selection svg.icon-svg {
+  stroke: #585858 !important;
+}
+
+div#gantt_area .context-menu-selection,
+div#gantt_area .context-menu-selection:hover {
+  background-color: rgba(255, 245, 128, 0.4) !important;
+}
+
+div#gantt_area .context-menu-selection a {
+  color: #0a0a0a !important;
+}

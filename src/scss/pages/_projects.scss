@@ -1,0 +1,83 @@
+// =============================================================================
+// Projektliste (Karten-Ansicht) und Projektübersicht
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+
+// Projektliste als Karten
+#projects-index {
+  column-gap: $spaceMd;
+
+  ul.projects li.root {
+    @include card($spaceLg, $radiusLg);
+    margin-bottom: $spaceMd;
+  }
+
+  ul.projects div.root a.project {
+    font-size: $fontSizeMd;
+    font-weight: $fontWeightSemibold;
+  }
+
+  ul.projects div.description {
+    padding-top: $spaceXxs;
+    font-size: $fontSizeSm;
+    color: $colorTextMuted;
+  }
+
+  li.root ul.projects {
+    margin-top: $spaceSm;
+    padding-left: $spaceMd;
+    border-left: $borderWidth solid $colorBorder;
+  }
+
+  ul.projects li.child {
+    margin-top: $spaceSm;
+  }
+}
+
+ul.projects li.root div.archived,
+ul.projects li.child div.archived {
+  color: $colorTextTertiary;
+}
+
+// Projektübersicht: Kästen nebeneinander
+body.controller-projects.action-show {
+  .splitcontent {
+    align-items: flex-start;
+  }
+
+  .splitcontentleft > .box,
+  .splitcontentright > .box,
+  .splitcontentleft > div > .box,
+  .splitcontentright > div > .box {
+    margin-bottom: $spaceLg;
+  }
+
+  // Ticket-Statistik in der Übersicht
+  table.list.issue-report {
+    margin: $spaceXs 0;
+  }
+
+  .box h3 {
+    display: flex;
+    align-items: center;
+    gap: $spaceXs;
+  }
+}
+
+// Zusammenfassungen (News) nicht kursiv
+.summary {
+  font-style: normal;
+  color: $colorTextMuted;
+}
+
+ul.subprojects li {
+  float: none;
+  display: inline;
+}
+
+// Mitglieder-Liste der Übersicht
+.members.box p {
+  margin: $spaceXxs 0;
+}

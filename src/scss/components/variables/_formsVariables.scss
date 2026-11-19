@@ -1,0 +1,30 @@
+@use "../../variables" as *;
+
+$formControlHeight:       $controlHeight !default;
+$formControlPaddingX:     $spaceSm * 0.8 !default;
+$formControlRadius:       $radiusBase !default;
+$formControlBorder:       $colorBorder !default;
+$formControlHoverBorder:  $colorBorderStrong !default;
+$formControlFocusBorder:  $neutral500 !default;
+$formControlDisabledBg:   $colorBgMuted !default;
+$formPlaceholderColor:    $colorTextPlaceholder !default;
+$formCheckAccent:         $neutral900 !default;
+$formCheckSize:           16px !default;
+$formCheckRadius:         4px !default;
+$formCheckBorder:         $colorBorderStrong !default;
+$formCheckHoverBorder:    $neutral400 !default;
+
+$formLabelColor:          $colorTextSecondary !default;
+$formLabelFontWeight:     $fontWeightMedium !default;
+$formRequiredColor:       $statusError !default;
+$formErrorColor:          $statusErrorText !default;
+$formHelpColor:           $colorTextTertiary !default;
+
+// Tabellarische Formulare: Label-Spalte links
+$formTabularLabelWidth:   180px !default;
+$formTabularRowPaddingY:  $spaceXxs !default;
+$formTabularSettingsLabelWidth: 300px !default;
+
+$fieldsetBorder:          $colorBorder !default;
+$fieldsetRadius:          $radiusMd !default;
+$fieldsetPadding:         $spaceMd !default;

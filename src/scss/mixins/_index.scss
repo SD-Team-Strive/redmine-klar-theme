@@ -1,0 +1,87 @@
+// =============================================================================
+// Mixins: wiederkehrende Muster, damit Komponenten sie nicht kopieren
+// =============================================================================
+
+@use "../variables" as *;
+@forward "iconMasks";
+
+// Weiße Karte mit feinem Rand (Monitor: modCard)
+@mixin card($padding: $spaceLg, $radius: $radiusLg) {
+  background-color: $colorBgCard;
+  border: $borderWidth solid $colorBorder;
+  border-radius: $radius;
+  box-shadow: $shadowSm;
+  padding: $padding;
+}
+
+// Schwebende Fläche (Dropdowns, Kontextmenü, Tooltips)
+@mixin popover {
+  background-color: $colorBgCard;
+  border: $borderWidth solid $colorBorder;
+  border-radius: $radiusMd;
+  box-shadow: $shadowLg;
+}
+
+// Tastatur-Fokus
+@mixin focusRing {
+  outline: none;
+  box-shadow: $focusRing;
+}
+
+// Grundform für Eingabefelder
+@mixin control {
+  min-height: $controlHeight;
+  padding: 0 $spaceSm;
+  font-family: inherit;
+  font-size: $fontSizeBase;
+  color: $colorTextPrimary;
+  background-color: $colorBgCard;
+  border: $borderWidth solid $colorBorder;
+  border-radius: $radiusBase;
+  box-shadow: $shadowSm;
+  transition: border-color $transitionFast, box-shadow $transitionFast;
+}
+
+// Eintrag in Menüs/Listen mit Hover-Fläche
+@mixin menuItem {
+  display: flex;
+  align-items: center;
+  gap: $spaceXs;
+  padding: $spaceXs * 0.75 $spaceXs * 1.25;
+  border: 0;
+  border-radius: $radiusSm;
+  color: $colorTextPrimary;
+  text-decoration: none;
+
+  &:hover {
+    background-color: $colorHoverBg;
+    color: $colorTextPrimary;
+    text-decoration: none;
+  }
+}
+
+// Getönte Fläche für Status-Hinweise (keine farbigen Randakzente)
+@mixin tint($bg, $text) {
+  background-color: $bg;
+  color: $text;
+  border: $borderWidth solid rgba($text, 0.15);
+}
+
+@mixin mobile {
+  @media screen and (max-width: $breakpointMobile) {
+    @content;
+  }
+}
+
+// Schmale Telefone (zweiter Breakpoint in Redmines responsive.css)
+@mixin phone {
+  @media all and (max-width: $breakpointPhone) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media screen and (min-width: $breakpointMobile + 1) {
+    @content;
+  }
+}

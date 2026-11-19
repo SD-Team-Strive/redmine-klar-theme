@@ -1,0 +1,40 @@
+// =============================================================================
+// Mobil: allgemeine Inhalte (Überschriften, Kästen, Projektübersicht, Login)
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+
+@include mobile {
+  #content > h2,
+  h2.inline-flex {
+    font-size: $fontSizeLg;
+  }
+
+  // Zwei Spalten stehen untereinander: nur ein Abstand zwischen Kästen
+  .splitcontent {
+    gap: 0;
+  }
+
+  .box,
+  .mypage-box,
+  div#roadmap .version-article {
+    padding: $spaceMd;
+    border-radius: $radiusMd;
+  }
+
+  // Breite Inhaltstabellen (Wiki, Übersichten) seitlich scrollbar statt
+  // die Seite zu sprengen
+  // (nicht für Ticketlisten in der Roadmap: deren Überschrift ist eine
+  // caption und würde sonst in den Rahmen rutschen)
+  div.wiki table,
+  table.list:not(.issues):not(.time-entries):not(.related-issues) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  #login-form {
+    margin-top: $spaceXl;
+  }
+}

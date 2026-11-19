@@ -1,0 +1,235 @@
+// =============================================================================
+// Kopfbereich: Projekttitel mit Brotkrumen, Schnellsuche, Projektwechsel
+// Desktop: Raster aus Titel | Suche und darunter die Hauptnavigation.
+// Mobil übernimmt Redmines responsive.css (Flyout-Menü).
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/layoutVariables" as *;
+@use "variables/headerVariables" as *;
+
+#header {
+  min-height: 0;
+  color: $headerColor;
+  background: $headerBackground;
+  border-bottom: $borderWidth solid $headerBorderColor;
+
+  a {
+    color: $headerColor;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: $headerTitleFontSize;
+    font-weight: $fontWeightSemibold;
+    letter-spacing: $letterSpacingHeading;
+    line-height: $lineHeightTight;
+    color: $headerTitleColor;
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumbs {
+      margin-bottom: $spaceXxs;
+      font-size: $fontSizeSm;
+      font-weight: $fontWeightRegular;
+      letter-spacing: 0;
+      line-height: $lineHeightBase;
+      color: $headerMutedColor;
+
+      a {
+        color: $headerMutedColor;
+
+        &:hover {
+          color: $headerTitleColor;
+        }
+      }
+    }
+  }
+
+  @include desktop {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "title search"
+      "menu menu";
+    align-items: center;
+    gap: $headerRowGap $spaceLg;
+    padding: $headerPaddingTop $layoutGutter 0;
+
+    // Redmine 7 reserviert unten Platz für die absolut positionierte Navigation
+    body.has-main-menu & {
+      padding-bottom: 0;
+    }
+
+    // Redmine 7: Mindesthöhen für Titel und Suche
+    > h1,
+    > #quick-search {
+      min-height: 0;
+    }
+
+    > h1 {
+      grid-area: title;
+    }
+
+    // Logo (javascripts/theme.js) als eigene Spalte vor Titel und Brotkrumen
+    // Spaltenabstand = Abstand Logo–Titel; die Suche gleicht auf den
+    // üblichen Abstand zum Titel aus
+    &:has(> .theme-logo) {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-areas:
+        "logo title search"
+        "menu menu menu";
+      column-gap: $headerLogoGap;
+
+      > #quick-search {
+        margin-left: $spaceLg - $headerLogoGap;
+      }
+    }
+
+    > .theme-logo {
+      grid-area: logo;
+    }
+
+    > h1 {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: $headerLogoSize;
+    }
+
+    > #quick-search {
+      grid-area: search;
+    }
+
+    > #main-menu {
+      grid-area: menu;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Logo-Link (eingesetzt von javascripts/theme.js)
+// -----------------------------------------------------------------------------
+
+// Bildpfad für das Script; Propshaft ergänzt den Digest in url().
+// In Custom Properties wertet Sass nur Interpolation aus, daher #{}.
+@if $headerLogo {
+  :root {
+    --theme-logo: url("#{$headerLogo}");
+  }
+}
+
+.theme-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $headerLogoSize;
+  height: $headerLogoSize;
+  text-decoration: none;
+  border-radius: $headerLogoRadius;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  // Kein Logo gepflegt: Kachel mit dem Anfangsbuchstaben des Titels
+  &[data-fallback] {
+    font-size: $headerLogoSize * 0.45;
+    font-weight: $fontWeightSemibold;
+    line-height: 1;
+    color: $headerLogoFallbackColor;
+    background-color: $headerLogoFallbackBackground;
+  }
+}
+
+// Schnellsuche + Projektwechsel
+#quick-search {
+  float: none;
+  display: flex;
+  align-items: center;
+  gap: $spaceXs;
+
+  form {
+    float: none;
+    display: flex;
+    align-items: center;
+    gap: $spaceXs;
+    margin: 0;
+  }
+
+  // "Suche:"-Label ist neben dem Feld überflüssig, bleibt aber für Screenreader
+  label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  #q {
+    width: $headerSearchWidth;
+    height: $controlHeight;
+    padding-left: $controlHeight;
+    background: $colorBgCard url("#{$redmineAssetPath}search.svg") no-repeat $spaceXs 50%;
+    background-size: 16px;
+    border-color: $colorBorder;
+    border-radius: $radiusBase;
+  }
+
+  #project-jump {
+    float: none;
+  }
+}
+
+// Projektwechsel als Auswahlfeld; mobil gestaltet ihn responsive.css als Titel
+@include desktop {
+  #project-jump.drdn {
+    width: $headerProjectJumpWidth;
+
+    .drdn-trigger {
+      height: $controlHeight;
+      padding: 0 $spaceLg * 1.4 0 $spaceSm;
+      line-height: $controlHeight - 2px;
+      color: $colorTextPrimary;
+      background: $colorBgCard url("#{$redmineAssetPath}chevron-down.svg") no-repeat right $spaceXs center;
+      border: $borderWidth solid $colorBorder;
+      border-radius: $radiusBase;
+      box-shadow: $shadowSm;
+
+      &:hover {
+        border-color: $colorBorderStrong;
+      }
+    }
+
+    &.expanded .drdn-trigger {
+      background-image: url("#{$redmineAssetPath}chevron-down.svg");
+    }
+
+    .drdn-content {
+      top: $controlHeight + $spaceXxs;
+      width: $headerProjectJumpDropdownWidth;
+    }
+  }
+}
+
+#project-jump.drdn {
+  .drdn-items > * {
+    color: $colorTextPrimary !important;
+  }
+
+  .drdn-items > a:hover {
+    color: $colorTextPrimary !important;
+    background-color: $colorHoverBg;
+  }
+}

@@ -1,0 +1,9 @@
+@use "../../variables" as *;
+
+$roadmapHeaderHeight:  28px !default;    // Kopfzeile: Name, Status, Bearbeiten
+$roadmapProgressWidth: 480px !default;   // Balken, wächst nicht über diese Breite
+
+// Ticketliste: 16px-Avatar mittig zur ersten Textzeile (13px × 1.5)
+$relatedAvatarSize:      16px !default;
+$relatedLineHeight:      calc(#{$fontSizeSm} * #{$lineHeightBase}) !default;
+$relatedFirstLineOffset: calc(#{$spaceXs} + (#{$relatedLineHeight} - #{$relatedAvatarSize}) / 2) !default;

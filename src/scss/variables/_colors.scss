@@ -1,0 +1,100 @@
+// =============================================================================
+// Farbsystem
+// Neutrale Grauskala, Gelb als Markenakzent,
+// wenige Statusfarben. Komponenten verwenden die semantischen Token unten,
+// nie die Skalenwerte direkt.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Neutrale Skala (50–950)
+// -----------------------------------------------------------------------------
+
+$neutral0:   #ffffff !default;
+$neutral50:  #fafafa !default;
+$neutral100: #f5f5f5 !default;
+$neutral200: #e5e5e5 !default;
+$neutral300: #d4d4d4 !default;
+$neutral400: #a1a1a1 !default;
+$neutral500: #737373 !default;
+$neutral600: #585858 !default;
+$neutral700: #404040 !default;
+$neutral800: #262626 !default;
+$neutral900: #171717 !default;
+$neutral950: #0a0a0a !default;
+
+// -----------------------------------------------------------------------------
+// Gelb / Markenakzent (50–950), Basis #FCEA2B
+// -----------------------------------------------------------------------------
+
+$yellow50:  #fffef5 !default;
+$yellow100: #fffce0 !default;
+$yellow200: #fff9b9 !default;
+$yellow300: #fff580 !default;
+$yellow400: #fff04d !default;
+$yellow500: #fcea2b !default;
+$yellow600: #e5d300 !default;
+$yellow700: #bfb000 !default;
+
+// -----------------------------------------------------------------------------
+// Statusfarben (Monitor) mit hellen Flächen- und dunklen Textvarianten
+// -----------------------------------------------------------------------------
+
+$statusSuccess:     #3a9d5c !default;
+$statusSuccessBg:   #eaf5ee !default;
+$statusSuccessText: #24693c !default;
+
+$statusWarning:     #ffb900 !default;
+$statusWarningBg:   #fff6db !default;
+$statusWarningText: #8a6100 !default;
+
+$statusError:       #f54a00 !default;
+$statusErrorBg:     #fef0ea !default;
+$statusErrorText:   #b23600 !default;
+
+$statusInfo:        #104e64 !default;
+$statusInfoBg:      #e8f1f4 !default;
+$statusInfoText:    #104e64 !default;
+
+$chartTeal:         #009689 !default;
+$chartTealBg:       #e6f4f2 !default;
+$chartTealText:     #00695f !default;
+
+// -----------------------------------------------------------------------------
+// Semantische Token
+// -----------------------------------------------------------------------------
+
+// Flächen
+$colorBgPage:      $neutral0 !default;
+$colorBgSubtle:    $neutral50 !default;
+$colorBgMuted:     $neutral100 !default;
+$colorBgCard:      $neutral0 !default;
+$colorBgInverse:   $neutral900 !default;
+
+// Text
+$colorTextPrimary:     $neutral950 !default;
+$colorTextSecondary:   $neutral700 !default;
+$colorTextMuted:       $neutral600 !default;
+$colorTextTertiary:    $neutral500 !default;
+$colorTextPlaceholder: $neutral400 !default;
+$colorTextInverse:     $neutral0 !default;
+
+// Linien
+$colorBorder:       $neutral200 !default;
+$colorBorderStrong: $neutral300 !default;
+
+// Interaktion
+$colorHoverBg:    $neutral100 !default;
+$colorActiveBg:   $neutral200 !default;
+$colorFocusRing:  $neutral400 !default;
+$colorSelectedBg: $yellow100 !default;
+
+// Akzent
+$colorAccent:     $yellow500 !default;
+$colorAccentBg:   $yellow100 !default;
+$colorHighlight:  $yellow200 !default;
+
+// Links
+$colorLink:      $neutral950 !default;
+$colorLinkHover: $neutral950 !default;
+$colorLinkMuted: $neutral500 !default;
+$colorLinkNew:   $statusErrorText !default;

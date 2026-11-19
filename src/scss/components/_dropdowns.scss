@@ -1,0 +1,156 @@
+// =============================================================================
+// Aufklappmenüs (.drdn): "…"-Menüs, Projektwechsel, Abfrage-Auswahl
+// sowie jQuery-UI-Autocomplete und Tribute (@-Erwähnungen)
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.drdn-content {
+  @include popover;
+  top: 100%;
+  margin-top: $spaceXxs;
+  color: $colorTextPrimary;
+  overflow: hidden;
+}
+
+.drdn-content .quick-search {
+  margin: $spaceXs;
+}
+
+.drdn-content .quick-search input.autocomplete {
+  width: 100%;
+}
+
+.drdn-items {
+  padding: $spaceXxs;
+}
+
+div + .drdn-items {
+  border-top-color: $colorBorder;
+}
+
+.drdn-items > * {
+  @include menuItem;
+  display: block;
+  border: 0;
+}
+
+.drdn-items > *:focus {
+  border: 0;
+  background-color: $colorHoverBg;
+  outline: none;
+}
+
+.drdn-items > span {
+  color: $colorTextTertiary;
+}
+
+// Auswahllisten: Platz für das Häkchen, ausgewählt mit Icon statt "✓"
+.drdn-items.selection > * {
+  display: flex;
+}
+
+.drdn-items.selection > *::before {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin: 2px $spaceXs 0 0;
+}
+
+.drdn-items.selection > *.selected {
+  font-weight: $fontWeightMedium;
+}
+
+.drdn-items.selection > *.selected::before {
+  @include maskIcon("check", 16px);
+  margin: 2px $spaceXs 0 0;
+}
+
+// "…"-Menüs neben Überschriften und Journalen
+.contextual .drdn-content,
+.journal-actions .drdn-content {
+  top: 100%;
+}
+
+.contextual .drdn-items,
+.journal-actions .drdn-items {
+  min-width: 200px;
+  padding: $spaceXxs;
+}
+
+.contextual .drdn-items > a,
+.journal-actions .drdn-items > a {
+  @include menuItem;
+}
+
+.contextual .drdn-items > a:hover,
+.journal-actions .drdn-items > a:hover {
+  color: $colorTextPrimary;
+  background-color: $colorHoverBg;
+  border: 0;
+  border-radius: $radiusSm;
+}
+
+// Trigger "…" als runder Icon-Button
+.contextual .drdn-trigger,
+.journal-actions .drdn-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: $radiusSm;
+
+  &:hover {
+    background-color: $colorHoverBg;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// jQuery-UI-Autocomplete und Tribute
+// -----------------------------------------------------------------------------
+
+.ui-autocomplete.ui-menu,
+.tribute-container ul {
+  @include popover;
+  padding: $spaceXxs;
+}
+
+.ui-autocomplete .ui-menu-item > div,
+.ui-menu .ui-menu-item > div {
+  padding: $spaceXs * 0.75 $spaceXs * 1.25;
+  border-radius: $radiusSm;
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active {
+  color: $colorTextPrimary;
+  background: $colorHoverBg;
+  border-color: transparent;
+  margin: 0;
+}
+
+.tribute-container li {
+  padding: $spaceXs * 0.75 $spaceXs * 1.25;
+  border-radius: $radiusSm;
+}
+
+.tribute-container li.highlight {
+  color: $colorTextPrimary;
+  background-color: $colorHoverBg;
+}
+
+.ui-widget-overlay {
+  background: $neutral950;
+  opacity: 0.4;
+}
+
+.ui-tooltip {
+  padding: $spaceXxs $spaceXs;
+  font-size: $fontSizeXs;
+  color: $colorTextInverse;
+  background: $neutral900;
+  border-radius: $radiusSm;
+}

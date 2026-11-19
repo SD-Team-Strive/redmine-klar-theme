@@ -1,0 +1,11 @@
+@use "../../variables" as *;
+
+$mobileHeaderHeight:     64px !default;   // fest in Redmines responsive.css
+$mobileHeaderPaddingX:   $spaceMd !default;
+$mobileLogoSize:         36px !default;
+$mobileControlHeight:    40px !default;
+$mobileToggleWidth:      56px !default;
+
+// Projektwechsel: links Platz fürs Logo, rechts für den Menü-Button
+$mobileJumpPaddingLeft:  $mobileHeaderPaddingX + $mobileLogoSize + $spaceSm !default;
+$mobileJumpPaddingRight: $mobileToggleWidth !default;

@@ -1,0 +1,64 @@
+// =============================================================================
+// SVG-Icons (Redmine 6, Tabler-Sprite): einheitlich grau, beim Hover dunkel
+// =============================================================================
+
+@use "../variables" as *;
+
+svg.icon-svg {
+  stroke: $colorTextMuted;
+  stroke-width: 1.75;
+}
+
+svg.icon-svg-filled {
+  fill: $colorTextMuted;
+}
+
+a.icon .icon-svg,
+a.icon-only .icon-svg,
+span.icon-actions .icon-svg {
+  stroke: $colorTextMuted;
+  transition: stroke $transitionFast;
+}
+
+a.icon:hover .icon-svg,
+a.icon-only:hover .icon-svg,
+span.icon-actions:hover .icon-svg {
+  stroke: $colorTextPrimary;
+}
+
+a.icon .icon-svg-filled,
+a.icon-only .icon-svg-filled {
+  fill: $colorTextMuted;
+}
+
+a.icon:hover .icon-svg-filled,
+a.icon-only:hover .icon-svg-filled {
+  fill: $colorTextPrimary;
+}
+
+// Links mit Icon nicht unterstreichen, das Label reicht
+a.icon:hover {
+  text-decoration: none;
+
+  .icon-label {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
+span.icon-label {
+  margin-left: $spaceXs * 0.75;
+}
+
+svg.icon-ok,
+span.icon-checked:has(:not(a svg.icon-svg)) svg.icon-svg {
+  stroke: $statusSuccess;
+}
+
+.icon-error svg.icon-svg {
+  stroke: $statusError;
+}
+
+.icon-warning svg.icon-svg {
+  stroke: $statusWarning;
+}

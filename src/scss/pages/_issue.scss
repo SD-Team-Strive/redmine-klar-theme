@@ -1,0 +1,577 @@
+// =============================================================================
+// Ticket-Detailansicht: Karte mit Betreff, Attributen, Beschreibung,
+// Unteraufgaben und Beziehungen; fixierter Kopf beim Scrollen
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/issueVariables" as *;
+
+// .details: nur die Detailansicht (Redmine nutzt div.issue auch im Kalender)
+div.issue.details {
+  @include card($issueCardPadding, $issueCardRadius);
+  margin-bottom: $spaceLg;
+  background: $colorBgCard;
+
+  // Betreff mit Autor-Avatar: die eigentliche Überschrift des Tickets
+  div.subject {
+    h3 {
+      margin: 0 0 $spaceXxs;
+      font-size: $issueSubjectFontSize;
+      font-weight: $fontWeightSemibold;
+      line-height: $lineHeightTight;
+      letter-spacing: $letterSpacingHeading;
+    }
+
+    div div {
+      padding-left: 0;
+    }
+  }
+
+  > .gravatar,
+  > .avatar,
+  .author .avatar {
+    margin-right: $spaceSm;
+  }
+
+  // Eigener Block-Kontext: Folgezeilen bleiben neben dem Avatar statt
+  // darunter zu laufen
+  p.author {
+    display: flow-root;
+    margin: 0;
+    font-size: $fontSizeSm;
+    color: $issueMetaColor;
+
+    a {
+      color: $colorTextSecondary;
+    }
+  }
+
+  // Vor/Zurück: zwei Pfeile, dazwischen die Position ("12 / 17").
+  // Die Texte "« Zurück"/"Weiter »" bleiben für Screenreader im Link.
+  .next-prev-links {
+    margin: 0;
+    font-size: $fontSizeSm;
+    color: $issueMetaColor;
+
+    // components/_pagination.scss gibt Seitenblätter-Leisten Abstand nach oben
+    span.pagination {
+      margin: 0;
+    }
+
+    .pagination ul.pages {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      margin: 0;
+    }
+
+    .pagination ul.pages li {
+      margin: 0;
+
+      a,
+      span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
+        height: $issueNavButtonSize;
+        padding: 0;
+        color: $issueMetaColor;
+        border: 0;
+        border-radius: $radiusSm;
+      }
+
+      a:hover {
+        color: $colorTextPrimary;
+        background-color: $colorHoverBg;
+        text-decoration: none;
+      }
+    }
+
+    .pagination ul.pages li:is(.previous, .next) {
+      a,
+      span {
+        position: relative;
+        width: $issueNavButtonSize;
+        font-size: 0;
+      }
+
+      // nicht verfügbar (erstes/letztes Ticket)
+      span {
+        opacity: 0.35;
+      }
+    }
+
+    .pagination ul.pages li.previous :is(a, span)::before {
+      @include maskIcon("chevron-left", 18px);
+    }
+
+    .pagination ul.pages li.next :is(a, span)::before {
+      @include maskIcon("chevron-right", 18px);
+    }
+
+    .pagination ul.pages li.position :is(a, span) {
+      padding: 0 $spaceXxs;
+      font-size: $fontSizeSm;
+      font-variant-numeric: tabular-nums;
+      color: $colorTextSecondary;
+    }
+
+    // Redmine 6: dieselbe Navigation ohne span.pagination – nackte Links
+    // "« Zurück | 12/17 | Weiter »", ein fehlender Link ist nur Text.
+    // font-size 0 blendet Striche und Texte aus; fehlende Richtung als
+    // abgeblendeter Pfeil über ::before/::after des Containers
+    &:not(:has(.pagination)) {
+      display: inline-flex;
+      align-items: center;
+      // kein Abstand: die ausgeblendeten Striche zählen sonst als Elemente
+      // (.contextual setzt gap und Innenabstand)
+      gap: 0;
+      padding: 0;
+      font-size: 0;
+
+      .position {
+        margin: 0;
+      }
+
+      > a[accesskey],
+      &:not(:has(> a[accesskey="p"]))::before,
+      &:not(:has(> a[accesskey="n"]))::after {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: $issueNavButtonSize;
+        height: $issueNavButtonSize;
+        color: $issueMetaColor;
+        border-radius: $radiusSm;
+      }
+
+      > a[accesskey]:hover {
+        color: $colorTextPrimary;
+        background-color: $colorHoverBg;
+        text-decoration: none;
+      }
+
+      > a[accesskey="p"]::before,
+      &:not(:has(> a[accesskey="p"]))::before {
+        @include maskIcon("chevron-left", 18px);
+      }
+
+      > a[accesskey="n"]::before,
+      &:not(:has(> a[accesskey="n"]))::after {
+        @include maskIcon("chevron-right", 18px);
+      }
+
+      &:not(:has(> a[accesskey="p"]))::before,
+      &:not(:has(> a[accesskey="n"]))::after {
+        opacity: 0.35;
+      }
+
+      > a[accesskey="n"] {
+        order: 2;
+      }
+
+      &::after {
+        order: 3;
+      }
+
+      .position a {
+        display: inline-flex;
+        align-items: center;
+        height: $issueNavButtonSize;
+        padding: 0 $spaceXxs;
+        font-size: $fontSizeSm;
+        font-variant-numeric: tabular-nums;
+        color: $colorTextSecondary;
+      }
+    }
+  }
+
+  // Attribute: eine Liste, gleichmäßig in zwei Spalten (erst links runter,
+  // dann rechts). Redmine liefert zwei Blöcke (Standard- und benutzer-
+  // definierte Felder) mit je linker/rechter Hälfte; die Hüllen werden per
+  // display: contents durchlässig, damit keine Lücken entstehen.
+  // Leere Felder sind ausgeblendet ("-" bei Kategorie/Version ist Text und
+  // bleibt sichtbar).
+  .attributes {
+    margin-top: $issueSectionGap;
+    padding: $spaceMd 0 0;
+    border-top: $borderWidth solid $issueSectionBorder;
+    column-count: $issueAttributeColumns;
+    column-gap: $issueAttributeColumnGap;
+
+    .splitcontent,
+    .splitcontentleft,
+    .splitcontentright {
+      display: contents;
+    }
+
+    .attribute:has(> .value:empty) {
+      display: none;
+    }
+
+    .attribute {
+      break-inside: avoid;
+      display: grid;
+      grid-template-columns: $issueAttributeLabelWidth minmax(0, 1fr);
+      align-items: center;
+      min-height: $issueAttributeRowHeight;
+      padding: 0;
+    }
+
+    .attribute .label {
+      float: none;
+      width: auto;
+      margin: 0;
+      padding-right: $spaceSm;
+      font-weight: $fontWeightRegular;
+      color: $issueAttributeLabelColor;
+    }
+
+    .attribute .value {
+      color: $colorTextPrimary;
+    }
+
+    // Fortschritt: Balken und Prozent auf einer Linie
+    .attribute.progress .value {
+      display: flex;
+      align-items: center;
+      gap: $spaceXs;
+
+      table.progress {
+        float: none;
+        flex: 0 0 $issueProgressWidth;
+        margin: 0;
+      }
+
+      p.percent {
+        margin: 0;
+        line-height: 1;
+      }
+    }
+  }
+
+  &.overdue .due-date .value {
+    color: $statusErrorText;
+    font-weight: $fontWeightMedium;
+  }
+
+  hr {
+    margin: $issueSectionGap 0;
+  }
+
+  // Abschnitte: Beschreibung, Unteraufgaben, Beziehungen
+  .description,
+  #issue_tree,
+  #relations {
+    > .contextual {
+      margin-top: 0;
+    }
+
+    > p strong,
+    > p:first-child > strong {
+      font-weight: $fontWeightSemibold;
+    }
+  }
+
+  #issue_tree,
+  #relations {
+    > p {
+      margin: 0 0 $spaceXs;
+    }
+
+    table.issues {
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+    }
+
+    table.issues td {
+      padding: $spaceXs $spaceXs;
+      border-top: $borderWidth solid $issueSectionBorder;
+    }
+
+    table.issues tr:first-child td {
+      border-top: 0;
+    }
+
+    table.issues tr:hover {
+      background-color: $colorBgSubtle;
+    }
+  }
+
+  .wiki {
+    color: $colorTextPrimary;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Reaktion ("Daumen hoch") am Ende der Karte
+// Redmine setzt sie zwischen Betreff und Autorzeile, rechts schwebend.
+// Hier: als Chip unten links, durch eine Linie vom Inhalt getrennt – erst
+// lesen, dann reagieren. Platz und Linie nur, wenn Reaktionen aktiv sind.
+// -----------------------------------------------------------------------------
+
+div.issue.details:has(> .reaction) {
+  position: relative;
+  padding-bottom: $issueCardPadding + $issueReactionHeight + $issueSectionGap;
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: $issueCardPadding;
+    bottom: $issueCardPadding + $issueReactionHeight + $issueSectionGap * 0.5;
+    left: $issueCardPadding;
+    height: $borderWidth;
+    background-color: $issueSectionBorder;
+  }
+
+  > .reaction {
+    position: absolute;
+    bottom: $issueCardPadding;
+    left: $issueCardPadding;
+    float: none;
+    margin: 0;
+    font-size: $fontSizeSm;
+  }
+}
+
+div.issue.details .reaction .reaction-button {
+  gap: $spaceXxs;
+  height: $issueReactionHeight;
+  padding: 0 $spaceSm * 0.8;
+  color: $colorTextSecondary;
+  border: $borderWidth solid $colorBorder;
+  border-radius: $radiusPill;
+
+  &:hover {
+    color: $colorTextPrimary;
+    background-color: $colorBgSubtle;
+    border-color: $colorBorderStrong;
+    text-decoration: none;
+  }
+
+  .icon-label {
+    margin: 0;
+  }
+
+  // Eigene Reaktion gesetzt: Akzentfläche
+  &.reacted {
+    background-color: $colorAccentBg;
+    border-color: $yellow300;
+  }
+}
+
+// Kopfzeile über der Karte: "Fehler #23" ist nur Einordnung (klein, grau),
+// der Status daneben die wichtige Information; die Überschrift ist der
+// Betreff in der Karte
+body.controller-issues.action-show #content > h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: $spaceXs;
+  font-size: $issueKeyFontSize;
+  font-weight: $fontWeightMedium;
+  letter-spacing: 0;
+  color: $issueKeyColor;
+}
+
+body.controller-issues.action-show #content > h2 + .badge,
+.issue-key .badge {
+  padding: $spaceXxs * 0.5 $spaceSm * 0.8;
+  font-size: $fontSizeSm;
+  font-weight: $fontWeightSemibold;
+  vertical-align: middle;
+}
+
+// -----------------------------------------------------------------------------
+// Betreff als Seitentitel (javascripts/theme.js setzt die Attribute)
+//   Titel        Betreff, groß
+//   darunter     "Fehler #23" + Status
+//   Karte        beginnt mit kleinem Avatar + Autorzeile, rechts ‹ 1/17 ›
+// -----------------------------------------------------------------------------
+
+body.controller-issues.action-show #content > h2[data-issue-title] {
+  display: block;
+  margin-bottom: 0;
+  font-size: $issueTitleFontSize;
+  font-weight: $fontWeightSemibold;
+  letter-spacing: $letterSpacingHeading;
+  color: $colorTextPrimary;
+}
+
+.issue-key {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: $spaceXs;
+  margin: $spaceXxs 0 $spaceMd;
+  font-size: $fontSizeSm;
+  color: $issueKeyColor;
+
+  .badge {
+    margin: 0;
+  }
+}
+
+div.issue.details[data-subject-promoted] {
+  position: relative;
+
+  // Betreff steht jetzt oben; hier nur für Redmines fixierte Kopfzeile
+  div.subject {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  // Avatar klein vor der Autorzeile; zugewiesene Person steht als Attribut
+  .avatar-with-child {
+    float: left;
+    margin: 0 $spaceXs 0 0;
+
+    .avatar {
+      width: $issueAuthorAvatarSize;
+      height: $issueAuthorAvatarSize;
+      margin: 0;
+      font-size: $issueAuthorAvatarSize * 0.4;
+    }
+
+    .avatar-child {
+      display: none;
+    }
+  }
+
+  p.author {
+    min-height: $issueAuthorAvatarSize;
+    line-height: $issueAuthorAvatarSize;
+  }
+
+  // Platz für ‹ 1/17 › nur, wenn Redmine die Navigation zeigt (nicht beim
+  // direkten Aufruf eines Tickets ohne Liste)
+  // (Redmine 7: .pagination, Redmine 6: .position)
+  &:has(> .next-prev-links :is(.pagination, .position)) p.author {
+    padding-right: $issueNavWidth + $spaceSm;
+  }
+
+  // Vor/Zurück fest oben rechts, auf der Höhe der Autorzeile
+  > .next-prev-links {
+    position: absolute;
+    top: $issueCardPadding + ($issueAuthorAvatarSize - $issueNavButtonSize) * 0.5;
+    right: $issueCardPadding - $spaceXs;
+    float: none;
+    margin: 0;
+  }
+
+  .attributes {
+    margin-top: $spaceMd;
+  }
+}
+
+// Formular "Ticket bearbeiten" unter der Karte
+// "Bearbeiten": eigene Fläche in Sidebar-Grau, damit der Bearbeitungsmodus
+// sich vom Lesen abhebt; Felder bleiben weiß. Redmines innerer Kasten
+// (.box) und die Fieldsets werden zu Abschnitten mit Trennlinie statt
+// Kästen im Kasten.
+#update {
+  margin-bottom: $spaceXl;
+  padding: $issueEditPadding;
+  background-color: $issueEditBackground;
+  border: $borderWidth solid $colorBorder;
+  border-radius: $issueCardRadius;
+
+  > h3 {
+    margin-top: 0;
+  }
+
+  #issue-form > .box {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+
+  #issue-form > .box > fieldset {
+    margin: 0;
+    padding: $spaceMd 0 0;
+    border: 0;
+    border-top: $borderWidth solid $colorBorder;
+    border-radius: 0;
+
+    &:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    > legend {
+      float: left;
+      width: 100%;
+      margin: 0 0 $spaceSm;
+      padding: 0;
+      font-size: $fontSizeBase;
+    }
+
+    > legend + * {
+      clear: both;
+    }
+
+    & + fieldset {
+      margin-top: $spaceMd;
+    }
+  }
+}
+
+#issue-form .attributes,
+#all_attributes .attributes {
+  padding: $spaceXs 0;
+}
+
+#issue_is_private_wrap {
+  margin-right: 0;
+}
+
+// Fixierter Kopf beim Scrollen
+div#sticky-issue-header {
+  min-height: $issueStickyHeaderHeight;
+  padding: $spaceXs $spaceXl;
+  font-size: $fontSizeSm;
+  background-color: rgba($colorBgCard, 0.96);
+  border-bottom: $borderWidth solid $colorBorder;
+  box-shadow: $shadowMd;
+  backdrop-filter: blur(6px);
+  box-sizing: border-box;
+
+  .issue-heading {
+    color: $colorTextTertiary;
+  }
+
+  .subject {
+    font-weight: $fontWeightSemibold;
+  }
+}
+
+.controller-issues.action-show div.wiki a[name],
+.controller-issues.action-show #history div[id^="note-"],
+.controller-issues.action-show #history div[id^="change-"],
+.controller-issues.action-show #update {
+  scroll-margin-top: $issueStickyHeaderHeight + $spaceXs;
+}
+
+// Changesets (Repository-Verknüpfungen) neben der Historie
+div#issue-changesets {
+  padding-left: $spaceLg;
+  font-size: $fontSizeSm;
+  border-left: $borderWidth solid $colorBorder;
+
+  div.changeset {
+    padding: $spaceXs 0;
+    border-bottom-color: $colorBorder;
+  }
+}
+
+#issue-changesets div.changeset:nth-child(odd),
+#issue-changesets div.changeset:nth-child(even) {
+  background-color: transparent;
+}

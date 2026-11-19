@@ -1,0 +1,27 @@
+@use "../../variables" as *;
+
+// Aktionen in der Titelzeile
+$mobileActionHeight:      36px !default;
+$mobileActionGap:         $spaceXs * 0.75 !default;
+
+// Listen als Zeilen (statt breiter Tabellen)
+$mobileListRowPaddingY:   $spaceSm !default;
+$mobileListRowPaddingX:   $spaceSm !default;
+$mobileListCheckboxSpace: $spaceXl !default;   // links: Checkbox
+$mobileListButtonsSpace:  $spaceXl + $spaceXxs !default;   // rechts: "⋯"
+$mobileListMetaGap:       $spaceXxs $spaceSm !default;
+
+// Reaktion am Ende der Ticket-Karte (Höhe wie auf dem Desktop)
+$mobileReactionRowHeight: 28px !default;
+
+// Ticket-Attribute: Label | Wert
+$mobileAttributeLabelWidth: 42% !default;
+
+// Checkbox (wie components/variables/_formsVariables.scss)
+$mobileCheckSize:         16px !default;
+
+// Formularzeilen: Abstand zwischen zwei Feldern
+$mobileFormRowGap:        $spaceSm !default;
+
+// Eingabefelder: 16px verhindert das automatische Zoomen in iOS
+$mobileControlFontSize:   16px !default;

@@ -1,0 +1,4 @@
+@use "../../variables" as *;
+
+// Kreis um die Tageszahl (Redmine 7), groß genug für zweistellige Tage
+$calendarDayCircleSize: 26px !default;

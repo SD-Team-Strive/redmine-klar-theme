@@ -1,0 +1,116 @@
+// =============================================================================
+// Mobiler Kopf (bis 899px)
+//
+//   [Logo]  [ Projektname              ⌄ ]  [≡]
+//
+// Redmine blendet mobil den Titel aus und zeigt nur den Projektwechsel
+// (#project-jump, absolut über die volle Breite) und den Menü-Button.
+// Das Logo kommt wie auf dem Desktop links dazu, der Projektwechsel wird
+// ein Auswahlfeld im Stil der übrigen Eingabefelder.
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/headerVariables" as *;
+@use "variables/mobileHeaderVariables" as *;
+
+@include mobile {
+  #header {
+    height: $mobileHeaderHeight;
+    color: $colorTextPrimary;
+    background-color: $colorBgCard;
+    border-bottom: $borderWidth solid $colorBorder;
+  }
+
+  // Logo-Link links (javascripts/theme.js; der Titel ist mobil ausgeblendet)
+  #header > .theme-logo {
+    position: absolute;
+    top: ($mobileHeaderHeight - $mobileLogoSize) * 0.5;
+    left: $mobileHeaderPaddingX;
+    z-index: 1;
+    width: $mobileLogoSize;
+    height: $mobileLogoSize;
+  }
+
+  #header > .theme-logo[data-fallback] {
+    font-size: $mobileLogoSize * 0.45;
+  }
+
+  // Projektwechsel zwischen Logo und Menü-Button
+  #project-jump.drdn {
+    width: 100%;
+    height: $mobileHeaderHeight;
+    padding: (($mobileHeaderHeight - $mobileControlHeight) * 0.5) $mobileJumpPaddingRight
+      0 $mobileJumpPaddingLeft;
+  }
+
+  #project-jump .drdn-trigger {
+    position: relative;
+    height: $mobileControlHeight;
+    padding: 0 ($spaceXl + $spaceXxs) 0 $spaceSm;
+    font-size: $fontSizeMd;
+    font-weight: $fontWeightMedium;
+    line-height: $mobileControlHeight - 2px;
+    color: $colorTextPrimary;
+    background: $colorBgCard;
+    border: $borderWidth solid $colorBorder;
+    border-radius: $radiusBase;
+    box-shadow: $shadowSm;
+  }
+
+  // Chevron rechts im Feld statt gestauchtem "^" davor
+  #project-jump .drdn-trigger::before {
+    @include maskIcon("chevron-down", 18px);
+    position: absolute;
+    top: 50%;
+    right: $spaceSm;
+    left: auto;
+    margin-top: -9px;
+    padding: 0;
+    color: $colorTextTertiary;
+    opacity: 1;
+    transform: none;
+    transition: transform $transitionFast;
+  }
+
+  #project-jump.expanded .drdn-trigger::before {
+    padding: 0;
+    transform: rotate(180deg);
+  }
+
+  // Aufgeklappte Projektliste unter dem Kopf
+  #project-jump .drdn-content {
+    top: $mobileHeaderHeight;
+    margin: 0;
+    border-width: 0 0 $borderWidth;
+    border-radius: 0;
+    box-shadow: $shadowMd;
+  }
+
+  #project-jump .drdn-content .autocomplete {
+    height: $mobileControlHeight;
+    font-size: $fontSizeMd;
+  }
+
+  // Menü-Button rechts: Icon ohne Trennlinie
+  #header a.mobile-toggle-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $mobileToggleWidth;
+    height: $mobileHeaderHeight;
+    color: $colorTextPrimary;
+    border: 0;
+  }
+
+  // Linien-Icon statt Zeichen "≡", offen ein "x" statt "×"
+  .mobile-toggle-button::after {
+    @include maskIcon("menu", 24px, 1.75);
+    margin: 0;
+    font-size: 0;
+  }
+
+  .flyout-is-active .mobile-toggle-button::after {
+    @include maskIconSwap("x", 1.75);
+  }
+}

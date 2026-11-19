@@ -1,0 +1,63 @@
+// =============================================================================
+// Meine Seite: Blöcke als Karten
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/myPageVariables" as *;
+
+.mypage-box {
+  @include card($spaceLg, $radiusLg);
+  margin: 0 0 $spaceLg;
+  color: $colorTextPrimary;
+  line-height: $lineHeightBase;
+
+  // Überschrift so hoch wie die Icon-Buttons daneben
+  h3 {
+    margin: 0 0 $spaceSm;
+    line-height: $myPageToolHeight;
+  }
+
+  table.list {
+    margin-bottom: 0;
+  }
+
+  // Werkzeuge im Kopf: Redmine setzt zwei getrennte, rechts schwebende
+  // Gruppen ([Verschieben, Löschen] und davor [Optionen]). Alle Icons
+  // gleich groß, gleicher Abstand – innerhalb und zwischen den Gruppen.
+  // Redmine blendet sie erst beim Hover ein; das bleibt so.
+  > .contextual {
+    gap: $myPageToolGap;
+    height: $myPageToolHeight;
+    margin: 0 0 0 $myPageToolGap;
+    padding: 0;
+  }
+
+  > .contextual .icon-only {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: $myPageToolHeight;
+    height: $myPageToolHeight;
+    margin: 0;
+    border-radius: $radiusSm;
+
+    &:hover {
+      background-color: $colorHoverBg;
+    }
+  }
+}
+
+.block-receiver {
+  padding-top: 0;
+  border-color: transparent;
+}
+
+.dragging .block-receiver {
+  border-color: $colorBorderStrong;
+  border-radius: $radiusLg;
+}
+
+#my-page #block-select {
+  min-width: 220px;
+}

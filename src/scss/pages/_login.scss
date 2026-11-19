@@ -1,0 +1,99 @@
+// =============================================================================
+// Anmeldung, Registrierung, Passwort vergessen (Monitor-Login als Vorbild)
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+
+#login-form {
+  @include card($spaceXl, $radiusLg);
+  width: 380px;
+  max-width: 100%;
+  margin: $space2xl * 1.5 auto $space2xl;
+  box-shadow: $shadowMd;
+
+  h3 {
+    margin: 0 0 $spaceLg;
+    font-size: $fontSizeLg;
+    text-align: center;
+  }
+
+  label {
+    margin-bottom: $spaceXxs + 2px;
+    font-weight: $fontWeightMedium;
+    color: $colorTextSecondary;
+  }
+
+  label[for="autologin"] {
+    display: flex;
+    align-items: center;
+    gap: $spaceXs;
+    margin: $spaceXxs 0 $spaceMd;
+    color: $colorTextPrimary;
+  }
+
+  input {
+    height: $controlHeight + 4px;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    margin-bottom: $spaceMd;
+  }
+
+  input[type="submit"] {
+    height: $controlHeight + 6px;
+  }
+
+  input[type="checkbox"] {
+    height: 16px;
+  }
+
+  a.lost_password {
+    font-size: $fontSizeSm;
+    font-weight: $fontWeightRegular;
+    color: $colorTextMuted;
+  }
+
+  // Zeile "Passwort" + "Passwort vergessen"
+  label[for="password"] {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+}
+
+// Logo über dem Formular (Plugin redmine_branding): übernimmt den oberen
+// Abstand der Karte, die Karte rückt an das Logo heran
+.branding-login-logo {
+  margin: $space2xl * 1.5 auto $spaceLg;
+  text-align: center;
+
+  img {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    max-width: 240px;
+    max-height: 64px;
+  }
+
+  + #login-form {
+    margin-top: 0;
+  }
+}
+
+// Externe Anmeldung (OpenID u. a.)
+#login-form + #login-links,
+#openid-form {
+  text-align: center;
+}
+
+body.controller-account {
+  #content {
+    background: $colorBgSubtle;
+  }
+
+  #content > h2 {
+    text-align: center;
+  }
+}

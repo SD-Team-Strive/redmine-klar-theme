@@ -1,0 +1,53 @@
+// =============================================================================
+// Theme: Radien, Schatten, Bedienelemente, Übergänge
+// =============================================================================
+
+@use "colors" as *;
+
+// Radien (Monitor: Inputs 8px, Buttons 10px, Karten 14px)
+$radiusSm:   6px !default;
+$radiusBase: 8px !default;
+$radiusMd:   10px !default;
+$radiusLg:   14px !default;
+$radiusPill: 9999px !default;
+
+// Schatten bewusst flach
+$shadowSm: 0 1px 2px rgba($neutral950, 0.05) !default;
+$shadowMd: 0 4px 12px rgba($neutral950, 0.08), 0 1px 2px rgba($neutral950, 0.04) !default;
+$shadowLg: 0 12px 32px rgba($neutral950, 0.12), 0 2px 6px rgba($neutral950, 0.06) !default;
+
+// Fokus-Ring (Monitor: 2px weiß, dann 2px Grau)
+$focusRing: 0 0 0 2px $neutral0, 0 0 0 4px $colorFocusRing !default;
+
+// Bedienelemente
+$controlHeight:   32px !default;
+$controlHeightSm: 28px !default;
+$borderWidth:     1px !default;
+
+// Übergänge: nur gezielte Eigenschaften, nie "all"
+$transitionFast: 120ms ease-out !default;
+
+// Ebenen (z-index): wer liegt über wem. Redmine bringt eigene feste Werte
+// mit (in Klammern); hier steht, wie sie zusammenspielen. Neue Ebenen nur
+// hier eintragen, nie freie Zahlen in Komponenten.
+//   content          Inhalt
+//   popover          Dropdowns, Kontextmenü, Tooltips        (Redmine 40–99)
+//   sticky           fixierte Ticket-Kopfzeile               (Redmine 1000)
+//   mobileHeader     mobiler Kopf                            (Redmine 9999)
+// Das mobile Menü liegt neben dem Inhalt, nicht darüber: Fixierte Leisten
+// des Inhalts werden bei geöffnetem Menü ausgeblendet
+// (layout/_flyoutMenu.scss), statt sie per z-index darunter zu schieben.
+$zLayers: (
+  "content": 1,
+  "popover": 100,
+  "sticky": 1000,
+  "mobileHeader": 9999,
+) !default;
+
+// Pfad von themes/<id>/application.css zu Redmines eigenen Assets
+// (z. B. search.svg, chevron-down.svg). Propshaft hängt den Digest an.
+$redmineAssetPath: "../../" !default;
+
+// Breakpoint von Redmines responsive.css
+$breakpointMobile: 899px !default;
+$breakpointPhone:  599px !default;

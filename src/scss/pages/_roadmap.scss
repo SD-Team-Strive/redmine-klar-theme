@@ -1,0 +1,222 @@
+// =============================================================================
+// Roadmap und Versionsansicht
+// =============================================================================
+
+@use "../variables" as *;
+@use "../mixins" as *;
+@use "variables/roadmapVariables" as *;
+
+// Je Version eine Karte:
+//   Kopf      [Paket] Name  [offen]                        [Bearbeiten]
+//   Meta      Fällig in 40 Tagen (29.12.2026) · Beschreibung
+//   Fortschritt  ████████░░░░  69%
+//                5 Tickets (2 geschlossen — 3 offen)
+//   Tickets   Liste der zugehörigen Tickets
+// Alles an einer linken Kante (Redmine 7 rückt den Inhalt um 1,5rem ein).
+div#roadmap {
+  article.version-article {
+    @include card($spaceLg, $radiusLg);
+    margin-bottom: $spaceLg;
+    padding-top: $spaceLg;
+  }
+
+  // Kopf: Icon, Name und Status in einer Zeile, Bearbeiten rechts
+  .version-article > header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $spaceXs;
+    padding: 0;
+
+    > .contextual {
+      order: 1;
+      margin: 0 0 0 auto;
+      padding: 0;
+    }
+
+    .badge {
+      margin: 0;
+    }
+  }
+
+  .version-article > header h3.version {
+    display: flex;
+    align-items: center;
+    gap: $spaceXs;
+    margin: 0;
+    font-size: $fontSizeLg;
+    line-height: $roadmapHeaderHeight;
+
+    svg {
+      margin: 0;
+    }
+  }
+
+  // Inhalte ohne Einzug
+  article.version-article .version-overview,
+  article.version-article .wiki,
+  article.version-article form {
+    padding-left: 0;
+  }
+
+  // Meta, Beschreibung und Fortschritt; Balken + Prozent auf einer Linie
+  // (Roadmap und Versionsansicht – letztere ohne article-Hülle)
+  .version-overview {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $spaceXxs $spaceSm;
+    margin: $spaceXs 0 0;
+
+    > p {
+      flex: 0 0 100%;
+      margin: 0;
+      color: $colorTextSecondary;
+    }
+
+    > p strong {
+      font-weight: $fontWeightMedium;
+      color: $colorTextPrimary;
+    }
+
+    // nimmt den Platz bis höchstens $roadmapProgressWidth, die Prozentzahl
+    // bleibt daneben
+    > table.progress {
+      flex: 1 1 0;
+      width: auto;
+      max-width: $roadmapProgressWidth;
+      margin: $spaceSm 0 0;
+    }
+
+    > p.percent {
+      flex: 0 0 auto;
+      margin: $spaceSm 0 0;
+      font-size: $fontSizeSm;
+      line-height: 1;
+      color: $colorTextSecondary;
+    }
+
+    > p.progress-info {
+      margin: 0;
+      font-size: $fontSizeSm;
+      color: $colorTextTertiary;
+
+      a {
+        color: $colorTextSecondary;
+      }
+    }
+  }
+
+  .related-issues {
+    margin: $spaceMd 0 0;
+
+    // Avatar-Spalte: Redmine setzt Innenabstand 0, der Avatar klebte am
+    // Rahmen. Gleicher Einzug wie die übrigen Zellen; Avatar und "⋯" auf
+    // Höhe der ersten Textzeile, auch wenn der Betreff umbricht.
+    td.assigned_to {
+      width: 1%;
+      padding: $relatedFirstLineOffset 0 $spaceXs $spaceSm;
+      line-height: 0;
+      vertical-align: top;
+
+      .avatar {
+        margin: 0;
+      }
+    }
+
+    td.subject {
+      padding-left: $spaceXs;
+      vertical-align: top;
+    }
+
+    // "⋯" so hoch wie eine Textzeile, damit es mittig zur ersten Zeile sitzt
+    td.buttons {
+      padding-top: $spaceXs;
+      vertical-align: top;
+
+      .icon-only {
+        display: inline-flex;
+        align-items: center;
+        height: $relatedLineHeight;
+      }
+    }
+
+    caption {
+      padding: 0 0 $spaceXs;
+      font-size: $fontSizeSm;
+      font-weight: $fontWeightSemibold;
+      text-align: left;
+    }
+  }
+
+  .wiki h1 {
+    font-size: $fontSizeLg;
+  }
+}
+
+// Zusammenfassung rechts in der Versionsansicht: Zeiten als ruhige
+// Liste Label | Wert statt großer, umbrechender Zahlen
+div#version-summary {
+  margin-left: $spaceLg;
+
+  fieldset {
+    margin-bottom: $spaceMd;
+  }
+
+  fieldset.time-tracking table {
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: $spaceXxs 0;
+      vertical-align: baseline;
+    }
+
+    th {
+      font-weight: $fontWeightRegular;
+      text-align: left;
+      color: $colorTextMuted;
+    }
+
+    td.total-hours {
+      padding-left: $spaceSm;
+      font-size: $fontSizeBase;
+      font-weight: $fontWeightSemibold;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      white-space: nowrap;
+    }
+  }
+
+  .total-hours span.hours-int {
+    font-size: inherit;
+  }
+
+  // "Tickets pro [Tracker]": Auswahl in der Legende kompakt
+  legend select {
+    height: $controlHeightSm;
+    margin-left: $spaceXxs;
+    font-size: $fontSizeSm;
+  }
+}
+
+// Abgelaufene Termine
+.version-overdue a,
+.issue-overdue a,
+.project-overdue a {
+  color: $statusErrorText;
+}
+
+.version-behind-schedule a,
+.issue-behind-schedule a {
+  color: $statusWarningText;
+}
+
+a#toggle-completed-versions {
+  color: $colorTextTertiary;
+
+  svg,
+  &:hover svg {
+    stroke: $colorTextTertiary;
+  }
+}
