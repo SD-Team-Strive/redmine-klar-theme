@@ -75,7 +75,12 @@
   border-color: transparent;
 }
 
+// Beim Verschieben jede Spalte als gestrichelte Fläche – auch leere. Ohne
+// Mindesthöhe war eine leere Spalte nur 2px hoch (Redmines padding-top ist
+// oben auf 0 gesetzt): keine Linie zu sehen, nichts zum Ablegen, alles
+// blieb oben in voller Breite (dev/check-my-page-drag.mjs)
 .dragging .block-receiver {
+  min-height: $myPageDropMinHeight;
   border-color: $colorBorderStrong;
   border-radius: $radiusLg;
 }

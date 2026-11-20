@@ -4257,6 +4257,7 @@ div.tooltip:hover span.tip {
 }
 
 .dragging .block-receiver {
+  min-height: 120px;
   border-color: #d4d4d4;
   border-radius: 14px;
 }
