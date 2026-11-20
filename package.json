@@ -1,6 +1,6 @@
 {
   "name": "redmine-klar-theme",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "private": true,
   "description": "Nüchternes, klar strukturiertes Redmine-Theme mit Inter",
   "scripts": {
@@ -15,7 +15,8 @@
     "screenshots:plugins": "dev/plugin-screenshots/run.sh",
     "check:issue-list": "node dev/check-issue-list-mobile.mjs",
     "check:dialogs": "node dev/check-dialogs.mjs",
-    "check:my-page-drag": "node dev/check-my-page-drag.mjs"
+    "check:my-page-drag": "node dev/check-my-page-drag.mjs",
+    "check:query-totals": "node dev/check-query-totals.mjs"
   },
   "devDependencies": {
     "esbuild": "0.28.2",

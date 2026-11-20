@@ -68,6 +68,21 @@ table.list :is(td, th):is(
   font-variant-numeric: tabular-nums;
 }
 
+// Stunden: Redmine setzt nur die Werte rechtsbündig – die Überschrift
+// folgt, sonst stehen beide an verschiedenen Kanten der Spalte
+// (dev/check-query-totals.mjs)
+table.list th:is(
+  .estimated_hours, .total_estimated_hours, .estimated_remaining_hours,
+  .spent_hours, .total_spent_hours
+) {
+  text-align: right;
+
+  // sortiert: kein Abstand rechts (Pfeil steht vor dem Text)
+  a.sort {
+    padding-right: 0;
+  }
+}
+
 table.list td.id {
   width: 1%;
   color: $tableMutedColor;
@@ -310,8 +325,12 @@ a.sort {
   padding-right: $spaceMd;
 }
 
-// Darüberliegende Summen der Abfrage
+// Darüberliegende Summen der Abfrage: eigene Zeile zwischen Filterkasten
+// und Tabelle. Redmine zieht sie mit margin-top: -2.3em neben die Knöpfe
+// des Filters – im Kasten-Layout des Themes saß sie dann auf dessen
+// Unterkante (dev/check-query-totals.mjs)
 .query-totals {
+  margin: 0 0 $spaceSm;
   font-size: $fontSizeSm;
   color: $colorTextMuted;
 

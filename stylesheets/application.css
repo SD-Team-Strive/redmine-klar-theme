@@ -1419,6 +1419,15 @@ table.list :is(td, th):is(.id, .done_ratio, .estimated_hours, .total_estimated_h
   font-variant-numeric: tabular-nums;
 }
 
+table.list th:is(.estimated_hours, .total_estimated_hours, .estimated_remaining_hours,
+.spent_hours, .total_spent_hours) {
+  text-align: right;
+}
+table.list th:is(.estimated_hours, .total_estimated_hours, .estimated_remaining_hours,
+.spent_hours, .total_spent_hours) a.sort {
+  padding-right: 0;
+}
+
 table.list td.id {
   width: 1%;
   color: #737373;
@@ -1613,6 +1622,7 @@ a.sort {
 }
 
 .query-totals {
+  margin: 0 0 12px;
   font-size: 0.8125rem;
   color: #585858;
 }

@@ -66,9 +66,11 @@ enough, a small script fills the gap; without JavaScript Redmine keeps working a
   heading.
 - Project list as a grid of cards, equal in height per row; subprojects as a quiet list
   at the foot of their project's card.
-- Calmer and more spacious tables.
+- Calmer and more spacious tables; hour columns (spent time, estimates) right-aligned
+  together with their heading, query totals on their own line above the list.
 - "My page" with its blocks as cards; the left and right columns side by side even with
-  wide tables.
+  wide tables, and every column – even an empty one – shown as a drop area while a block
+  is dragged.
 - Activity, roadmap, calendar, Gantt, wiki, forums, login and administration in the same
   style; many small alignment issues fixed.
 
@@ -175,6 +177,8 @@ npm run check:alignment                 # icons/rows vertically aligned? (deskto
 npm run check:alignment -- --mobile     # the same on mobile
 npm run check:issue-list                # mobile issue list: hidden columns, Select, tap, long press
 npm run check:dialogs                   # dialogs (watchers, CSV export, new category …): width, close, checkboxes
+npm run check:my-page-drag              # My page: empty columns are drop areas while dragging
+npm run check:query-totals              # issue list: hour columns and their heading aligned, totals placed
 ```
 
 `check:alignment` measures on every page whether icons are centred with their text and

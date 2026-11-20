@@ -27,6 +27,17 @@ await page.click('#login-submit');
 await page.route('**/my/order_blocks', (route) => route.abort());
 await page.goto(`${baseUrl}/my/page`);
 
+// Mit Plugin redmine_dashboard_blocks: ist das gewählte Dashboard leer,
+// kurz auf eins mit Blöcken wechseln – am Ende zurück auf das gewählte
+const tabs = page.locator('.dashboard-blocks-pages .tabs a');
+const selectedTab = await tabs.evaluateAll((links) => links.find((link) => link.classList.contains('selected'))?.href);
+if (selectedTab && !(await page.locator('.mypage-box').count())) {
+  for (const href of await tabs.evaluateAll((links) => links.map((link) => link.href))) {
+    await page.goto(href);
+    if (await page.locator('.mypage-box').count()) break;
+  }
+}
+
 const blockCount = await page.locator('.mypage-box').count();
 if (!blockCount) {
   failures.push('Keine Blöcke auf Meine Seite');
@@ -68,6 +79,9 @@ if (!blockCount) {
   await page.waitForTimeout(300);
 }
 
+if (selectedTab && page.url() !== selectedTab) {
+  await page.goto(selectedTab);
+}
 await browser.close();
 
 if (failures.length) {
