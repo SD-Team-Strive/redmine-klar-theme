@@ -8,6 +8,8 @@
 # danach wieder ab. Die lokale Testinstanz (Port 3080) bleibt unberührt.
 #
 # Aufruf: npm run screenshots:plugins
+#         dev/plugin-screenshots/run.sh team-planning   (nur Team Planning,
+#         Screenshots und Video nach redmine-team-planning/docs/screenshots)
 # =============================================================================
 
 set -euo pipefail
@@ -31,5 +33,11 @@ done
 "${compose[@]}" exec -T redmine bin/rails runner dev/seed.rb >/dev/null 2>&1
 "${compose[@]}" exec -T redmine bin/rails runner dev/plugin-screenshots/setup.rb 2>&1 | grep -E '^Fertig' || true
 
-node "$here/../check-header-logo.mjs" http://localhost:3091 nordlicht
-node "$here/shoot.mjs"
+if [[ "${1:-}" != "team-planning" ]]; then
+  node "$here/../check-header-logo.mjs" http://localhost:3091 nordlicht
+  node "$here/shoot.mjs"
+fi
+
+# Team Planning zuletzt: setzt eigene Meine-Seite-Blöcke, das Video ändert Daten
+"${compose[@]}" exec -T redmine bin/rails runner dev/plugin-screenshots/setup-team-planning.rb 2>&1 | grep -E '^Fertig' || true
+node "$here/shoot-team-planning.mjs"

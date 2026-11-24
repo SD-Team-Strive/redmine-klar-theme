@@ -31,10 +31,24 @@
   }
 
   // Fokus: dunklerer, doppelt starker Rand nach innen – wie bei den
-  // Eingabefeldern; ein Schein außen wurde mobil abgeschnitten
+  // Eingabefeldern; ein Schein außen wurde mobil abgeschnitten.
+  // Der Rand liegt als eigene Ebene über dem Inhalt: ein Schatten nach
+  // innen oder eine Outline würden von Werkzeugleiste (position: relative)
+  // und Vorschau mit eigener Fläche überdeckt und wären dort nur 1px stark.
+  position: relative;
+
   &:focus-within {
     border-color: $editorFocusBorder;
-    box-shadow: $editorFocusShadow;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -$borderWidth;
+      z-index: 1;
+      border: calc(#{$borderWidth} * 2) solid $editorFocusBorder;
+      border-radius: inherit;
+      pointer-events: none;
+    }
   }
 }
 

@@ -13,9 +13,20 @@
 .jstBlock:hover {
   border-color: #d4d4d4;
 }
+.jstBlock {
+  position: relative;
+}
 .jstBlock:focus-within {
   border-color: #404040;
-  box-shadow: inset 0 0 0 1px #404040;
+}
+.jstBlock:focus-within::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 1;
+  border: calc(1px * 2) solid #404040;
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .tabular label.error + span#issue_description_and_toolbar div.jstBlock {

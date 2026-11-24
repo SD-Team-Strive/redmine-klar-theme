@@ -37,8 +37,9 @@ enough, a small script fills the gap; without JavaScript Redmine keeps working a
   text colour instead of coloured borders.
 - Consistent icons: characters Redmine renders as text (≡, ^, ×, ✓ …) are replaced by
   clean line icons, vertically centred with their labels.
-- Inputs, selects, checkboxes and buttons share one style; focused text fields get a
-  strong inner border that is never clipped.
+- Inputs, selects, checkboxes and buttons share one style; focused text fields and editors
+  get a strong inner border that is never clipped – the same 2px all round, also over the
+  editor's toolbar and preview.
 
 **Header and navigation**
 - Logo of your installation in the header (or a tile with the first letter of the
