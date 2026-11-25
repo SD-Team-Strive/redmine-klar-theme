@@ -1,0 +1,101 @@
+// =============================================================================
+// Chili: our changes to Klar, kept in this one file so updates from upstream
+// (stbt-de/redmine-klar-theme) merge cleanly. Loaded after Klar's own rules
+// and before print (application.scss). The /* */ comments stay in the built
+// CSS, so each rule is findable there as "Chili: …".
+// =============================================================================
+
+@use "variables" as *;
+@use "mixins" as *;
+
+/* Chili: role names in bold in the project Overview's Members box */
+.members.box p span.label {
+  font-weight: bold;
+}
+
+/* Chili: space between one radio option's label and the next radio, e.g.
+   Projects -> Options -> "Display results as: Board / List". Klar sets the
+   radio's left margin to 0 and Redmine writes no space between them. */
+label.inline + input[type="radio"] {
+  margin-left: $spaceSm;
+}
+
+/* Chili: checkbox and radio lists of custom fields, e.g. "Dev Checklist" on the
+   issue form. Klar's ".tabular label" (form captions: 164px wide, medium weight)
+   also hit the options, so each one wrapped at 164px under its checkbox.
+   Options now use the box's full width, and a long one wraps beside its
+   checkbox. The box shows about 10 options before it scrolls (Redmine: 120px). */
+.tabular .check_box_group:not(.bool_cf) {
+  max-height: 300px;
+}
+.tabular .check_box_group:not(.bool_cf) label {
+  display: flex;
+  align-items: flex-start;
+  gap: $spaceXs;
+  width: auto;
+  margin: $spaceXxs 0;
+  padding: 0;
+  font-weight: $fontWeightRegular;
+  line-height: $lineHeightBase;
+  color: inherit;
+}
+.tabular .check_box_group:not(.bool_cf) label > input {
+  flex: none;
+  margin: calc((1.5em - 16px) / 2) 0 0;
+}
+
+/* Chili: Checklists plugin. Its "height: initial" on item checkboxes left
+   Klar's self-drawn checkbox 2px tall (a grey dash). */
+#content :is(#checklist_form_items, #checklist_items, .cf_checklist_form_items) input[type="checkbox"] {
+  height: 16px;
+}
+
+/* Chili: one width for fields in the issue form's two attribute columns.
+   Selects sized to their longest option (200px and up), text and number
+   custom fields to the browser default (180px), so neighbours never lined up.
+   Dates, hours, story points and parent task keep their short widths. The
+   32px left free keeps an icon after a field (Category's "+") on its line.
+   Below 900px Klar's responsive.css already makes every field full width. */
+@include desktop {
+  #all_attributes .splitcontent p > :is(select, input.string_cf, input.int_cf, input.float_cf, input.link_cf, .check_box_group:not(.bool_cf)) {
+    box-sizing: border-box;
+    width: calc(100% - 32px);
+    max-width: 360px;
+  }
+}
+
+/* Chili: show which top-menu item the page belongs to. Klar gave the current
+   item no style, and Redmine marks it only for Projects and Help & Support.
+   Home, My page and Workload are found by the page's body class, and
+   Administration by the admin menu that every admin page has. The look is
+   Klar's own current item in the admin menu and the mobile menu. "ul > li >"
+   matches the specificity of Klar's hover rule, so the mark stays on hover. */
+#top-menu .general-menu ul > li > a.selected,
+body.controller-welcome :is(#top-menu, .flyout-menu) ul > li > a.home,
+body.controller-my.action-page :is(#top-menu, .flyout-menu) ul > li > a.my-page,
+body.controller-workloads :is(#top-menu, .flyout-menu) ul > li > a.WorkLoad,
+body:has(#admin-menu) :is(#top-menu, .flyout-menu) ul > li > a.administration {
+  color: $colorTextPrimary;
+  background-color: $colorActiveBg;
+}
+
+/* Chili: project header of a subproject (breadcrumb above the name). Klar
+   set the logo level with the project name, so the breadcrumb hung above the
+   logo's right edge. The logo is now centred on breadcrumb and name together,
+   like the search box beside them and like Project Icons' own header icon.
+   The breadcrumb no longer ends in a "»" pointing at the line below. */
+@include desktop {
+  #header > .theme-logo {
+    align-self: center;
+  }
+}
+#header h1 .breadcrumbs > .separator:last-child {
+  display: none;
+}
+
+/* Chili: space between the Filters / Options heading and its first row. Klar
+   gave that content no top padding, so the first filter touched the heading
+   (plain to see once the heading's hover background shows). */
+#query_form_content > fieldset.collapsible > legend + div {
+  padding-top: $spaceSm;
+}
