@@ -4676,6 +4676,14 @@ body:has(#admin-menu) #top-menu ul > li > a.administration {
     outline-offset: -2px;
   }
 }
+/* Chili: My page "Add" when a searchable-dropdown plugin (select2) has
+   replaced the select: the same underline on hover as Klar gives the select
+   itself (pages/_myPage.scss). */
+#content > .contextual > #block-form:hover .select2-selection__rendered {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 /* Chili: project header of a subproject (breadcrumb above the name). Klar
    set the logo level with the project name, so the breadcrumb hung above the
    logo's right edge. The logo is now centred on breadcrumb and name together,
