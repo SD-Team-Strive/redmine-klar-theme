@@ -79,6 +79,34 @@ body:has(#admin-menu) :is(#top-menu, .flyout-menu) ul > li > a.administration {
   background-color: $colorActiveBg;
 }
 
+/* Chili: in the top menu (desktop), the current item looks like the current
+   project tab below it: dark, white text. Same selectors and specificity as
+   the rule above, which the mobile menu keeps. */
+#top-menu .general-menu ul > li > a.selected,
+body.controller-welcome #top-menu ul > li > a.home,
+body.controller-my.action-page #top-menu ul > li > a.my-page,
+body.controller-workloads #top-menu ul > li > a.WorkLoad,
+body:has(#admin-menu) #top-menu ul > li > a.administration {
+  color: $colorTextInverse;
+  background-color: $colorBgInverse;
+  font-weight: $fontWeightMedium;
+}
+
+/* Chili: high-contrast mode (forced colours) drops background colours, so the
+   current top-menu item and project tab would show only as bolder text. An
+   outline in the system text colour keeps them visible. */
+@media (forced-colors: active) {
+  #main-menu li a.selected,
+  #top-menu .general-menu ul > li > a.selected,
+  body.controller-welcome #top-menu ul > li > a.home,
+  body.controller-my.action-page #top-menu ul > li > a.my-page,
+  body.controller-workloads #top-menu ul > li > a.WorkLoad,
+  body:has(#admin-menu) #top-menu ul > li > a.administration {
+    outline: 2px solid CanvasText;
+    outline-offset: -2px;
+  }
+}
+
 /* Chili: project header of a subproject (breadcrumb above the name). Klar
    set the logo level with the project name, so the breadcrumb hung above the
    logo's right edge. The logo is now centred on breadcrumb and name together,
