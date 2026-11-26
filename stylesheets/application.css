@@ -4670,6 +4670,33 @@ body:has(#admin-menu) :is(#top-menu, .flyout-menu) ul > li > a.administration {
   padding-top: 12px;
 }
 
+/* Chili: project tabs wrap onto a second line on desktop instead of
+   scrolling. With many modules (15 tabs at 1280px) Klar's scroll arrows sat
+   on top of the last tabs and Settings slid out of the bar. Redmine's script
+   shows the arrows whenever the tabs' total width exceeds the bar, even
+   when they wrap, hence !important. */
+@media screen and (min-width: 900px) {
+  #main-menu > ul {
+    flex-wrap: wrap;
+  }
+  #main-menu .tabs-buttons {
+    display: none !important;
+  }
+}
+/* Chili: issue lists keep the subject readable. Redmine keeps issue cells on
+   one line (tr.issue { white-space: nowrap }), so a long project or version
+   name made its column as wide as the name and the subject got what was
+   left (144px, six lines). The subject now gets at least 300px, and project
+   and version wrap like the subject, so the subject also moves left. Desktop
+   only; Klar's mobile list has its own layout. */
+@media screen and (min-width: 900px) {
+  table.list.issues td.subject {
+    min-width: 300px;
+  }
+  table.list.issues tr.issue td:is(.project, .fixed_version) {
+    white-space: normal;
+  }
+}
 @media print {
   body {
     font-size: 11pt;
