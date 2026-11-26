@@ -626,6 +626,22 @@
     });
   }
 
+  // src/js/currentPage.js
+  var CURRENT_ITEMS = [
+    "#top-menu a.selected",
+    "#main-menu a.selected",
+    ".flyout-menu a.selected",
+    "body.controller-welcome :is(#top-menu, .flyout-menu) a.home",
+    "body.controller-my.action-page :is(#top-menu, .flyout-menu) a.my-page",
+    "body.controller-workloads :is(#top-menu, .flyout-menu) a.WorkLoad",
+    "body:has(#admin-menu) :is(#top-menu, .flyout-menu) a.administration"
+  ].join(", ");
+  function markCurrentPage() {
+    document.querySelectorAll(CURRENT_ITEMS).forEach((link) => {
+      link.setAttribute("aria-current", "page");
+    });
+  }
+
   // src/js/theme.js
   function init() {
     insertHeaderLogo();
@@ -636,6 +652,7 @@
     enhanceIssueListMobile();
     labelMyPageAddBlock();
     enhanceDialogs();
+    markCurrentPage();
   }
   claimBrandingLogo();
   if (document.readyState === "loading") {

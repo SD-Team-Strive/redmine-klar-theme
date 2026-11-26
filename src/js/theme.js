@@ -16,6 +16,7 @@
 //   issueListMobile.js    Ticketliste mobil: ohne Doppeltes, Auswahl auf Wunsch
 //   myPageAddBlock.js     Meine Seite: "Hinzufügen" als ein Knopf
 //   dialogs.js            Dialoge: "Schließen" übersetzt, Kontextmenü zu
+//   currentPage.js        Chili: current page in the menus (aria-current)
 // =============================================================================
 
 import { claimBrandingLogo, insertHeaderLogo } from './headerLogo.js';
@@ -26,6 +27,7 @@ import { collapseQueryFilters } from './queryFilters.js';
 import { enhanceIssueListMobile } from './issueListMobile.js';
 import { labelMyPageAddBlock } from './myPageAddBlock.js';
 import { enhanceDialogs } from './dialogs.js';
+import { markCurrentPage } from './currentPage.js';
 
 function init() {
   insertHeaderLogo();
@@ -36,6 +38,7 @@ function init() {
   enhanceIssueListMobile();
   labelMyPageAddBlock();
   enhanceDialogs();
+  markCurrentPage();
 }
 
 // Logo stellt das Theme selbst dar (Plugin redmine_branding fügt dann keins ein)
