@@ -4684,6 +4684,15 @@ body:has(#admin-menu) #top-menu ul > li > a.administration {
   text-underline-offset: 0.2em;
 }
 
+/* Chili: the issue's "% Done" row. Redmine gives every attribute value
+   overflow: auto, and the percentage (line-height 1) sticks out of its line by
+   a pixel, so where scrollbars are always shown (Windows, or macOS set to show
+   them) a small scrollbar square appeared at the end of the row. Nothing in
+   this row needs to scroll. */
+div.issue.details .attributes .attribute.progress .value {
+  overflow: visible;
+}
+
 /* Chili: project header of a subproject (breadcrumb above the name). Klar
    set the logo level with the project name, so the breadcrumb hung above the
    logo's right edge. The logo is now centred on breadcrumb and name together,
