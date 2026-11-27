@@ -4676,6 +4676,14 @@ body:has(#admin-menu) #top-menu ul > li > a.administration {
     outline-offset: -2px;
   }
 }
+/* Chili: My page "Add" when a searchable-dropdown plugin (select2) has
+   replaced the select: the same underline on hover as Klar gives the select
+   itself (pages/_myPage.scss). */
+#content > .contextual > #block-form:hover .select2-selection__rendered {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 /* Chili: the issue's "% Done" row. Redmine gives every attribute value
    overflow: auto, and the percentage (line-height 1) sticks out of its line by
    a pixel, so where scrollbars are always shown (Windows, or macOS set to show
