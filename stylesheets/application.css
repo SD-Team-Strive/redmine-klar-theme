@@ -4741,6 +4741,13 @@ div.issue.details .attributes .attribute.progress .value {
     white-space: normal;
   }
 }
+/* Chili: the issue reference ("Bug #123") in bold in Spent time lists, on the
+   Spent time page and in My page's Spent time block, so it stands out from the
+   subject after it. A closed issue keeps its strikethrough. */
+table.time-entries td.issue a.issue {
+  font-weight: 700;
+}
+
 @media print {
   body {
     font-size: 11pt;
